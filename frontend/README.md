@@ -1,4 +1,4 @@
-# Lifecycle
+# Lifecycle Frontend
 
 ## Project Setup
 
