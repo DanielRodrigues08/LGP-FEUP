@@ -10,4 +10,5 @@ npm install
 
 ```sh
 npm run dev
-```
+```  
+http://localhost:5173/
