@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:5173")
+// @CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
 public class ProcessController {
@@ -44,11 +45,7 @@ public class ProcessController {
     public ResponseEntity<Process> getProcessById(@PathVariable("id") long id) {
         Optional<Process> processData = processRepository.findById(id);
 
-        if (processData.isPresent()) {
-            return new ResponseEntity<>(processData.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return processData.map(process -> new ResponseEntity<>(process, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/processes/create")

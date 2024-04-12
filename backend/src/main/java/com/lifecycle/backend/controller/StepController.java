@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:5173")
+// @CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
 public class StepController {
@@ -44,23 +45,17 @@ public class StepController {
     public ResponseEntity<Step> getStepById(@PathVariable("id") long id) {
         Optional<Step> stepData = stepRepository.findById(id);
 
-        if (stepData.isPresent()) {
-            return new ResponseEntity<>(stepData.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return stepData.map(step -> new ResponseEntity<>(step, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/steps/test")
     public ResponseEntity<Step> testStep() {
-        Step step = Step.builder().title("testStep").build();
+        Step step = new Step("testStep", null, 1);
         System.out.println(step);
+        stepRepository.save(step);
+        System.out.println("Step added to the database. Check it!");
 
-        if (step != null) {
-            return new ResponseEntity<>(step, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(step, HttpStatus.OK);
     }
 
     @GetMapping("/steps/create")

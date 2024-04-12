@@ -7,9 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+
 @Entity
 @Table(name = "steps")
 public class Step {
@@ -27,8 +25,16 @@ public class Step {
     @Column(name="deadline", nullable = false)
     private int deadline; // type might be changed
 
+    public Step() { }
+
+    public Step(String title, String description, int deadline) {
+        this.title = title;
+        this.description = description;
+        this.deadline = deadline;
+    }
+
     // relationship with processes
-    @ManyToMany(mappedBy = "steps")
-    private List<Process> processes;
+    /* @ManyToMany(mappedBy = "steps")
+    private List<Process> processes;*/
 
 }
