@@ -36,5 +36,4 @@ public class Step {
     // relationship with processes
     /* @ManyToMany(mappedBy = "steps")
     private List<Process> processes;*/
-
 }

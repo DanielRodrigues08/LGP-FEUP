@@ -1,6 +1,5 @@
 package com.lifecycle.backend.controller;
 
-import com.lifecycle.backend.model.Process;
 import com.lifecycle.backend.model.Step;
 import com.lifecycle.backend.repository.StepRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,17 +64,33 @@ public class StepController {
 
     @PostMapping("/steps/create")
     public ResponseEntity<Step> createStep(@RequestBody Step step) {
-        return null;
+        stepRepository.save(step);
+        return new ResponseEntity<>(step, HttpStatus.OK);
     }
 
-    @PutMapping("/steps/{id}")
+    @PutMapping("/steps/update/{id}")
     public ResponseEntity<Step> updateStep(@PathVariable("id") long id, @RequestBody Step step) {
-        return null;
-    }
+        Optional<Step> stepToChange = stepRepository.findById(id);
 
-    @DeleteMapping("/steps/{id}")
-    public ResponseEntity<HttpStatus> deleteStep(@PathVariable("id") long id) {
-        return null;
+        if (stepToChange.isPresent()) {
+            Step _step = stepToChange.get();
+            _step.setTitle(step.getTitle());
+            if (!_step.getDescription().isEmpty()) _step.setDescription(step.getDescription());
+            return new ResponseEntity<>(stepRepository.save(_step), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+}
+
+    @DeleteMapping("/steps/delete/{id}")
+    public ResponseEntity<HttpStatus> deleteTutorial(@PathVariable("id") long id) {
+        try {
+            stepRepository.deleteById(id);
+            System.out.println("deleted?");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
