@@ -14,61 +14,54 @@ import java.util.Optional;
 // @CrossOrigin(origins = "http://localhost:5173")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/steps")
 public class StepController {
 
     @Autowired
     StepRepository stepRepository;
 
-    @GetMapping("/steps")
+    @GetMapping("")
     public ResponseEntity<List<Step>> getAllSteps(@RequestParam(required = false) String title) {
         try {
-            List<Step> processes = new ArrayList<Step>();
+            List<Step> steps = new ArrayList<>();
 
             if (title == null)
-                processes.addAll(stepRepository.findAll());
+                steps.addAll(stepRepository.findAll());
             else
-                processes.addAll(stepRepository.findByTitle(title));
+                steps.addAll(stepRepository.findByTitle(title));
 
-            if (processes.isEmpty()) {
+            if (steps.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
 
-            return new ResponseEntity<>(processes, HttpStatus.OK);
+            return new ResponseEntity<>(steps, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @GetMapping("/steps/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Step> getStepById(@PathVariable("id") long id) {
         Optional<Step> stepData = stepRepository.findById(id);
 
         return stepData.map(step -> new ResponseEntity<>(step, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/steps/test")
-    public ResponseEntity<Step> testStep() {
-        Step step = new Step("testStep", null, 1);
-        System.out.println(step);
-        stepRepository.save(step);
-        System.out.println("Step added to the database. Check it!");
-
-        return new ResponseEntity<>(step, HttpStatus.OK);
-    }
-
-    @GetMapping("/steps/create")
+    @GetMapping("/create")
     public ResponseEntity<Step> getStepCreationForm() {
         return null;
     }
 
-    @PostMapping("/steps/create")
+    /* ---- STEP CRUD ---- */
+
+    // Step Creation
+    @PostMapping("/create")
     public ResponseEntity<Step> createStep(@RequestBody Step step) {
         stepRepository.save(step);
         return new ResponseEntity<>(step, HttpStatus.OK);
     }
 
-    @PutMapping("/steps/update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Step> updateStep(@PathVariable("id") long id, @RequestBody Step step) {
         Optional<Step> stepToChange = stepRepository.findById(id);
 
@@ -82,7 +75,7 @@ public class StepController {
         }
 }
 
-    @DeleteMapping("/steps/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<HttpStatus> deleteTutorial(@PathVariable("id") long id) {
         try {
             stepRepository.deleteById(id);

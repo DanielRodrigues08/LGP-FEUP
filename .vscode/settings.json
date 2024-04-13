@@ -9,10 +9,10 @@
             "server": "localhost",
             "port": 3306,
             "driver": "MySQL",
-            "name": "lifecycle-mysql",
             "database": "processdb",
+            "password": "123456",
             "username": "root",
-            "password": "123456"
+            "name": "lifecycle-mysql"
         }
     ]
 }
