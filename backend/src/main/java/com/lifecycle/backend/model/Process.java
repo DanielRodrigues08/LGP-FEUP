@@ -3,6 +3,7 @@ package com.lifecycle.backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -23,20 +24,24 @@ public class Process {
     @Column(name = "description") // *nullable = true* is redundant
     private String description;
 
+    /*
+    regarding some class relationships:
+    https://jakarta.ee/specifications/persistence/2.2/apidocs/javax/persistence/onetomany
+    -> there is no CascadeType option because we do not want steps
+    -> to be deleted from the Steps table when a Process is deleted.
+    */
+    @ManyToMany()
+    @JoinTable(name = "processes_steps",
+            joinColumns = @JoinColumn(name = "process_id"),
+            inverseJoinColumns = @JoinColumn(name = "step_id"))
+    private List<Step> steps;
+
     public Process() { }
 
     public Process(String title, String description) {
         this.title = title;
         this.description = description;
+        // this.steps = new ArrayList<>();
     }
 
-    /*
-    regarding some class relationships:
-    https://jakarta.ee/specifications/persistence/2.2/apidocs/javax/persistence/onetomany
-    */
-    /* @ManyToMany
-    @JoinTable(name = "steps",
-            joinColumns = @JoinColumn(name = "process_id"),
-            inverseJoinColumns = @JoinColumn(name = "step_id"))
-    private List<Step> steps;*/
 }

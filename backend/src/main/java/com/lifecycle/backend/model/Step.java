@@ -3,6 +3,7 @@ package com.lifecycle.backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -25,6 +26,9 @@ public class Step {
     @Column(name="deadline", nullable = false)
     private int deadline; // type might be changed
 
+    // relationship with 'processes' is a unidirectional ManyToMany with 'processes' as the owner
+    // https://www.baeldung.com/hibernate-many-to-many
+
     public Step() { }
 
     public Step(String title, String description, int deadline) {
@@ -32,8 +36,4 @@ public class Step {
         this.description = description;
         this.deadline = deadline;
     }
-
-    // relationship with processes
-    /* @ManyToMany(mappedBy = "steps")
-    private List<Process> processes;*/
 }
