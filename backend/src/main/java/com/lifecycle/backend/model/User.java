@@ -10,7 +10,8 @@ import jakarta.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class User {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,14 +24,11 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
-    private UserRole role;
-
-    public User(String username, String password, UserRole role) {
+    // Constructor for User class
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.role = role;
     }
 }
+
 

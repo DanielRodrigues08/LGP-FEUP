@@ -1,7 +1,6 @@
 package com.lifecycle.backend.controller;
 
 import com.lifecycle.backend.model.User;
-import com.lifecycle.backend.model.UserRole;
 import com.lifecycle.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,17 +30,6 @@ public class UserController {
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         Optional<User> user = userRepository.findById(id);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    // Test endpoint to create and save a dummy user to the database
-    @GetMapping("/test")
-    public ResponseEntity<User> testUser() {
-        User user = new User("testUser", "password123", UserRole.ONBOARDEE);
-        System.out.println(user);
-        userRepository.save(user);
-        System.out.println("User added to the database. Check it!");
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     // POST create user
