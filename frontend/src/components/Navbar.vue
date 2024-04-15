@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import { RouterLink } from 'vue-router'
-import NextPhaseIcon from './icons/NextPhaseIcon.vue'
+import LifecycleIcon from './icons/LifecycleIcon.vue'
 import NavbarList from './NavbarList.vue'
 import NavbarProfile from './NavbarProfile.vue'
 </script>
@@ -13,11 +13,7 @@ import NavbarProfile from './NavbarProfile.vue'
       <nav>
         <RouterLink to="/">
           <div class="navbar-menu">
-            <NextPhaseIcon class="ml-2 logo"/>
-            <div class="logo-text">
-              <span class="pl-2 font-bold">LIFE</span>
-              <span>CYCLE</span>
-            </div>
+            <LifecycleIcon class="ml-2 logo"/>
           </div>
         </RouterLink>
       </nav>
@@ -44,15 +40,9 @@ import NavbarProfile from './NavbarProfile.vue'
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.5);
   }
 
-  .logo-text {
-    color: #033A65;
-    font-size: calc(0.4 * var(--navbar-height));
-    /* TODO: add appropriate font for the logo
-    font-family: "P22 Speyside W01SC SemiBold SC";  */
-  }
-
   .logo {
-    width: calc(0.7 * var(--navbar-height));
+    display: flex;
+    max-height: calc(0.7 * var(--navbar-height));
     aspect-ratio: 1 / 1;
   }
 </style>
