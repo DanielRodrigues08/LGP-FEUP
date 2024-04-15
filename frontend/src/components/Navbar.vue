@@ -2,14 +2,14 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 import LifecycleIcon from './icons/LifecycleIcon.vue'
-import NavbarList from './NavbarList.vue'
+import Sidebar from './Sidebar.vue'
 import NavbarProfile from './NavbarProfile.vue'
 </script>
 
 <template>
   <div class="navbar">
     <div class="navbar-menu">
-      <NavbarList/>
+      <Sidebar/>
       <nav>
         <RouterLink to="/">
           <div class="navbar-menu">
