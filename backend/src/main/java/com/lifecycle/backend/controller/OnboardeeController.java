@@ -1,9 +1,7 @@
 package com.lifecycle.backend.controller;
 
 import com.lifecycle.backend.model.Onboardee;
-import com.lifecycle.backend.model.User;
 import com.lifecycle.backend.repository.OnboardeeRepository;
-import com.lifecycle.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
