@@ -35,7 +35,7 @@ public class OnboardeeController {
     // Test endpoint to create and save a dummy user to the database
     @GetMapping("/test/onboardee")
     public ResponseEntity<Onboardee> testOnboardee() {
-        Onboardee onboardee = new Onboardee("testOnboardee", "password123");
+        Onboardee onboardee = new Onboardee("testOnboardee", "password123", "onboardeeName", "999888666", "onboardee@gmail.com");
         System.out.println(onboardee);
         onboardeeRepository.save(onboardee);
         System.out.println("Onboardee added to the database. Check it!");

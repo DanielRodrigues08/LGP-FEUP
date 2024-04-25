@@ -36,7 +36,7 @@ public class HRMemberController {
     // Test endpoint to create and save a dummy user to the database
     @GetMapping("/test/hrmember")
     public ResponseEntity<HRMember> testHRMember() {
-        HRMember hrMember = new HRMember("testHRMember", "password123", HRMemberRole.ADMIN);
+        HRMember hrMember = new HRMember("testHRMember", "password123", "hrName", "999888777", "hr@gmail.com", HRMemberRole.ADMIN);
         System.out.println(hrMember);
         hrmemberRepository.save(hrMember);
         System.out.println("HRMember added to the database. Check it!");

@@ -12,7 +12,8 @@ import jakarta.persistence.*;
 public class Onboardee extends User {
 
     // Constructor for Onboardee class
-    public Onboardee(String username, String password) {
-        super(username, password);
+    public Onboardee(String username, String password, String name, String phoneNumber, String email) {
+        super(username, password, name, phoneNumber, email);
     }
 }
+
