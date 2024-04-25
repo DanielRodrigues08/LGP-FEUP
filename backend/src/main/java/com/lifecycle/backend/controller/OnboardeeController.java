@@ -1,9 +1,7 @@
 package com.lifecycle.backend.controller;
 
 import com.lifecycle.backend.model.Onboardee;
-import com.lifecycle.backend.model.User;
 import com.lifecycle.backend.repository.OnboardeeRepository;
-import com.lifecycle.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +36,7 @@ public class OnboardeeController {
     // Test endpoint to create and save a dummy user to the database
     @GetMapping("/test/onboardee")
     public ResponseEntity<Onboardee> testOnboardee() {
-        Onboardee onboardee = new Onboardee("testOnboardee", "password123");
+        Onboardee onboardee = new Onboardee("testOnboardee", "password123", "onboardeeName", "999888666", "onboardee@gmail.com");
         System.out.println(onboardee);
         onboardeeRepository.save(onboardee);
         System.out.println("Onboardee added to the database. Check it!");
