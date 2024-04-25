@@ -12,6 +12,8 @@ import Menu from 'primevue/menu';
 import "primeflex/themes/primeone-light.css"
 import "primevue/resources/themes/aura-light-blue/theme.css"
 
+import 'primevue/resources/primevue.min.css';
+
 import App from './App.vue'
 import router from './router'
 

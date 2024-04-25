@@ -23,6 +23,7 @@ public class OnboardeeController {
     // GET all onboardees
     @GetMapping
     public ResponseEntity<List<Onboardee>> getAllOnboardees() {
+        System.out.println("oiii");
         List<Onboardee> onboardees = onboardeeRepository.findAll();
         return ResponseEntity.ok(onboardees);
     }
