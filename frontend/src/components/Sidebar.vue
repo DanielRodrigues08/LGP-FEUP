@@ -18,8 +18,8 @@ const boards = ref([
         route: "/dashboard2"
     },
     {
-        name: "Dashboard 3",
-        route: "/dashboard3"
+        name: "Onboardees",
+        route: "/onboardees"
     }
 ])
 </script>
