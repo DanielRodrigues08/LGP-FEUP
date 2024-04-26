@@ -21,11 +21,16 @@ public class OnboardeeController {
     // GET all onboardees
     @GetMapping
     public ResponseEntity<List<Onboardee>> getAllOnboardees() {
-        System.out.println("oiii");
         List<Onboardee> onboardees = onboardeeRepository.findAll();
         return ResponseEntity.ok(onboardees);
     }
-
+    // POST create onboardee
+    @PostMapping
+    public ResponseEntity<Onboardee> createOnboardee(@RequestBody Onboardee onboardee) {
+        Onboardee savedOnboardee = onboardeeRepository.save(onboardee);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedOnboardee);
+    }
+    
     // GET onboardee by ID
     @GetMapping("/{id}")
     public ResponseEntity<Onboardee> getOnboardeeById(@PathVariable Long id) {
@@ -42,13 +47,6 @@ public class OnboardeeController {
         System.out.println("Onboardee added to the database. Check it!");
 
         return new ResponseEntity<>(onboardee, HttpStatus.OK);
-    }
-
-    // POST create onboardee
-    @PostMapping
-    public ResponseEntity<Onboardee> createOnboardee(@RequestBody Onboardee onboardee) {
-        Onboardee savedOnboardee = onboardeeRepository.save(onboardee);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedOnboardee);
     }
 
     // PUT update onboardee

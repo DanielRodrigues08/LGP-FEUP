@@ -18,7 +18,7 @@ public abstract class User {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", nullable = false)
     private String username;
 
     @Column(name = "password", nullable = false)
@@ -42,5 +42,3 @@ public abstract class User {
         this.email = email;
     }
 }
-
-

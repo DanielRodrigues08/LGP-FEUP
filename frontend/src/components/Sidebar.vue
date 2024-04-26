@@ -14,12 +14,12 @@ const boards = ref([
         route: "/dashboard1"
     },
     {
-        name: "Onboardees",
-        route: "/onboardees"
+        name: "Dashboard 2",
+        route: "/dashboard2"
     },
     {
-        name: "Dashboard 3",
-        route: "/dashboard3"
+        name: "Onboardees",
+        route: "/onboardees"
     }
 ])
 </script>

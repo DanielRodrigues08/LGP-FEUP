@@ -30,6 +30,7 @@
   <script>
   import Button from 'primevue/button';
   import InputText from 'primevue/inputtext';  
+  import axios from 'axios';
   
   export default {
     data() {
@@ -40,8 +41,22 @@
       };
     },
     methods: {
-      handleSubmit() {
-        // Handle form submission here
+      async handleSubmit() {
+        const requestData = {
+          username: "username",
+          password: "password",
+          name: this.name,
+          phoneNumber: this.phone,
+          email: this.email
+        };
+
+      await axios.post('http://localhost:8081/api/onboardees', requestData)
+        .then(response => {
+          console.log('Onboardee added successfully');
+        })
+        .catch(error => {
+          console.error('Error adding Onboardee:', error);
+        });
       },
       goBack() {
         this.$router.go(-1);
