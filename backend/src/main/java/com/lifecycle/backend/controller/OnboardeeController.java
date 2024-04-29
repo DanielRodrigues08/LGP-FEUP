@@ -30,7 +30,7 @@ public class OnboardeeController {
         Onboardee savedOnboardee = onboardeeRepository.save(onboardee);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedOnboardee);
     }
-    
+
     // GET onboardee by ID
     @GetMapping("/{id}")
     public ResponseEntity<Onboardee> getOnboardeeById(@PathVariable Long id) {

@@ -1,9 +1,25 @@
 <!-- eslint-disable vue/multi-word-component-names -->
-<script setup>
+<script>
+import ToggleButton from 'primevue/togglebutton';
 import { RouterLink } from 'vue-router'
 import LifecycleIcon from './icons/LifecycleIcon.vue'
 import Sidebar from './Sidebar.vue'
 import NavbarProfile from './NavbarProfile.vue'
+
+export default {
+  components: {
+    ToggleButton,
+    RouterLink,
+    LifecycleIcon,
+    Sidebar,
+    NavbarProfile
+  },
+  data() {
+    return {
+      checked: false
+    };
+  }
+};
 </script>
 
 <template>
@@ -17,6 +33,10 @@ import NavbarProfile from './NavbarProfile.vue'
           </div>
         </RouterLink>
       </nav>
+    </div>
+    <div class="card flex justify-content-center">
+      <ToggleButton v-model="checked" onLabel="Locked" offLabel="Unlocked" onIcon="pi pi-lock" 
+        offIcon="pi pi-lock-open" class="w-9rem" aria-label="Do you confirm"  />
     </div>
     <NavbarProfile/>
   </div>
