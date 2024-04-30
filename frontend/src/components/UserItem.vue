@@ -28,7 +28,7 @@ export default {
   methods: {
     fetchUser(userId) {
       // Make an API call to retrieve user information based on user ID
-      axios.get(`/api/users/${userId}`)
+      axios.get(`/users/${userId}`)
           .then(response => {
             this.user = response.data;
           })

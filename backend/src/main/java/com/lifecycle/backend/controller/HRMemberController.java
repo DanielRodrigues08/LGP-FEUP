@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/hrmembers")
+@RequestMapping("/hrmembers")
 public class HRMemberController {
 
     @Autowired
@@ -33,7 +33,49 @@ public class HRMemberController {
         return hrMember.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Test endpoint to create and save a dummy user to the database
+    // Mark HR member attendance
+    @PostMapping("/{id}/attendance/mark")
+    public ResponseEntity<Void> markAttendance(@PathVariable Long id) {
+        Optional<HRMember> hrMemberOptional = hrmemberRepository.findById(id);
+        if (hrMemberOptional.isPresent()) {
+            HRMember hrMember = hrMemberOptional.get();
+            hrMember.markAttendance(); // Mark attendance
+            hrmemberRepository.save(hrMember); // Save updated HR member
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Mark HR member leave
+    @PostMapping("/{id}/leave/mark")
+    public ResponseEntity<Void> markLeave(@PathVariable Long id) {
+        Optional<HRMember> hrMemberOptional = hrmemberRepository.findById(id);
+        if (hrMemberOptional.isPresent()) {
+            HRMember hrMember = hrMemberOptional.get();
+            hrMember.markLeave(); // Mark leave
+            hrmemberRepository.save(hrMember); // Save updated HR member
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Reset HR member attendance
+    @PostMapping("/{id}/attendance/reset")
+    public ResponseEntity<Void> resetAttendance(@PathVariable Long id) {
+        Optional<HRMember> hrMemberOptional = hrmemberRepository.findById(id);
+        if (hrMemberOptional.isPresent()) {
+            HRMember hrMember = hrMemberOptional.get();
+            hrMember.resetAttendance(); // Reset attendance
+            hrmemberRepository.save(hrMember); // Save updated HR member
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Test endpoint to create and save a dummy HR member to the database
     @GetMapping("/test/hrmember")
     public ResponseEntity<HRMember> testHRMember() {
         HRMember hrMember = new HRMember("testHRMember", "password123", "hrName", "999888777", "hr@gmail.com", HRMemberRole.ADMIN);
