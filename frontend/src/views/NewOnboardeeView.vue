@@ -43,16 +43,16 @@
     methods: {
       async handleSubmit() {
         const requestData = {
-          username: "username",
+          username: this.name, //TODO: ask if make sense to have usarname or not
           password: "password",
           name: this.name,
           phoneNumber: this.phone,
           email: this.email
         };
 
-      await axios.post('http://localhost:8081/api/onboardees', requestData)
+      await axios.post('http://localhost:8081/onboardees', requestData)
         .then(response => {
-          console.log('Onboardee added successfully');
+          this.$router.push({ name: 'onboardees' });
         })
         .catch(error => {
           console.error('Error adding Onboardee:', error);

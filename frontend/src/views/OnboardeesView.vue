@@ -51,7 +51,7 @@
     methods: {
       async fetchOnboardees() {
         try {
-          const response = await axios.get('http://localhost:8081/api/onboardees');
+          const response = await axios.get('http://localhost:8081/onboardees');
           this.onboardees = response.data;
         } catch (error) {
           console.error('Error fetching onboardees:', error);

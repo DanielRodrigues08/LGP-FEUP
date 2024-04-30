@@ -1,3 +1,4 @@
+DELETE FROM hr_members;
 DELETE FROM onboardees;
 DELETE FROM users;
 
@@ -8,7 +9,7 @@ INSERT INTO users (user_id, username, password, name, phone_number, email) VALUE
 (4, 'user4', 'password4', 'Emily Brown', '+351945678901', 'emily.brown@example.com'),
 (5, 'user5', 'password5', 'William Taylor', '+351956789012', 'william.taylor@example.com');
 
-INSERT INTO onboardees (user_id) VALUES (1);
+INSERT INTO hr_members (user_id, role) VALUES (1, 'ADMIN');
 INSERT INTO onboardees (user_id) VALUES (2);
 INSERT INTO onboardees (user_id) VALUES (3);
 INSERT INTO onboardees (user_id) VALUES (4);

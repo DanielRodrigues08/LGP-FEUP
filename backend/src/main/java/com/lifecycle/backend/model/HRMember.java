@@ -17,7 +17,7 @@ public class HRMember extends User {
     private HRMemberRole role;
 
     @Column(name = "attendance")
-    private boolean attendance;
+    private Boolean attendance;
 
     // Constructor for HRMember class
     public HRMember(String username, String password, String name, String phoneNumber, String email, HRMemberRole role) {
