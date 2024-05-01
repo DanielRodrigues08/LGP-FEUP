@@ -100,7 +100,6 @@ export default {
         matchMode: 'contains',
         field: 'name'
       };
-      console.log(this.originalOnboardees)
       if (this.globalFilter.value === '') {
     this.onboardees = this.originalOnboardees;
   } else {
