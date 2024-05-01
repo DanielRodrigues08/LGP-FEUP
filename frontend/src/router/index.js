@@ -30,7 +30,8 @@ const router = createRouter({
       component: NewOnboardeeView // Use the OnboardeesView component for this route
     },
     {
-      path: '/onboardee_profile/:id',
+      path: '/onboardee_profile',
+      //path: '/onboardee_profile/:id',
       name: 'OnboardeeProfile',
       component: OnboardeeProfileView
     }
