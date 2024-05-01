@@ -13,11 +13,14 @@ import "primeflex/themes/primeone-light.css"
 import "primevue/resources/themes/aura-light-blue/theme.css"
 
 import 'primevue/resources/primevue.min.css';
+import ConfirmationService from 'primevue/confirmationservice';
 
 import App from './App.vue'
 import router from './router'
 
 const app = createApp(App)
+
+app.use(ConfirmationService);
 
 app.use(createPinia())
 app.use(router)
