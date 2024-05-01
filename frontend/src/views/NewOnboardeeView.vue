@@ -15,6 +15,18 @@
             <label for="phone">Phone Number:</label>
             <InputText id="phone" v-model="phone" required />
           </div>
+          <div class="form-group">
+            <label for="annualSalary">Annual Salary:</label>
+            <InputText id="annualSalary" v-model="annualSalary" />
+          </div>
+          <div class="form-group">
+            <label for="payrollNumber">Payroll Number:</label>
+            <InputText id="payrollNumber" v-model="payrollNumber" />
+          </div>
+          <div class="form-group">
+            <label for="startDate">Start Date:</label>
+            <InputText id="startDate" type="date" v-model="startDate" />
+          </div>
           <div class="button-container">
             <div class="go-back" @click="goBack">
               <i class="pi pi-arrow-left"></i>
@@ -73,7 +85,7 @@
   h1 {
     color: #033A65;
     font-weight: 600;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
   }
   
   .new-onboardee {
@@ -88,7 +100,7 @@
     background-color: white;
     padding: 2rem;
     border-radius: 20px;
-    height: 85%;
+    height: 92%;
     width: 30%;
     display: flex;
     flex-direction: column;
@@ -96,7 +108,7 @@
   }
   
   .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.8rem;
   }
   
   label {
