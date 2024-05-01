@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/SC16.iml" filepath="$PROJECT_DIR$/.idea/SC16.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.lifecycle.lifecycle-backend.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.lifecycle.lifecycle-backend.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/lifecycle-backend.main.iml" filepath="$PROJECT_DIR$/.idea/modules/lifecycle-backend.main.iml" />
     </modules>
   </component>
