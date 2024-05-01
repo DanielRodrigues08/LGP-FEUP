@@ -3,6 +3,8 @@ import HomeView from '../views/HomeView.vue'
 import UserView from '../views/UserView.vue'
 import OnboardeesView from '@/views/OnboardeesView.vue'
 import NewOnboardeeView from '@/views/NewOnboardeeView.vue'
+import NotFound from '@/views/NotFound.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,6 +29,11 @@ const router = createRouter({
       path: '/add-onboardee', // Define the path for the onboardees page
       name: 'add-onboardee',
       component: NewOnboardeeView // Use the OnboardeesView component for this route
+    },
+    { 
+      path: '/:pathMatch(.*)*', 
+      name: 'not-found',
+      component: NotFound 
     }
   ]
 })
