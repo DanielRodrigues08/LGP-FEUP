@@ -59,5 +59,47 @@ public class UserController {
         userRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    // Mark HR member attendance
+    @PostMapping("/{id}/attendance/mark")
+    public ResponseEntity<Void> markAttendance(@PathVariable Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.markAttendance(); // Mark attendance
+            userRepository.save(user); // Save updated HR member
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Mark HR member leave
+    @PostMapping("/{id}/leave/mark")
+    public ResponseEntity<Void> markLeave(@PathVariable Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.markLeave(); // Mark leave
+            userRepository.save(user); // Save updated HR member
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Reset HR member attendance
+    @PostMapping("/{id}/attendance/reset")
+    public ResponseEntity<Void> resetAttendance(@PathVariable Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.resetAttendance(); // Reset attendance
+            userRepository.save(user); // Save updated HR member
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
 

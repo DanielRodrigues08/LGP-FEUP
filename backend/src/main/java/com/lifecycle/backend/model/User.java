@@ -10,16 +10,15 @@ import jakarta.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-@Inheritance(strategy = InheritanceType.JOINED)
-public abstract class User {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "username", nullable = false)
-    private String username;
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
 
     @Column(name = "password", nullable = false)
     private String password;
@@ -30,15 +29,32 @@ public abstract class User {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
+    @Column(name = "permission_level")
+    private UserPermission permissionLevel;
+
+    @Column(name = "attendance")
+    private Boolean attendance;
 
     // Constructor for User class
-    public User(String username, String password, String name, String phoneNumber, String email) {
-        this.username = username;
+    public User(String email, String password, String name, String phoneNumber, UserPermission permissionLevel) {
+        this.email = email;
         this.password = password;
         this.name = name;
         this.phoneNumber = phoneNumber;
-        this.email = email;
+        this.permissionLevel = permissionLevel;
+        this.attendance = false; // Default attendance is false
+    }
+
+    // Methods to mark attendance, leave, and reset attendance
+    public void markAttendance() {
+        this.attendance = true;
+    }
+
+    public void markLeave() {
+        this.attendance = false;
+    }
+
+    public void resetAttendance() {
+        this.attendance = false;
     }
 }
