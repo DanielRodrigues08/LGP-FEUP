@@ -4,6 +4,9 @@ import UserView from '../views/UserView.vue'
 import OnboardeesView from '@/views/OnboardeesView.vue'
 import NewOnboardeeView from '@/views/NewOnboardeeView.vue'
 import Login from '@/views/Login.vue'
+import AdminArea from '@/views/AdminArea.vue'
+import NewUser from '@/views/NewUser.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,6 +36,16 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/admin-area',
+      name: 'admin-area',
+      component: AdminArea
+    },
+    {
+      path: '/add-user',
+      name: 'add-user',
+      component: NewUser
     }
   ]
 })

@@ -20,6 +20,10 @@ const boards = ref([
     {
         name: "Onboardees",
         route: "/onboardees"
+    },
+    {
+        name: "Admin area",
+        route: "/admin-area"
     }
 ])
 </script>
