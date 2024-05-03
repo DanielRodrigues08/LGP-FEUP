@@ -6,6 +6,7 @@ import NewOnboardeeView from '@/views/NewOnboardeeView.vue'
 import Login from '@/views/Login.vue'
 import AdminArea from '@/views/AdminArea.vue'
 import NewUser from '@/views/NewUser.vue'
+import NotFound from '@/views/NotFound.vue'
 
 
 const router = createRouter({
