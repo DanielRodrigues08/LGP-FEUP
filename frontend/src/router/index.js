@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import UserView from '../views/UserView.vue'
 import OnboardeesView from '@/views/OnboardeesView.vue'
 import NewOnboardeeView from '@/views/NewOnboardeeView.vue'
+import Login from '@/views/Login.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,14 +20,19 @@ const router = createRouter({
       props: true // Pass route params as props to the component
     },
     {
-      path: '/onboardees', // Define the path for the onboardees page
+      path: '/onboardees',
       name: 'onboardees',
-      component: OnboardeesView // Use the OnboardeesView component for this route
+      component: OnboardeesView
     },
     {
-      path: '/add-onboardee', // Define the path for the onboardees page
+      path: '/add-onboardee',
       name: 'add-onboardee',
-      component: NewOnboardeeView // Use the OnboardeesView component for this route
+      component: NewOnboardeeView
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
     }
   ]
 })

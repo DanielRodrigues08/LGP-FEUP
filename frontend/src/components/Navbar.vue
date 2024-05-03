@@ -4,7 +4,6 @@ import { RouterLink } from 'vue-router';
 import LifecycleIcon from './icons/LifecycleIcon.vue';
 import Sidebar from './Sidebar.vue';
 import NavbarProfile from './NavbarProfile.vue';
-import axios from 'axios';
 
 export default {
   components: {
@@ -16,22 +15,8 @@ export default {
   },
   data() {
     return {
-      checked: false
     };
   },
-  methods: {
-    async handleToggle() {
-      try {
-        if (this.checked) {
-          await axios.post('http://localhost:8081/hrmembers/1/attendance/mark') //done for user 1 for now... change when login done
-        } else {
-          await axios.post('http://localhost:8081/hrmembers/1/leave/mark')
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
-  }
 };
 </script>
 
@@ -47,8 +32,6 @@ export default {
         </RouterLink>
       </nav>
     </div>
-    <ToggleButton v-model="checked" onLabel="Present" offLabel="Not present" onIcon="pi pi-briefcase" 
-        offIcon="pi pi-ban" class="w-9rem" @change="handleToggle"/>
     <NavbarProfile/>
 
   </div>
