@@ -26,8 +26,8 @@ public class Step {
     @Column(name="deadline", nullable = false)
     private int deadline; // type might be changed
 
-    // relationship with 'processes' is a unidirectional ManyToMany with 'processes' as the owner
-    // https://www.baeldung.com/hibernate-many-to-many
+    @OneToMany(mappedBy="step", cascade = CascadeType.ALL)
+    private List<StepInProcess> processes = new ArrayList<>();
 
     public Step() { }
 

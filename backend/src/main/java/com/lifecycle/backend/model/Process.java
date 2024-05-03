@@ -30,11 +30,8 @@ public class Process {
     -> there is no CascadeType option because we do not want steps
     -> to be deleted from the Steps table when a Process is deleted.
     */
-    @ManyToMany()
-    @JoinTable(name = "processes_steps",
-            joinColumns = @JoinColumn(name = "process_id"),
-            inverseJoinColumns = @JoinColumn(name = "step_id"))
-    private List<Step> steps;
+    @OneToMany(mappedBy="process", cascade = CascadeType.ALL)
+    private List<StepInProcess> steps;
 
     public Process() { }
 
@@ -42,6 +39,13 @@ public class Process {
         this.title = title;
         this.description = description;
         // this.steps = new ArrayList<>();
+    }
+
+    public StepInProcess getStepInProcessByID(Long id) {
+        return this.steps.stream()
+                .filter(step -> id.equals(step.getStep().getStep_id()))
+                .findAny()
+                .orElse(null);
     }
 
 }
