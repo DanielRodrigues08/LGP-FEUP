@@ -1,6 +1,7 @@
 package com.lifecycle.backend.model;
 
-public enum HRMemberRole {
+public enum UserPermission {
     ADMIN,
-    HR
+    HR,
+    EMPLOYEE
 }

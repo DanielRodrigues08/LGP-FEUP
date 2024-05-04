@@ -29,7 +29,6 @@ class LifecycleBackendApplicationTests {
 	@Test
 	void stepCreation() {
 		Step step = new Step("testStep", null, 1);
-		System.out.println(step);
 		ResponseEntity<Step> response = stepController.createStep(step);
 		System.out.println("Step " + response.getBody().getStep_id() + " added to the database.");
 		System.out.println("Received HTTP status " + response.getStatusCode());
