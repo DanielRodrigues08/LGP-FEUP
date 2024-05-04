@@ -39,17 +39,6 @@ public class OnboardeeController {
         return onboardee.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Test endpoint to create and save a dummy user to the database
-    @GetMapping("/test/onboardee")
-    public ResponseEntity<Onboardee> testOnboardee() {
-        Onboardee onboardee = new Onboardee("onboardeeName", "999888666", "onboardee@gmail.com", "male", "portuguese", "90000", "101", LocalDate.of(1970, 1, 1));
-        System.out.println(onboardee);
-        onboardeeRepository.save(onboardee);
-        System.out.println("Onboardee added to the database. Check it!");
-
-        return new ResponseEntity<>(onboardee, HttpStatus.OK);
-    }
-
     // PUT update onboardee
     @PutMapping("/{id}")
     public ResponseEntity<Onboardee> updateOnboardee(@PathVariable Long id, @RequestBody Onboardee onboardee) {

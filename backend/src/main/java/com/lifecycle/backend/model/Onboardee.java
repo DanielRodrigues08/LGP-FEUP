@@ -29,6 +29,7 @@ public class Onboardee {
     private String email;
 
     // New attributes for Onboardee
+    @Enumerated(EnumType.STRING) // Add this annotation
     @Column(name = "state")
     private OnboardeeStatus state;
 
@@ -48,11 +49,11 @@ public class Onboardee {
     private LocalDate startDate;
 
     // Constructor for Onboardee class
-    public Onboardee(String name, String phoneNumber, String email, String gender, String nationality, String annualSalary, String payrollNumber, LocalDate startDate) {
+    public Onboardee(String name, String phoneNumber, String email, String gender, String nationality, String annualSalary, String payrollNumber, LocalDate startDate, OnboardeeStatus state) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.state = OnboardeeStatus.INCOMING;
+        this.state = state;
         this.gender = gender;
         this.nationality = nationality;
         this.annualSalary = annualSalary;

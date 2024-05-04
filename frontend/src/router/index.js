@@ -2,11 +2,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import UserView from '../views/UserView.vue'
 import OnboardeesView from '@/views/OnboardeesView.vue'
-import NewOnboardeeView from '@/views/NewOnboardeeView.vue'
+import NewOnboardee from '@/views/NewOnboardee.vue'
 import Login from '@/views/Login.vue'
 import AdminArea from '@/views/AdminArea.vue'
 import NewUser from '@/views/NewUser.vue'
-import NotFound from '@/views/NotFound.vue'
 
 
 const router = createRouter({
@@ -31,7 +30,7 @@ const router = createRouter({
     {
       path: '/add-onboardee',
       name: 'add-onboardee',
-      component: NewOnboardeeView
+      component: NewOnboardee
     },
     {
       path: '/login',

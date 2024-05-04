@@ -53,7 +53,6 @@
   </div>
 </template>
 
-
 <script>
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';  
@@ -82,8 +81,6 @@ export default {
   methods: {
     async handleSubmit() {
       const requestData = {
-        username: this.name, //TODO: ask if make sense to have username or not
-        password: "password",
         name: this.name,
         phoneNumber: this.phone,
         email: this.email,
@@ -108,50 +105,7 @@ export default {
   },
   components: {
     InputText,
-    Button,
-  };
-  </script>
-  
-  <style scoped>
-  h1 {
-    color: #033A65;
-    font-weight: 600;
-    margin-bottom: 1rem;
-  }
-  
-  .new-onboardee {
-    background-color: #033A65;
-    height: calc(100vh - 3.25rem);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .form-container {
-    background-color: white;
-    padding: 2rem;
-    border-radius: 20px;
-    height: 92%;
-    width: 35%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .form-group {
-    margin-bottom: 0.8rem;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #033A65;
-  }
-  
-  .go-back {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
+    Button
   }
 };
 </script>

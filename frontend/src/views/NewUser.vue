@@ -12,11 +12,11 @@
             <InputText id="email" v-model="email" required />
           </div>
           <div class="form-group">
-            <label for="role">Role:</label>
-            <select id="role" v-model="role" required>
-              <option value="read">Read</option>
-              <option value="hr_member">HR Member</option>
-              <option value="admin">Admin</option>
+            <label for="permissionLevel">Permissions:</label>
+            <select id="permissionLevel" v-model="permissionLevel" required>
+              <option value="ADMIN">Admin</option>
+              <option value="HR">HR Member</option>
+              <option value="EMPLOYEE">Employee</option>
             </select>
           </div>
           <div class="button-container">
@@ -41,7 +41,7 @@
       return {
         name: '',
         email: '',
-        role: 'read'
+        permissionLevel: 'HR'
       };
     },
     methods: {
@@ -49,7 +49,7 @@
         const requestData = {
           name: this.name,
           email: this.email,
-          role: this.role
+          permissionLevel: this.permissionLevel
         };
   
         // // Assuming you have an endpoint for handling login

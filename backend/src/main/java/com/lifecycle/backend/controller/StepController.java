@@ -80,7 +80,6 @@ public class StepController {
     public ResponseEntity<HttpStatus> deleteStep(@PathVariable("id") long id) {
         try {
             stepRepository.deleteById(id);
-            System.out.println("deleted?");
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

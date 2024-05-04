@@ -29,11 +29,9 @@ public class User {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Enumerated(EnumType.STRING) // Specify that permissionLevel is an Enum
     @Column(name = "permission_level")
     private UserPermission permissionLevel;
-
-    @Column(name = "attendance")
-    private Boolean attendance;
 
     // Constructor for User class
     public User(String email, String password, String name, String phoneNumber, UserPermission permissionLevel) {
@@ -42,19 +40,6 @@ public class User {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.permissionLevel = permissionLevel;
-        this.attendance = false; // Default attendance is false
     }
 
-    // Methods to mark attendance, leave, and reset attendance
-    public void markAttendance() {
-        this.attendance = true;
-    }
-
-    public void markLeave() {
-        this.attendance = false;
-    }
-
-    public void resetAttendance() {
-        this.attendance = false;
-    }
 }
