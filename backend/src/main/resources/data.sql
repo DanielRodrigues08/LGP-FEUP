@@ -16,15 +16,15 @@ INSERT INTO onboardees (name, phone_number, email, gender, nationality, annual_s
 
 
 INSERT INTO users (email, password, name, phone_number, permission_level) VALUES 
-('user1@example.com', 'password1', 'João Silva', '+351911111111', 'ADMIN'),
-('user2@example.com', 'password2', 'Marta Santos', '+351922222222', 'ADMIN'),
-('user3@example.com', 'password3', 'Pedro Costa', '+351933333333', 'HR'),
-('user4@example.com', 'password4', 'Sofia Oliveira', '+351944444444', 'HR'),
-('user5@example.com', 'password5', 'Rui Fonseca', '+351955555555', 'HR'),
-('user6@example.com', 'password6', 'Ana Rodrigues', '+351966666666', 'HR'),
-('user7@example.com', 'password7', 'Diogo Martins', '+351977777777', 'HR'),
-('user8@example.com', 'password8', 'Carla Silva', '+351988888888', 'HR'),
-('user9@example.com', 'password9', 'Ricardo Santos', '+351999999999', 'EMPLOYEE'),
-('user10@example.com', 'password10', 'Inês Oliveira', '+351900000000', 'EMPLOYEE');
+('user1@example.com', '$2a$12$QNmvz/MnZMpAN5eBUjMATuXFIhzV0jKiQ7dQu86tq9fihiZgaBi12', 'João Silva', '+351911111111', 'ADMIN'),
+('user2@example.com', '$2a$12$6pe.T5UbCUarKQwMyfdT/urhWhR8RkFKY87vOxdfNT1UnuTBkNOUW', 'Marta Santos', '+351922222222', 'ADMIN'),
+('user3@example.com', '$2a$12$2vdAdQRzUyopkMVbwdEzo.BVXZR4khHYLv0QL.05BAd3Q/DAnFuku', 'Pedro Costa', '+351933333333', 'HR'),
+('user4@example.com', '$2a$12$vJq2WX8Ixzqc/E5H82tlp.xyc.g7NNOV0r1H50YTCEoasHl2sQxji', 'Sofia Oliveira', '+351944444444', 'HR'),
+('user5@example.com', '$2a$12$VVqTV7LxWrem1e/1TCWaGe3JgA9pO/sClAquoIvwKmMTT1DDHcCFq', 'Rui Fonseca', '+351955555555', 'HR'),
+('user6@example.com', '$2a$12$5aKfWLyMQp5HzpGHQywE9Okh4v.Rw0kZaz9ThEqh4h9bil9vVpxP2', 'Ana Rodrigues', '+351966666666', 'HR'),
+('user7@example.com', '$2a$12$C1dOJE5ruIPhavdFkH.j9.E1z9G9HpSReoEZjtsGGko/sKVzSACui', 'Diogo Martins', '+351977777777', 'HR'),
+('user8@example.com', '$2a$12$AohktM3NXoDr8bXXLbb3w.jlO1vn.m.0QdJ7NWy2qoI4mVwJyQAte', 'Carla Silva', '+351988888888', 'HR'),
+('user9@example.com', '$2a$12$bQbwYWoxSTVTj5hP455UrOSsJCWfIJ7kRhmMl5bZLCdMulSLCT2km', 'Ricardo Santos', '+351999999999', 'EMPLOYEE'),
+('user10@example.com', '$2a$12$l3W5A31kGu23BX.d9spHk.T8nwbVNsTnk7B0y.0VxAxfTNANkhpwS', 'Inês Oliveira', '+351900000000', 'EMPLOYEE');
 
 
