@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module external.linked.project.id="lifecycle-backend:main" external.linked.project.path="$MODULE_DIR$/../../backend" external.root.project.path="$MODULE_DIR$/../../backend" external.system.id="GRADLE" external.system.module.group="com.lifecycle" external.system.module.type="sourceSet" external.system.module.version="0.0.1-SNAPSHOT" type="JAVA_MODULE" version="4">
+<<<<<<< HEAD
+=======
+  <component name="FacetManager">
+    <facet type="web" name="Web">
+      <configuration>
+        <webroots />
+        <sourceRoots>
+          <root url="file://$MODULE_DIR$/../../backend/src/main/java" />
+          <root url="file://$MODULE_DIR$/../../backend/src/main/resources" />
+          <root url="file://$MODULE_DIR$/../../backend/build/generated/sources/annotationProcessor/java/main" />
+        </sourceRoots>
+      </configuration>
+    </facet>
+    <facet type="jpa" name="JPA">
+      <configuration>
+        <setting name="validation-enabled" value="true" />
+        <setting name="provider-name" value="Hibernate" />
+        <datasource-mapping>
+          <factory-entry name="entityManagerFactory" />
+        </datasource-mapping>
+        <naming-strategy-map />
+      </configuration>
+    </facet>
+    <facet type="Spring" name="Spring">
+      <configuration />
+    </facet>
+  </component>
+>>>>>>> a6119eb9b8fe8014e45c58e867ca12d3695a1b58
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_17">
     <output url="file://$MODULE_DIR$/../../backend/build/classes/java/main" />
     <exclude-output />

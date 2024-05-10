@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,17 +38,6 @@ public class OnboardeeController {
         System.out.println("aquiiiiii");
         Optional<Onboardee> onboardee = onboardeeRepository.findById(id);
         return onboardee.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    // Test endpoint to create and save a dummy user to the database
-    @GetMapping("/test/onboardee")
-    public ResponseEntity<Onboardee> testOnboardee() {
-        Onboardee onboardee = new Onboardee("testOnboardee", "password123", "onboardeeName", "999888666", "onboardee@gmail.com");
-        System.out.println(onboardee);
-        onboardeeRepository.save(onboardee);
-        System.out.println("Onboardee added to the database. Check it!");
-
-        return new ResponseEntity<>(onboardee, HttpStatus.OK);
     }
 
     // PUT update onboardee

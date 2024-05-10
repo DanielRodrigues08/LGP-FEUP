@@ -77,7 +77,6 @@ public class ProcessController {
     public ResponseEntity<HttpStatus> deleteProcess(@PathVariable("id") long id) {
         try {
             processRepository.deleteById(id);
-            System.out.println("deleted?");
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
