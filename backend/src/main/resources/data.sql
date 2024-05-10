@@ -1,5 +1,5 @@
-DELETE FROM onboardees;
-DELETE FROM users;
+--DELETE FROM onboardees;
+--DELETE FROM users;
 
 
 INSERT INTO onboardees (name, phone_number, email, gender, nationality, annual_salary, payroll_number, start_date, state) VALUES

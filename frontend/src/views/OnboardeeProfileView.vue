@@ -3,20 +3,28 @@
 
         <div v-if="onboardee" class="parent">
             <div class="div1">
-              <div class="OnboardName">
-                <h2>{{ onboardee.name }}</h2>
-                <p>Onboardee</p>
-              </div>
-              
+                <div class="OnboardName">
+                    <h2>{{ onboardee.name }}</h2>
+                    <p>Onboardee</p>
+                </div>
+
             </div>
-            <div class="PersonalInformation">  
+            <div class="PersonalInformation">
                 <h2>Personal Information</h2>
                 <p>Email: {{ onboardee.email }}</p>
                 <p>Phone: {{ onboardee.phoneNumber }}</p>
-
+                <p>Gender: {{ onboardee.gender }}</p>
+                <p>Country Born: {{ onboardee.nationality }}</p>
+                <p>Annual Salary: {{ onboardee.annualSalary }}</p>
+                <p>Payroll Number: {{ onboardee.payrollNumber }}</p>
+                <p>Start Date: {{ onboardee.startDate }}</p>
+                
+                <p>Status: 
+                    <span :class="onboardee.state">{{ onboardee.state }}</span>
+                </p>
 
             </div>
-            <div class="div3">  </div>
+            <div class="div3"> </div>
         </div>
 
         <div v-else>
@@ -26,20 +34,20 @@
 </template>
 
 <script>
-    import axios from 'axios';
+import axios from 'axios';
 
-    export default {
-        data() {
-            return {
-                onboardee: null
-            };
-        },
-        mounted() {
+export default {
+    data() {
+        return {
+            onboardee: null
+        };
+    },
+    mounted() {
         const onboardeeId = this.$route.params.id;
         this.fetchOnboardeeById(onboardeeId);
-        },
-        methods: {    
-            async fetchOnboardeeById(onboardeeId) {
+    },
+    methods: {
+        async fetchOnboardeeById(onboardeeId) {
             try {
                 console.log('onboardeeId:', onboardeeId)
                 const response = await axios.get(`http://localhost:8081/onboardees/${onboardeeId}`);
@@ -47,10 +55,10 @@
             } catch (error) {
                 console.error('Error fetching user:', error);
             }
-    
-           }
-     }
-    };
+
+        }
+    }
+};
 </script>
 
 <style scoped>
@@ -71,8 +79,8 @@
 }
 
 .div1 img {
-    width:14em;
-    height:14em;
+    width: 14em;
+    height: 14em;
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.5);
 }
 
@@ -81,9 +89,9 @@
     color: white;
     align-self: center;
     font-size: 1.5em;
-    padding:1em;
+    padding: 1em;
 
-    
+
 }
 
 .OnboardName h2 {
@@ -94,9 +102,9 @@
 
 .PersonalInformation {
     grid-area: 2 / 1 / 6 / 2;
-    background-color:#F9F9F9;
+    background-color: #F9F9F9;
     /*background-color: #F9F9F9;*/
-    height:100%;
+    height: 100%;
 }
 
 .PersonalInformation h2 {
@@ -104,18 +112,32 @@
     font-weight: bold;
     margin-top: 2em;
     margin-bottom: 1em;
-    padding:1em;
+    padding: 1em;
     text-align: center;
 }
 
 .PersonalInformation p {
     font-size: 1em;
-    margin-bottom: 1em;
-    padding:1em;
+    padding: 1em;
     padding-left: 2em;
     padding-right: 2em;
 }
 
+.INCOMING {
+    color: green;
+}
+
+.ONGOING {
+    color: #1976D2;
+}
+
+.COMPLETED {
+    color: purple;
+}
+
+.ABORTED {
+    color: #C81E1E;
+}
 
 .div3 {
     grid-area: 2 / 2 / 3 / 3;
