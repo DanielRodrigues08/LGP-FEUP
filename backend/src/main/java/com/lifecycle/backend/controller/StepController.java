@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 // @CrossOrigin(origins = "http://localhost:5173")
@@ -47,11 +48,6 @@ public class StepController {
         return stepData.map(step -> new ResponseEntity<>(step, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/create")
-    public ResponseEntity<Step> getStepCreationForm() {
-        return null;
-    }
-
     /* ---- STEP CRUD ---- */
 
     // Step Creation
@@ -61,26 +57,31 @@ public class StepController {
         return new ResponseEntity<>(step, HttpStatus.OK);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Step> updateStep(@PathVariable("id") long id, @RequestBody Step step) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<Step> updateStep(@PathVariable("id") long id, @RequestBody Map<String, Object> patch) {
         Optional<Step> stepToChange = stepRepository.findById(id);
 
-        if (stepToChange.isPresent()) {
-            Step _step = stepToChange.get();
-            _step.setTitle(step.getTitle());
-            if (!_step.getDescription().isEmpty()) _step.setDescription(step.getDescription());
-            return new ResponseEntity<>(stepRepository.save(_step), HttpStatus.OK);
-        } else {
+        if (stepToChange.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-}
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<HttpStatus> deleteTutorial(@PathVariable("id") long id) {
+        try {
+            Step _step = stepToChange.get();
+            if (patch.containsKey("title")) _step.setTitle((String) patch.get("title"));
+            if (patch.containsKey("description")) _step.setDescription((String) patch.get("description"));
+            if (patch.containsKey("deadline")) _step.setDeadline((int) patch.get("deadline"));
+            return new ResponseEntity<>(stepRepository.save(_step), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteStep(@PathVariable("id") long id) {
         try {
             stepRepository.deleteById(id);
             System.out.println("deleted?");
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

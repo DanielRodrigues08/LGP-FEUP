@@ -60,4 +60,3 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 }
-

@@ -1,11 +1,12 @@
 <template>
     <main>
+        <!--check if onboardee exists before loading html-->
         <div class="parent">
             <div class="div1">
               <img src="https://www.w3schools.com/w3images/lights.jpg" alt="Lights">
               <div class="OnboardName">
                 <h2>Sofia Martins</h2>
-                <!---<h2>{{ onboardee.name }}</h2>-->
+                <h2>{{ onboardee ? onboardee.name : 'Loading...' }}</h2>
                 <p>Onboardee</p>
               </div>
               
@@ -42,18 +43,18 @@
         const onboardeeId = this.$route.params.id;
         this.fetchOnboardeeById(onboardeeId);
         },
-        methods: {
-            fetchOnboardeeById(onboardeeId) {
-            // Make an API call to retrieve user information based on user ID
-            axios.get(`/onboardees/${onboardeeId}`)
-                .then(response => {
-                    this.onboardeeId = response.data;
-                })
-                .catch(error => {
-                    console.error('Error fetching user:', error);
-                });
-    }
-  }
+        methods: {    
+            async fetchOnboardeeById(onboardeeId) {
+            try {
+                console.log('onboardeeId:', onboardeeId)
+                const response = await axios.get(`http://localhost:8081/onboardees/${onboardeeId}`);
+                this.onboardee = response.data;
+            } catch (error) {
+                console.error('Error fetching user:', error);
+            }
+    
+           }
+     }
     };
 </script>
 

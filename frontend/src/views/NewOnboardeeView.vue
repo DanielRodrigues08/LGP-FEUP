@@ -101,7 +101,7 @@
     padding: 2rem;
     border-radius: 20px;
     height: 92%;
-    width: 30%;
+    width: 35%;
     display: flex;
     flex-direction: column;
     align-items: center;

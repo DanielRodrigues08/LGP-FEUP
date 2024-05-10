@@ -2,6 +2,7 @@ package com.lifecycle.backend.controller;
 
 import com.lifecycle.backend.model.Process;
 import com.lifecycle.backend.model.Step;
+import com.lifecycle.backend.model.StepInProcess;
 import com.lifecycle.backend.repository.ProcessRepository;
 
 import com.lifecycle.backend.repository.StepRepository;
@@ -10,9 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 // @CrossOrigin(origins = "http://localhost:5173")
 @CrossOrigin(origins = "*")
@@ -51,16 +50,11 @@ public class ProcessController {
 
         return processData.map(process -> new ResponseEntity<>(process, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    
-    @GetMapping("/create")
-    public ResponseEntity<Process> getProcessCreationForm() {
-        return null;
-    }
 
     /* ---- PROCESS CRUD ---- */
 
     // Process Creation
-    @PostMapping("/create")
+    /*@PostMapping("/create")
     public ResponseEntity<Process> createProcess(@RequestBody Process process, @RequestBody List<Long> step_ids) {
 
         List<Step> stepList = new ArrayList<>();
@@ -71,22 +65,101 @@ public class ProcessController {
         process.setSteps(stepList);
         processRepository.save(process);
         return new ResponseEntity<>(process, HttpStatus.OK);
-    }
-
-    /*@PostMapping("/processes/create")
-    public ResponseEntity<Process> createProcess(@RequestBody Process process, @RequestBody List<Step> steps) {
-        processRepository.save(process);
-        return new ResponseEntity<>(process, HttpStatus.OK);
     }*/
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Process> updateProcess(@PathVariable("id") long id, @RequestBody Process step) {
-        return null;
+    @PostMapping("/create")
+    public ResponseEntity<Process> createProcess(@RequestBody Process process) {
+        processRepository.save(process);
+        return new ResponseEntity<>(process, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteProcess(@PathVariable("id") long id) {
-        return null;
+        try {
+            processRepository.deleteById(id);
+            System.out.println("deleted?");
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<Process> updateProcess(@PathVariable("id") long id, @RequestBody Map<String, Object> patch) {
+        Optional<Process> processToChange = processRepository.findById(id);
+
+        if (processToChange.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        try {
+            Process _process = processToChange.get();
+            if (patch.containsKey("title")) _process.setTitle((String) patch.get("title"));
+            if (patch.containsKey("description")) _process.setDescription((String) patch.get("description"));
+            return new ResponseEntity<>(processRepository.save(_process), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/{id}/steps")
+    public ResponseEntity<Process> updateStepsInProcess(@PathVariable("id") long id, @RequestBody List<Long> stepIds) {
+        Optional<Process> process = processRepository.findById(id);
+        if (process.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Process _process = process.get();
+
+        /* Set<Long> stepIdsSet = new HashSet<>(stepIds);
+        List<Long> uniqueStepIds = new ArrayList<>(stepIdsSet); // get new step list to update */
+
+        // update process's step list with incoming step list
+        for (int i = 0; i < stepIds.size(); i++) {
+            Long currentStepId = stepIds.get(i);
+            Optional<Step> step = stepRepository.findById(currentStepId);
+            if (step.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            Step currentStep = step.get(); // get current step from database
+
+            // if incoming step is already in process, update it to new position
+            StepInProcess stepToUpdate = _process.getStepInProcessByID(currentStepId);
+            if (stepToUpdate != null) {
+                System.out.println("Found pre-existing step in process step list: Step ID nº" + currentStepId +
+                        ", previous position: " + stepToUpdate.getPosition()
+                        + ", new position: " + i);
+                stepToUpdate.setPosition(i); // update cascades
+            }
+            // if not, add new step to the process's list
+            else {
+                StepInProcess stepToAdd = new StepInProcess(currentStep, _process, i);
+                _process.getSteps().add(stepToAdd);
+            }
+        }
+
+        processRepository.save(_process);
+        return new ResponseEntity<>(_process, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}/steps")
+    public ResponseEntity<Process> removeStepFromProcess(@PathVariable("id") long id, @RequestBody List<Long> stepIds) {
+        Optional<Process> process = processRepository.findById(id);
+        if (process.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Set<Long> stepIdsSet = new HashSet<>(stepIds);
+        List<Long> uniqueStepIds = new ArrayList<>(stepIdsSet);
+
+        Process _process = process.get();
+        List<StepInProcess> stepsToRemove = _process.getSteps().stream().filter(stepInProcess -> uniqueStepIds.contains(stepInProcess.getStep().getStep_id())).toList();
+
+        if (stepsToRemove.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        _process.getSteps().removeAll(stepsToRemove);
+        processRepository.save(_process);
+        return new ResponseEntity<>(_process, HttpStatus.OK);
+    }
 }
