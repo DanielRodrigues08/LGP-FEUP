@@ -85,25 +85,36 @@ public class OnboardeeController {
         }
 
         Optional<Onboardee> onboardee = onboardeeRepository.findById(id);
-
-        long process_id;
-        try {
-            process_id = Long.parseLong(patch.get("process_id").toString());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        Optional<Process> process = processRepository.findById(process_id);
-
-        if (onboardee.isEmpty() || process.isEmpty()) {
+        if (onboardee.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        Onboardee onboardeeToUpdate = onboardee.get();
-        onboardeeToUpdate.setProcess(process.get());
-        onboardeeRepository.save(onboardeeToUpdate);
+        Onboardee _onboardee = onboardee.get();
 
+        Process _process;
 
-        return new ResponseEntity<>(process.get(), HttpStatus.OK);
+        if (patch.get("process_id") == null) {
+            _process = null;
+        } else {
+            long process_id;
+            try {
+                process_id = Long.parseLong(patch.get("process_id").toString());
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            Optional<Process> process = processRepository.findById(process_id);
+
+            if (process.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            _process = process.get();
+        }
+
+        _onboardee.setProcess(_process);
+        onboardeeRepository.save(_onboardee);
+
+        return new ResponseEntity<>(_process, HttpStatus.OK);
     }
 }
