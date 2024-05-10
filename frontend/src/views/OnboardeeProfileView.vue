@@ -1,31 +1,26 @@
 <template>
     <main>
-        <!--check if onboardee exists before loading html-->
-        <div class="parent">
+
+        <div v-if="onboardee" class="parent">
             <div class="div1">
-              <img src="https://www.w3schools.com/w3images/lights.jpg" alt="Lights">
               <div class="OnboardName">
-                <h2>Sofia Martins</h2>
-                <h2>{{ onboardee ? onboardee.name : 'Loading...' }}</h2>
+                <h2>{{ onboardee.name }}</h2>
                 <p>Onboardee</p>
               </div>
               
             </div>
             <div class="PersonalInformation">  
                 <h2>Personal Information</h2>
-                <p>sofiamartins@gmail.com
-                    <span>
-                        <!---{{ onboardee.email }}-->
-                    </span>
-                </p>
-                <p>987654321
-                    <span>
-                        <!---{{ onboardee.phone_number }}-->
-                    </span>
-                </p>
+                <p>Email: {{ onboardee.email }}</p>
+                <p>Phone: {{ onboardee.phoneNumber }}</p>
+
 
             </div>
             <div class="div3">  </div>
+        </div>
+
+        <div v-else>
+            <h1>Onboardee not found</h1>
         </div>
     </main>
 </template>
@@ -61,7 +56,7 @@
 <style scoped>
 .parent {
     display: grid;
-    grid-template-columns: 1fr 4fr;
+    grid-template-columns: 1fr 3fr;
     grid-template-rows: 1fr 2fr;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
@@ -99,14 +94,15 @@
 
 .PersonalInformation {
     grid-area: 2 / 1 / 6 / 2;
-    background-color:rgb(226, 222, 217);
+    background-color:#F9F9F9;
     /*background-color: #F9F9F9;*/
     height:100%;
 }
 
 .PersonalInformation h2 {
-    font-size: 1.5em;
+    font-size: 1.25em;
     font-weight: bold;
+    margin-top: 2em;
     margin-bottom: 1em;
     padding:1em;
     text-align: center;
@@ -116,7 +112,8 @@
     font-size: 1em;
     margin-bottom: 1em;
     padding:1em;
-    text-align: center;
+    padding-left: 2em;
+    padding-right: 2em;
 }
 
 
