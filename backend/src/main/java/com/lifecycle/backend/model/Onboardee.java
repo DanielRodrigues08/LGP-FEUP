@@ -48,6 +48,10 @@ public class Onboardee {
     @Column(name = "start_date")
     private LocalDate startDate;
 
+    @ManyToOne
+    @JoinColumn(name = "process_id")
+    private Process process;
+
     // Constructor for Onboardee class
     public Onboardee(String name, String phoneNumber, String email, String gender, String nationality, String annualSalary, String payrollNumber, LocalDate startDate, OnboardeeStatus state) {
         this.name = name;

@@ -33,6 +33,9 @@ public class Process {
     @OneToMany(mappedBy="process", cascade = CascadeType.ALL)
     private List<StepInProcess> steps;
 
+    @OneToMany(mappedBy="process", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Onboardee> onboardees;
+
     public Process() { }
 
     public Process(String title, String description) {

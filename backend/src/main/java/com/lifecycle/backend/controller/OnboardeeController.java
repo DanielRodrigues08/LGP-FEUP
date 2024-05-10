@@ -1,11 +1,15 @@
 package com.lifecycle.backend.controller;
 
 import com.lifecycle.backend.model.Onboardee;
+import com.lifecycle.backend.model.Process;
 import com.lifecycle.backend.repository.OnboardeeRepository;
+import com.lifecycle.backend.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,12 +23,16 @@ public class OnboardeeController {
     @Autowired
     private OnboardeeRepository onboardeeRepository;
 
+    @Autowired
+    private ProcessRepository processRepository;
+
     // GET all onboardees
     @GetMapping
     public ResponseEntity<List<Onboardee>> getAllOnboardees() {
         List<Onboardee> onboardees = onboardeeRepository.findAll();
         return ResponseEntity.ok(onboardees);
     }
+
     // POST create onboardee
     @PostMapping
     public ResponseEntity<Onboardee> createOnboardee(@RequestBody Onboardee onboardee) {
@@ -58,5 +66,44 @@ public class OnboardeeController {
         }
         onboardeeRepository.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/process")
+    public ResponseEntity<Process> getProcess(@PathVariable Long id) {
+        Optional<Onboardee> onboardee = onboardeeRepository.findById(id);
+        if (onboardee.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return new ResponseEntity<>(onboardee.get().getProcess(), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/process")
+    public ResponseEntity<Process> updateProcess(@PathVariable Long id, @RequestBody Map<String, Object> patch) {
+        if (!patch.containsKey("process_id")) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Optional<Onboardee> onboardee = onboardeeRepository.findById(id);
+
+        long process_id;
+        try {
+            process_id = Long.parseLong(patch.get("process_id").toString());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Optional<Process> process = processRepository.findById(process_id);
+
+        if (onboardee.isEmpty() || process.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Onboardee onboardeeToUpdate = onboardee.get();
+        onboardeeToUpdate.setProcess(process.get());
+        onboardeeRepository.save(onboardeeToUpdate);
+
+
+        return new ResponseEntity<>(process.get(), HttpStatus.OK);
     }
 }
