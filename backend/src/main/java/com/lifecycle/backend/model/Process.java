@@ -1,5 +1,6 @@
 package com.lifecycle.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,8 +35,8 @@ public class Process {
     @OneToMany(mappedBy = "process", cascade = CascadeType.ALL)
     private List<StepInProcess> steps;
 
-    @OneToMany(mappedBy = "process", cascade = CascadeType.ALL, orphanRemoval = false, fetch = FetchType.LAZY)
-    @JsonManagedReference // Fix the infinite recursion problem when serializing to JSON
+    @OneToMany(mappedBy = "process", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Onboardee> onboardees;
 
     public Process() {

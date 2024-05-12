@@ -1,5 +1,6 @@
 package com.lifecycle.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -54,7 +55,7 @@ public class Onboardee {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "process_id")
-    @JsonBackReference // Fix the infinite recursion problem when serializing to JSON
+    @JsonIgnore
     private Process process;
 
     // Constructor for Onboardee class
