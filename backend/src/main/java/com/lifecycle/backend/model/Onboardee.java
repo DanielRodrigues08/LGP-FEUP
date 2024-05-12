@@ -3,7 +3,11 @@ package com.lifecycle.backend.model;
 import lombok.*;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 @Getter
 @Setter
@@ -47,6 +51,11 @@ public class Onboardee {
 
     @Column(name = "start_date")
     private LocalDate startDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "process_id")
+    @JsonBackReference // Fix the infinite recursion problem when serializing to JSON
+    private Process process;
 
     // Constructor for Onboardee class
     public Onboardee(String name, String phoneNumber, String email, String gender, String nationality, String annualSalary, String payrollNumber, LocalDate startDate, OnboardeeStatus state) {

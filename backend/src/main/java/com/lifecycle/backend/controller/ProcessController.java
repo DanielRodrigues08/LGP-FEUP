@@ -1,5 +1,6 @@
 package com.lifecycle.backend.controller;
 
+import com.lifecycle.backend.model.Onboardee;
 import com.lifecycle.backend.model.Process;
 import com.lifecycle.backend.model.Step;
 import com.lifecycle.backend.model.StepInProcess;
@@ -160,5 +161,17 @@ public class ProcessController {
         _process.getSteps().removeAll(stepsToRemove);
         processRepository.save(_process);
         return new ResponseEntity<>(_process, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/onboardees")
+    public ResponseEntity<List<Onboardee>> getOnboardeesByProcess(@PathVariable("id") long id) {
+        Optional<Process> process = processRepository.findById(id);
+        if (process.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Process _process = process.get();
+
+        return new ResponseEntity<>(_process.getOnboardees(), HttpStatus.OK);
     }
 }
