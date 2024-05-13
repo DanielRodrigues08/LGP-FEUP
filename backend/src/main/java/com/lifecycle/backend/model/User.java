@@ -1,8 +1,11 @@
 package com.lifecycle.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,6 +35,14 @@ public class User {
     @Enumerated(EnumType.STRING) // Specify that permissionLevel is an Enum
     @Column(name = "permission_level")
     private UserPermission permissionLevel;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    List<Step> ownerSteps;
+
+    @OneToMany(mappedBy = "backup", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    List<Step> backupSteps;
 
     // Constructor for User class
     public User(String email, String password, String name, String phoneNumber, UserPermission permissionLevel) {

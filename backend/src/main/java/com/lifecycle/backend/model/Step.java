@@ -27,15 +27,27 @@ public class Step {
     @Column(name="deadline", nullable = false)
     private int deadline; // type might be changed
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner", referencedColumnName = "user_id", nullable = false)
+    @JsonIgnore
+    private User owner;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "backup", referencedColumnName = "user_id")
+    @JsonIgnore
+    private User backup;
+
     @OneToMany(mappedBy="step", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<StepInProcess> processes = new ArrayList<>();
 
     public Step() { }
 
-    public Step(String title, String description, int deadline) {
+    public Step(String title, String description, int deadline, User owner, User backup) {
         this.title = title;
         this.description = description;
         this.deadline = deadline;
+        this.owner = owner;
+        this.backup = backup;
     }
 }
