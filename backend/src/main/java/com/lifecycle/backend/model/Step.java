@@ -25,7 +25,10 @@ public class Step {
     private String description;
 
     @Column(name="deadline", nullable = false)
-    private int deadline; // type might be changed
+    private int deadline; // days
+
+    @Column(name="duration")
+    private int duration; // days
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner", referencedColumnName = "user_id", nullable = false)
@@ -43,10 +46,11 @@ public class Step {
 
     public Step() { }
 
-    public Step(String title, String description, int deadline, User owner, User backup) {
+    public Step(String title, String description, int deadline, int duration, User owner, User backup) {
         this.title = title;
         this.description = description;
         this.deadline = deadline;
+        this.duration = duration;
         this.owner = owner;
         this.backup = backup;
     }

@@ -32,17 +32,17 @@ VALUES ('Portugal', 'Process for onboarding employees in Portugal'),
        ('France', 'Process for onboarding employees in France'),
        ('Spain', 'Process for onboarding employees in Spain');
 
-INSERT INTO steps (title, description, deadline, owner, backup)
-VALUES ('Step 1', 'Step 1 description', 5, 3, 1),
-       ('Step 2', 'Step 2 description', 6, 3, 2),
-       ('Step 3', 'Step 3 description', 7, 3, 2),
-       ('Step 4', 'Step 4 description', 8, 3, 2),
-       ('Step 5', 'Step 5 description', 9, 3, 2),
-       ('Step 6', 'Step 6 description', 10, 3, 2),
-       ('Step 7', 'Step 7 description', 11, 3, 2),
-       ('Step 8', 'Step 8 description', 12, 3, 2),
-       ('Step 9', 'Step 9 description', 13, 3, 2),
-       ('Step 10', 'Step 10 description', 14, 3, 2);
+INSERT INTO steps (title, description, deadline, duration, owner, backup)
+VALUES ('Step 1', 'Step 1 description', 5, 1, 3, 1),
+       ('Step 2', 'Step 2 description', 6, 3, 3, 2),
+       ('Step 3', 'Step 3 description', 7, 0, 3, 2),
+       ('Step 4', 'Step 4 description', 8, 0, 3, 2),
+       ('Step 5', 'Step 5 description', 9, 0, 3, 2),
+       ('Step 6', 'Step 6 description', 10, 0, 3, 2),
+       ('Step 7', 'Step 7 description', 11, 0, 3, 2),
+       ('Step 8', 'Step 8 description', 12, 0, 3, 2),
+       ('Step 9', 'Step 9 description', 13, 0, 3, 2),
+       ('Step 10', 'Step 10 description', 14, 0, 3, 2);
 
 INSERT INTO steps_in_process(process_id, step_id, position)
 VALUES (1, 1, 1),

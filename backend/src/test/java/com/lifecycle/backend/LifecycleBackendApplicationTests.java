@@ -34,7 +34,7 @@ class LifecycleBackendApplicationTests {
 	@Test
 	void stepCreation() {
 		User owner = userController.getAllUsers().getBody().get(0);
-		Step step = new Step("testStep", null, 1, owner, null);
+		Step step = new Step("testStep", null, 1, 0, owner, null);
 		ResponseEntity<Step> response = stepController.createStep(step);
 		System.out.println("Step " + response.getBody().getStep_id() + " added to the database.");
 		System.out.println("Received HTTP status " + response.getStatusCode());
@@ -47,8 +47,8 @@ class LifecycleBackendApplicationTests {
 
 		User owner = userController.getAllUsers().getBody().get(0);
 
-		Step step1 = new Step("processStep1", null, 1, owner, null);
-		Step step2 = new Step("processStep2", null, 1, owner, null);
+		Step step1 = new Step("processStep1", null, 1, 0, owner, null);
+		Step step2 = new Step("processStep2", null, 1, 0, owner, null);
 		ResponseEntity<Step> stepCreationResponse1 = stepController.createStep(step1);
 		ResponseEntity<Step> stepCreationResponse2 = stepController.createStep(step2);
 		List<Long> stepsToAdd = new ArrayList<>();
