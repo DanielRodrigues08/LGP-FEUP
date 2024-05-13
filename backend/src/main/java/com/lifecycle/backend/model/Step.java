@@ -1,5 +1,6 @@
 package com.lifecycle.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +28,7 @@ public class Step {
     private int deadline; // type might be changed
 
     @OneToMany(mappedBy="step", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<StepInProcess> processes = new ArrayList<>();
 
     public Step() { }

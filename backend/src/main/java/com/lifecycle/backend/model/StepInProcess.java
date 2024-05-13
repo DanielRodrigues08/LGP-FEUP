@@ -1,5 +1,6 @@
 package com.lifecycle.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,9 +16,12 @@ public class StepInProcess {
     private long step_in_process_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "step_id")
     private Step step;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "process_id")
+    @JsonIgnore
     private Process process;
 
     @Column(name = "position", nullable = false)

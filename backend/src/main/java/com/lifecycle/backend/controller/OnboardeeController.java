@@ -2,8 +2,10 @@ package com.lifecycle.backend.controller;
 
 import com.lifecycle.backend.model.Onboardee;
 import com.lifecycle.backend.model.Process;
+import com.lifecycle.backend.model.StepInfo;
 import com.lifecycle.backend.repository.OnboardeeRepository;
 import com.lifecycle.backend.repository.ProcessRepository;
+import com.lifecycle.backend.repository.StepInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,8 @@ public class OnboardeeController {
 
     @Autowired
     private ProcessRepository processRepository;
+    @Autowired
+    private StepInfoRepository stepInfoRepository;
 
     // GET all onboardees
     @GetMapping
@@ -79,14 +83,14 @@ public class OnboardeeController {
     }
 
     @PatchMapping("/{id}/process")
-    public ResponseEntity<Process> updateProcess(@PathVariable Long id, @RequestBody Map<String, Object> patch) {
+    public ResponseEntity<Object> updateProcess(@PathVariable Long id, @RequestBody Map<String, Object> patch) {
         if (!patch.containsKey("process_id")) {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(Map.of("message", "Process not found!"), HttpStatus.NOT_FOUND);
         }
 
         Optional<Onboardee> onboardee = onboardeeRepository.findById(id);
         if (onboardee.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(Map.of("message", "Onboardee not found!"), HttpStatus.NOT_FOUND);
         }
 
         Onboardee _onboardee = onboardee.get();
@@ -100,7 +104,7 @@ public class OnboardeeController {
             try {
                 process_id = Long.parseLong(patch.get("process_id").toString());
             } catch (Exception e) {
-                return ResponseEntity.badRequest().build();
+                return new ResponseEntity<>(Map.of("message", "Invalid process ID!"), HttpStatus.BAD_REQUEST);
             }
 
             Optional<Process> process = processRepository.findById(process_id);
@@ -112,9 +116,16 @@ public class OnboardeeController {
             _process = process.get();
         }
 
+        if (_onboardee.getProcess().equals(_process)) {
+            return ResponseEntity.ok().build();
+        }
+
+        List<StepInfo> stepInfos = stepInfoRepository.findByOnboardee(_onboardee);
+        stepInfoRepository.deleteAll(stepInfos);
+
         _onboardee.setProcess(_process);
         onboardeeRepository.save(_onboardee);
 
-        return new ResponseEntity<>(_process, HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 }
