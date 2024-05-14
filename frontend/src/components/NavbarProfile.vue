@@ -1,25 +1,79 @@
-<script setup>
-import ProfileIcon from './icons/ProfileIcon.vue'
+<script>
 import { ref } from "vue";
+import Dialog from 'primevue/dialog';
+import ProfileIcon from './icons/ProfileIcon.vue';
+import InputText from 'primevue/inputtext';
+import axios from 'axios';
 
-const profile_menu = ref();
-const profile_items = ref([
-  {
-    items: [
+export default {
+  components: {
+    Dialog,
+    ProfileIcon,
+    InputText
+  },
+  setup() {
+    const showProfileDialog = ref(false);
+    const user = ref(null);
+    // Temporary user ID
+    const userId = 2;
+
+    const toggle = (event) => {
+      profile_menu.value.toggle(event);
+    };
+
+    const editProfile = () => {
+      showProfileDialog.value = true;
+    };
+
+    const profile_menu = ref();
+    const profile_items = ref([
       {
-        separator: true
-      },
-      {
-        label: 'Logout',
-        icon: 'pi pi-sign-out'
+        items: [
+          {
+            separator: true
+          },
+          {
+            label: 'Edit Profile',
+            icon: 'pi pi-cog',
+            action: editProfile
+          },
+          {
+            label: 'Logout',
+            icon: 'pi pi-sign-out'
+          }
+        ]
       }
-    ]
-  }
-]);
+    ]);
 
-const toggle = (event) => {
-  profile_menu.value.toggle(event);
-};
+    const fetchOnboardeeById = async (userId) => {
+      try {
+        console.log('userId:', userId)
+        const response = await axios.get(`http://localhost:8081/users/${userId}`);
+        user.value = response.data;
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    };
+
+    const saveChanges = async () => {
+      try {
+        await axios.put(`http://localhost:8081/users/${userId}`, user.value);
+        showProfileDialog.value = false;
+      } catch (error) {
+        console.error('Error saving changes:', error);
+      }
+    };
+
+    const cancelEdit = () => {
+      showProfileDialog.value = false;
+    };
+
+
+    fetchOnboardeeById(userId);
+
+    return { showProfileDialog, toggle, profile_menu, profile_items, user, saveChanges, cancelEdit };
+  }
+}
 </script>
 
 <template>
@@ -37,14 +91,36 @@ const toggle = (event) => {
                     </div>
                 </button>
             </template>
-            <template #item="{ item, props }">
-                <a class="relative overflow-hidden w-full p-link p-2 flex align-items-center pl-2 pr-2 hover:surface-200 border-noround" v-bind="props.action">
-                    <span :class="item.icon" class="primary-color" />
+            <template #item="{ item }">
+                <a class="relative overflow-hidden w-full p-link p-2 flex align-items-center pl-2 pr-2 hover:surface-200 border-noround" @click="item.action()">
+                    <span :class="item.icon" class="primary-color"></span>
                     <span class="text-color text-xs ml-2">{{ item.label }}</span>
                 </a>
             </template>
         </Menu>
     </div>
+
+    <Dialog :id="dialog" v-model="showProfileDialog" :visible="showProfileDialog" modal header="Edit Profile" @hide="showProfileDialog = false" :closable="false" :draggable="false">
+        <span class="p-text-secondary block mb-5">Update your information.</span>
+        <div v-if="user" class="parent">
+          <div class="flex align-items-center gap-3 mb-3">
+              <label for="name" class="font-semibold w-6rem">Name</label>
+              <InputText id="name" v-model="user.name" class="flex-auto" autocomplete="off" />
+          </div>
+          <div class="flex align-items-center gap-3 mb-5">
+              <label for="email" class="font-semibold w-6rem">Email</label>
+              <InputText id="email" v-model="user.email" class="flex-auto" autocomplete="off" />
+          </div>
+        </div>
+        <div v-else>
+            <p>User not found</p>
+        </div>
+        <div class="flex justify-content-end gap-2">
+            <Button type="button" label="Cancel" severity="secondary" @click="showProfileDialog = false"></Button>
+            <Button type="button" label="Save" @click="saveChanges"></Button>
+        </div>
+    </Dialog>
+
 </template>
 
 <style scoped>
@@ -64,5 +140,19 @@ const toggle = (event) => {
       align-items: center;
       height: calc(0.6 * var(--navbar-height));
       aspect-ratio: 1 / 1;
+    }
+    
+    .p-dialog .p-dialog-content {
+      width: 25rem;
+    }
+
+    #dialog .p-dialog-title {
+
+      background-color: var(--teal-500) !important;
+      color: #ce2929;
+    }
+
+    #dialog .p-dialog-titlebar-close{
+      display: none;
     }
 </style>
