@@ -12,4 +12,5 @@ import java.util.Optional;
 public interface StepInfoRepository extends JpaRepository<StepInfo, Long> {
     Optional<StepInfo> findByOnboardeeAndStep(Onboardee onboardee, Step step);
     List<StepInfo> findByOnboardee(Onboardee onboardee);
+    List<StepInfo> findByOnboardeeId(Long onboardeeId);
 }
