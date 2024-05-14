@@ -1,15 +1,15 @@
 DELETE
-FROM onboardees;
+FROM onboardee;
 DELETE
 FROM users;
 DELETE
-FROM steps_in_process;
+FROM step_in_process;
 DELETE
-FROM steps;
+FROM step;
 DELETE
-FROM processes;
+FROM process;
 DELETE
-FROM onboardees;
+FROM onboardee;
 DELETE
 FROM step_info;
 
@@ -26,13 +26,13 @@ VALUES ('user1@example.com', 'password1', 'João Silva', '+351911111111', 'ADMIN
        ('user9@example.com', 'password9', 'Ricardo Santos', '+351999999999', 'EMPLOYEE'),
        ('user10@example.com', 'password10', 'Inês Oliveira', '+351900000000', 'EMPLOYEE');
 
-INSERT INTO processes (title, description)
+INSERT INTO process (title, description)
 VALUES ('Portugal', 'Process for onboarding employees in Portugal'),
        ('UK', 'Process for onboarding employees in the UK'),
        ('France', 'Process for onboarding employees in France'),
        ('Spain', 'Process for onboarding employees in Spain');
 
-INSERT INTO steps (title, description, deadline)
+INSERT INTO step (title, description, deadline)
 VALUES ('Step 1', 'Step 1 description', 5),
        ('Step 2', 'Step 2 description', 6),
        ('Step 3', 'Step 3 description', 7),
@@ -44,25 +44,25 @@ VALUES ('Step 1', 'Step 1 description', 5),
        ('Step 9', 'Step 9 description', 13),
        ('Step 10', 'Step 10 description', 14);
 
-INSERT INTO onboardees (name, phone_number, email, gender, nationality, annual_salary, payroll_number, start_date,
-                        state, process_id)
+INSERT INTO onboardee (name, phone_number, email, gender, nationality, annual_salary, payroll_number, start_date,
+                        state)
 VALUES ('João Silva', '+351912345678', 'joao.silva@example.com', 'male', 'Portugal', '55000', 'ABC123', '2024-05-03',
-        'INCOMING', 1),
+        'INCOMING'),
        ('Marta Santos', '+351923456789', 'marta.santos@example.com', 'female', 'Portugal', '50000', 'DEF456',
-        '2024-05-03', 'INCOMING', 2),
+        '2024-05-03', 'INCOMING'),
        ('Pedro Costa', '+351934567890', 'pedro.costa@example.com', 'male', 'Portugal', '60000', 'GHI789', '2024-05-03',
-        'INCOMING', 3),
+        'INCOMING'),
        ('Sofia Oliveira', '+351945678901', 'sofia.oliveira@example.com', 'female', 'Portugal', '58000', 'JKL012',
-        '2024-05-03', 'ONGOING', 4),
+        '2024-05-03', 'ONGOING'),
        ('Rui Fonseca', '+351956789012', 'rui.fonseca@example.com', 'male', 'Portugal', '62000', 'MNO345', '2024-05-03',
-        'ONGOING', 1),
+        'ONGOING'),
        ('Alice Smith', '+447890123456', 'alice.smith@example.com', 'female', 'UK', '55000', 'DEF456', '2024-05-03',
-        'ONGOING', 2),
+        'ONGOING'),
        ('Sophie Dubois', '+33123456789', 'sophie.dubois@example.com', 'female', 'France', '45000', 'PQR678',
-        '2024-05-03', 'ONGOING', 3),
+        '2024-05-03', 'ONGOING'),
        ('Juan Martinez', '+541112345678', 'juan.martinez@example.com', 'male', 'Spain', '62000', 'STU901', '2024-05-03',
-        'COMPLETED', 4),
+        'COMPLETED'),
        ('Maria Garcia', '+34911234567', 'maria.garcia@example.com', 'female', 'Spain', '58000', 'VWX234', '2024-05-03',
-        'COMPLETED', 2),
+        'COMPLETED'),
        ('Lucas Garcia', '+351911234567', 'lucas.garcia@example.com', 'female', 'Portugal', '15000', 'ABC124',
-        '2024-05-03', 'ABORTED', 2);
+        '2024-05-03', 'ABORTED');

@@ -56,7 +56,7 @@ public class Onboardee {
     private LocalDate startDate;
 
     @Column(name = "active_process")
-    private long activeProcess;
+    private Long activeProcess;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JsonManagedReference
