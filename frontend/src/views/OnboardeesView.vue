@@ -62,14 +62,15 @@ export default {
   },
   methods: {
     async fetchOnboardees() {
-      try {
-        const response = await axios.get('http://localhost:8081/onboardees');
-        this.onboardees = response.data;
-        this.originalOnboardees = response.data;
+      // try {
+      //    const response = await axios.get('http://localhost:8081/onboardees');
+      //    console.log(response.data)
+      //    this.onboardees = response.data;
+      //    this.originalOnboardees = response.data;
 
-      } catch (error) {
-        console.error('Error fetching onboardees:', error);
-      }
+      //  } catch (error) {
+      //    console.error('Error fetching onboardees:', error);
+      //  }
     },
     filterOnboardees() {
       this.globalFilter = {

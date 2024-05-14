@@ -3,10 +3,11 @@ package com.lifecycle.backend.model;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.Arrays;
 import java.util.Collection;
-
+@CrossOrigin(origins = "*")
 public class MyUserDetails implements UserDetails {
 
     private User user;

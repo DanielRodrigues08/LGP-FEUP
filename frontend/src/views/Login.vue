@@ -44,17 +44,20 @@
           email: this.email,
           password: this.password
         };
-  
-        // // Assuming you have an endpoint for handling login
-        // await axios.post('http://localhost:8081/login', requestData)
-        //   .then(response => {
-        //     // Handle successful login
-        //     console.log('Login successful');
-        //   })
-        //   .catch(error => {
-        //     // Handle login error
-        //     console.error('Error during login:', error);
-        //   });
+        console.log(this.password)
+
+        await axios.get('http://localhost:8081/login', requestData)
+          .then(response => {
+            console.log(response)
+            const token = response.data.token;
+
+            localStorage.setItem('token', token);
+            console.log('Login successful');
+          })
+          .catch(error => {
+            // Handle login error
+            console.error('Error during login:', error);
+          });
       },
       goBack() {
         this.$router.go(-1);

@@ -52,16 +52,6 @@
           permissionLevel: this.permissionLevel
         };
   
-        // // Assuming you have an endpoint for handling login
-        // await axios.post('http://localhost:8081/login', requestData)
-        //   .then(response => {
-        //     // Handle successful login
-        //     console.log('Login successful');
-        //   })
-        //   .catch(error => {
-        //     // Handle login error
-        //     console.error('Error during login:', error);
-        //   });
       },
       goBack() {
         this.$router.go(-1);

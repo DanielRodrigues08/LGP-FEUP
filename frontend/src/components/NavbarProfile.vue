@@ -10,6 +10,10 @@ const profile_items = ref([
         separator: true
       },
       {
+        label: 'Edit',
+        icon: 'pi pi-sign-out'
+      },
+      {
         label: 'Logout',
         icon: 'pi pi-sign-out'
       }
