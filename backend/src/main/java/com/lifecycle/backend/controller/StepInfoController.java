@@ -19,6 +19,12 @@ public class StepInfoController {
     @Autowired
     private StepInfoRepository stepInfoRepository;
 
+    @GetMapping
+    public ResponseEntity<Object> getAllStepInfo() {
+        List<StepInfo> stepInfo = stepInfoRepository.findAll();
+        return new ResponseEntity<>(stepInfo, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Object> getStepInfo(@PathVariable Long id) {
         Optional<StepInfo> stepInfo = stepInfoRepository.findById(id);

@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/")
+@RequestMapping("/step-in-processes")
 public class StepInProcessController {
     @Autowired
     private ProcessRepository processRepository;
@@ -27,7 +27,13 @@ public class StepInProcessController {
     @Autowired
     private StepInProcessRepository stepInProcessRepository;
 
-    @PutMapping("/step-in-processes")
+    @GetMapping
+    public ResponseEntity<Object> getAllStepInProcesses(){
+        List<StepInProcess> stepInProcesses = stepInProcessRepository.findAll();
+        return new ResponseEntity<>(stepInProcesses, HttpStatus.OK);
+    }
+
+    @PutMapping
     public ResponseEntity<Object> createStepInProcess(@RequestBody Map<String, Object> body) {
         try {
             long processId = ((Number) body.get("process_id")).longValue();
@@ -62,7 +68,7 @@ public class StepInProcessController {
 
     }
 
-    @DeleteMapping("/step-in-processes/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteStepInProcess(@PathVariable("id") long id) {
         Optional<StepInProcess> stepInProcess = stepInProcessRepository.findById(id);
         if (stepInProcess.isEmpty()) {
@@ -73,13 +79,17 @@ public class StepInProcessController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PatchMapping("/step-in-processes/{id}/dependencies")
+    @PatchMapping("/{id}/dependencies")
     public ResponseEntity<Object> updateDependencies(@PathVariable("id") long id, @RequestBody Map<String, Object> body) {
         long dependencyId;
         try {
             dependencyId = ((Number) body.get("dependency_id")).longValue();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", "Invalid dependency id type"));
+        }
+
+        if(id == dependencyId){
+            return ResponseEntity.badRequest().body(Map.of("error", "Cannot add a step as a dependency of itself"));
         }
 
         Optional<StepInProcess> stepInProcess = stepInProcessRepository.findById(id);

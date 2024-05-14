@@ -78,7 +78,8 @@ public class OnboardeeController {
         }
 
         Onboardee _onboardee = onboardee.get();
-        if (_onboardee.getActiveProcess() == idProcess) {
+
+        if (_onboardee.getActiveProcess() != null && _onboardee.getActiveProcess().getId() == idProcess) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Onboardee already has this process"));
         }
 
@@ -122,12 +123,12 @@ public class OnboardeeController {
         }
         Onboardee _onboardee = onboardee.get();
 
-        Optional<Process> process = processRepository.findById(_onboardee.getActiveProcess());
-        if (process.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "The process of the onboardee not found"));
+        Process _process = _onboardee.getActiveProcess();
+
+        if (_process == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "The onboardee has no active process"));
         }
 
-        Process _process = process.get();
         List<StepInfo> stepsInfo = new ArrayList<>();
         for (StepInfo stepInfo : _onboardee.getStepsInfo()) {
             if (stepInfo.getStep().getProcess().getId() == _process.getId()) {

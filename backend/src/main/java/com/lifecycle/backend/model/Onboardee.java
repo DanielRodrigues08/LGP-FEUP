@@ -55,11 +55,12 @@ public class Onboardee {
     @Column(name = "start_date")
     private LocalDate startDate;
 
-    @Column(name = "active_process")
-    private Long activeProcess;
-
     @OneToMany(fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<StepInfo> stepsInfo;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    private Process activeProcess;
 }
 
