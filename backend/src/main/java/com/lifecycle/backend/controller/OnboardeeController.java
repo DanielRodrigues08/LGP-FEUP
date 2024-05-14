@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -115,14 +114,48 @@ public class OnboardeeController {
     }
 
 
-    @GetMapping("/{id}/process")
-    public ResponseEntity<Process> getProcess(@PathVariable Long id) {
+    @GetMapping("/{id}/process/active")
+    public ResponseEntity<Object> getProcess(@PathVariable Long id) {
         Optional<Onboardee> onboardee = onboardeeRepository.findById(id);
         if (onboardee.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Onboardee not found"));
+        }
+        Onboardee _onboardee = onboardee.get();
+
+        Optional<Process> process = processRepository.findById(_onboardee.getActiveProcess());
+        if (process.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "The process of the onboardee not found"));
         }
 
-        return new ResponseEntity<>(onboardee.get().getProcess(), HttpStatus.OK);
+        Process _process = process.get();
+        List<StepInfo> stepsInfo = new ArrayList<>();
+        for (StepInfo stepInfo : _onboardee.getStepsInfo()) {
+            if (stepInfo.getStep().getProcess().getId() == _process.getId()) {
+                stepsInfo.add(stepInfo);
+            }
+        }
+
+        return ResponseEntity.ok(Map.of("process", _process, "stepsInfo", stepsInfo));
+
+    }
+
+    @GetMapping("/{id}/process/archived")
+    public ResponseEntity<Object> getStepsInfoArchived(@PathVariable Long id) {
+        Optional<Onboardee> onboardee = onboardeeRepository.findById(id);
+        if (onboardee.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Onboardee not found"));
+        }
+        Onboardee _onboardee = onboardee.get();
+
+        List<StepInfo> stepsInfo = new ArrayList<>();
+        for (StepInfo stepInfo : _onboardee.getStepsInfo()) {
+            if (stepInfo.getStatus() == StepInfoStatus.ABORTED) {
+                stepsInfo.add(stepInfo);
+            }
+        }
+
+        return ResponseEntity.ok(stepsInfo);
+
     }
 
 

@@ -27,115 +27,92 @@ public class StepInProcessController {
     @Autowired
     private StepInProcessRepository stepInProcessRepository;
 
-    @GetMapping("/processes/{processId}/steps/{stepId}")
-    public ResponseEntity<Object> getStepInProcessDependecies(@PathVariable("processId") long processId, @PathVariable("stepId") long stepId) {
-        Optional<Process> process = processRepository.findById(processId);
-        if (process.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        Optional<Step> step = stepRepository.findById(stepId);
-        if (step.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        Optional<StepInProcess> stepInProcess = stepInProcessRepository.findByProcessAndStep(process.get(), step.get());
-        if (stepInProcess.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        List<Long> dependencies = new ArrayList<>();
-        for (Step dependency : stepInProcess.get().getDependencies()) {
-            dependencies.add(dependency.getStep_id());
-        }
-
-        return new ResponseEntity<>(Map.of(
-                "step_id", stepInProcess.get().getStep().getStep_id(),
-                "dependencies", dependencies
-        ), HttpStatus.OK);
-    }
-
-    @GetMapping("/processes/{id}/steps")
-    public ResponseEntity<Object> getStepsInProcess(@PathVariable("id") long id) {
-        Optional<Process> process = processRepository.findById(id);
-        if (process.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        List<Long> steps = new ArrayList<>();
-        for (StepInProcess stepInProcess : process.get().getSteps()) {
-            steps.add(stepInProcess.getStep().getStep_id());
-        }
-
-        return new ResponseEntity<>(Map.of(
-                "process_id", process.get().getProcess_id(),
-                "steps", steps
-        ), HttpStatus.OK);
-    }
-
-
-    @PatchMapping("/processes/{id}/steps")
-    public ResponseEntity<Object> updateStepInProcess(@PathVariable("id") long id, @RequestBody Map<String, Object> patch) {
-        Optional<Process> process = processRepository.findById(id);
-        if (process.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        Process _process = process.get();
+    @PutMapping("/step-in-processes")
+    public ResponseEntity<Object> createStepInProcess(@RequestBody Map<String, Object> body) {
         try {
-            long stepId = ((Number) patch.get("step_id")).longValue();
+            long processId = ((Number) body.get("process_id")).longValue();
+            long stepId = ((Number) body.get("step_id")).longValue();
+
+            Optional<Process> process = processRepository.findById(processId);
+            if (process.isEmpty()) {
+                throw new IllegalArgumentException("Invalid process id");
+            }
+
             Optional<Step> step = stepRepository.findById(stepId);
             if (step.isEmpty()) {
                 throw new IllegalArgumentException("Invalid step id");
             }
 
+            Process _process = process.get();
             Step _step = step.get();
-            StepInProcess _stepInProcess = stepInProcessRepository.findByProcessAndStep(_process, _step).orElse(null);
 
-            switch ((String) patch.get("type")) {
-                case "dependency":
-                    long dependencyId = (long) patch.get("dependency_id");
-                    Optional<Step> dependency = stepRepository.findById(dependencyId);
-
-                    if (dependency.isEmpty() || _stepInProcess == null) {
-                        throw new IllegalArgumentException("Invalid dependency id");
-                    }
-
-                    Step _dependency = dependency.get();
-
-                    if (patch.get("op").equals("add")) {
-                        if (!_stepInProcess.getDependencies().contains(_dependency)) {
-                            _stepInProcess.getDependencies().add(_dependency);
-                            stepInProcessRepository.save(_stepInProcess);
-                        }
-                    } else if (patch.get("op").equals("remove")) {
-                        _stepInProcess.getDependencies().remove(_dependency);
-                        stepInProcessRepository.save(_stepInProcess);
-                    } else {
-                        throw new IllegalArgumentException("Invalid operation type");
-                    }
-                    break;
-                case "step":
-                    if (patch.get("op").equals("add")) {
-                        if (_stepInProcess == null) {
-                            _process.getSteps().add(new StepInProcess(_step, _process, new ArrayList<>()));
-                            processRepository.save(_process);
-                        }
-                    } else if (patch.get("op").equals("remove")) {
-                        if (_stepInProcess != null) {
-                            stepInProcessRepository.delete(_stepInProcess);
-                        }
-                    } else {
-                        throw new IllegalArgumentException("Invalid operation type");
-                    }
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid type");
+            if (stepInProcessRepository.findByProcessAndStep(_process, _step).isPresent()) {
+                throw new IllegalArgumentException("Step already exists in process");
             }
+
+            StepInProcess stepInProcess = new StepInProcess();
+            stepInProcess.setProcess(_process);
+            stepInProcess.setStep(_step);
+            stepInProcessRepository.save(stepInProcess);
+
+            return new ResponseEntity<>(stepInProcess, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
 
+    }
+
+    @DeleteMapping("/step-in-processes/{id}")
+    public ResponseEntity<Object> deleteStepInProcess(@PathVariable("id") long id) {
+        Optional<StepInProcess> stepInProcess = stepInProcessRepository.findById(id);
+        if (stepInProcess.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        stepInProcessRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PatchMapping("/step-in-processes/{id}/dependencies")
+    public ResponseEntity<Object> updateDependencies(@PathVariable("id") long id, @RequestBody Map<String, Object> body) {
+        long dependencyId;
+        try {
+            dependencyId = ((Number) body.get("dependency_id")).longValue();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid dependency id type"));
+        }
+
+        Optional<StepInProcess> stepInProcess = stepInProcessRepository.findById(id);
+        if (stepInProcess.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        StepInProcess _stepInProcess = stepInProcess.get();
+
+        Optional<StepInProcess> dependency = stepInProcessRepository.findById(dependencyId);
+        if (dependency.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid dependency id"));
+        }
+        StepInProcess _dependency = dependency.get();
+
+        if (!_stepInProcess.getProcess().equals(_dependency.getProcess())) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Steps are not in the same process"));
+        }
+
+        try {
+            String op = (String) body.get("operation");
+            if (op.equals("add") && !_stepInProcess.getDependencies().contains(_dependency)) {
+                _stepInProcess.getDependencies().add(_dependency);
+            } else if (op.equals("remove")) {
+                _stepInProcess.getDependencies().remove(_dependency);
+            } else {
+                return ResponseEntity.badRequest().body(Map.of("error", "Invalid operation"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid operation type"));
+        }
+
+        StepInProcess updatedStepInProcess = stepInProcessRepository.save(_stepInProcess);
+        return new ResponseEntity<>(updatedStepInProcess, HttpStatus.OK);
+    }
 }
+
