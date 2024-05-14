@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 
@@ -24,14 +26,15 @@ public class StepInProcess {
     @JsonIgnore
     private Process process;
 
-    @Column(name = "position", nullable = false)
-    private int position;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Step> dependencies;
 
     public StepInProcess() {}
 
-    public StepInProcess(Step step, Process process, int position) {
+    public StepInProcess(Step step, Process process, List<Step> dependencies) {
         this.step = step;
         this.process = process;
-        this.position = position;
+        this.dependencies = dependencies;
     }
 }

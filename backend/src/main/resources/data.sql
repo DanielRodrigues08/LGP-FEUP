@@ -44,15 +44,6 @@ VALUES ('Step 1', 'Step 1 description', 5),
        ('Step 9', 'Step 9 description', 13),
        ('Step 10', 'Step 10 description', 14);
 
-INSERT INTO steps_in_process(process_id, step_id, position)
-VALUES (1, 1, 1),
-       (1, 2, 1),
-       (2, 1, 1),
-       (2, 3, 2),
-       (3, 1, 1),
-       (3, 4, 2),
-       (4, 1, 1);
-
 INSERT INTO onboardees (name, phone_number, email, gender, nationality, annual_salary, payroll_number, start_date,
                         state, process_id)
 VALUES ('João Silva', '+351912345678', 'joao.silva@example.com', 'male', 'Portugal', '55000', 'ABC123', '2024-05-03',
@@ -75,7 +66,3 @@ VALUES ('João Silva', '+351912345678', 'joao.silva@example.com', 'male', 'Portu
         'COMPLETED', 2),
        ('Lucas Garcia', '+351911234567', 'lucas.garcia@example.com', 'female', 'Portugal', '15000', 'ABC124',
         '2024-05-03', 'ABORTED', 2);
-
-INSERT INTO step_info (step_id, onboardee_id, status) VALUES (1, 1, 'NOT_STARTED');
-
-

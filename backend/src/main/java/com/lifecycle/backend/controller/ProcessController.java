@@ -6,6 +6,7 @@ import com.lifecycle.backend.model.Step;
 import com.lifecycle.backend.model.StepInProcess;
 import com.lifecycle.backend.repository.ProcessRepository;
 
+import com.lifecycle.backend.repository.StepInProcessRepository;
 import com.lifecycle.backend.repository.StepRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,8 @@ public class ProcessController {
     ProcessRepository processRepository;
     @Autowired
     StepRepository stepRepository;
+    @Autowired
+    private StepInProcessRepository stepInProcessRepository;
 
     @GetMapping("")
     public ResponseEntity<List<Process>> getAllProcesses(@RequestParam(required = false) String title) {
@@ -51,22 +54,6 @@ public class ProcessController {
 
         return processData.map(process -> new ResponseEntity<>(process, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-
-    /* ---- PROCESS CRUD ---- */
-
-    // Process Creation
-    /*@PostMapping("/create")
-    public ResponseEntity<Process> createProcess(@RequestBody Process process, @RequestBody List<Long> step_ids) {
-
-        List<Step> stepList = new ArrayList<>();
-        for (Long id : step_ids) {
-            Optional<Step> step = stepRepository.findById(id);
-            step.ifPresent(stepList::add);
-        }
-        process.setSteps(stepList);
-        processRepository.save(process);
-        return new ResponseEntity<>(process, HttpStatus.OK);
-    }*/
 
     @PostMapping("/create")
     public ResponseEntity<Process> createProcess(@RequestBody Process process) {
@@ -100,67 +87,6 @@ public class ProcessController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-    }
-
-    @PutMapping("/{id}/steps")
-    public ResponseEntity<Process> updateStepsInProcess(@PathVariable("id") long id, @RequestBody List<Long> stepIds) {
-        Optional<Process> process = processRepository.findById(id);
-        if (process.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        Process _process = process.get();
-
-        /* Set<Long> stepIdsSet = new HashSet<>(stepIds);
-        List<Long> uniqueStepIds = new ArrayList<>(stepIdsSet); // get new step list to update */
-
-        // update process's step list with incoming step list
-        for (int i = 0; i < stepIds.size(); i++) {
-            Long currentStepId = stepIds.get(i);
-            Optional<Step> step = stepRepository.findById(currentStepId);
-            if (step.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-            Step currentStep = step.get(); // get current step from database
-
-            // if incoming step is already in process, update it to new position
-            StepInProcess stepToUpdate = _process.getStepInProcessByID(currentStepId);
-            if (stepToUpdate != null) {
-                System.out.println("Found pre-existing step in process step list: Step ID nº" + currentStepId +
-                        ", previous position: " + stepToUpdate.getPosition()
-                        + ", new position: " + i);
-                stepToUpdate.setPosition(i); // update cascades
-            }
-            // if not, add new step to the process's list
-            else {
-                StepInProcess stepToAdd = new StepInProcess(currentStep, _process, i);
-                _process.getSteps().add(stepToAdd);
-            }
-        }
-
-        processRepository.save(_process);
-        return new ResponseEntity<>(_process, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{id}/steps")
-    public ResponseEntity<Process> removeStepFromProcess(@PathVariable("id") long id, @RequestBody List<Long> stepIds) {
-        Optional<Process> process = processRepository.findById(id);
-        if (process.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        Set<Long> stepIdsSet = new HashSet<>(stepIds);
-        List<Long> uniqueStepIds = new ArrayList<>(stepIdsSet);
-
-        Process _process = process.get();
-        List<StepInProcess> stepsToRemove = _process.getSteps().stream().filter(stepInProcess -> uniqueStepIds.contains(stepInProcess.getStep().getStep_id())).toList();
-
-        if (stepsToRemove.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        _process.getSteps().removeAll(stepsToRemove);
-        processRepository.save(_process);
-        return new ResponseEntity<>(_process, HttpStatus.OK);
     }
 
     @GetMapping("/{id}/onboardees")
