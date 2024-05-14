@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.Optional;
 @CrossOrigin(origins = "*")
+@Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
@@ -24,9 +26,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         if (user.isEmpty()) {
             throw new UsernameNotFoundException("Could not find user");
+        } else if (user == null) {
+            throw new UsernameNotFoundException("User is null");
         }
 
-        return new MyUserDetails(user.orElseThrow(() -> new UsernameNotFoundException("User not found")));
+        return MyUserDetails.build(user.orElseThrow(() -> new UsernameNotFoundException("User not found")));
     }
 
 }
