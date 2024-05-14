@@ -10,15 +10,16 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Getter
 @Setter
-
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "processes")
+@Table(name = "process")
 
 public class Process {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "process_id")
-    private long process_id;
+    @Column(name = "id")
+    private long id;
 
     @Column(name = "title", nullable = false)
     private String title;
@@ -33,26 +34,6 @@ public class Process {
     -> to be deleted from the Steps table when a Process is deleted.
     */
     @OneToMany(mappedBy = "process", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<StepInProcess> steps;
-
-    @OneToMany(mappedBy = "process", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Onboardee> onboardees;
-
-    public Process() {
-    }
-
-    public Process(String title, String description) {
-        this.title = title;
-        this.description = description;
-        // this.steps = new ArrayList<>();
-    }
-
-    public StepInProcess getStepInProcessByID(Long id) {
-        return this.steps.stream()
-                .filter(step -> id.equals(step.getStep().getStep_id()))
-                .findAny()
-                .orElse(null);
-    }
-
 }

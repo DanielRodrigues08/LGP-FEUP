@@ -1,11 +1,13 @@
 package com.lifecycle.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -15,12 +17,12 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "onboardees")
+@Table(name = "onboardee")
 public class Onboardee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "onboardee_id")
+    @Column(name = "id")
     private Long id;
 
     // Additional fields for Onboardee
@@ -53,22 +55,8 @@ public class Onboardee {
     @Column(name = "start_date")
     private LocalDate startDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "process_id")
-    @JsonIgnore
-    private Process process;
-
-    // Constructor for Onboardee class
-    public Onboardee(String name, String phoneNumber, String email, String gender, String nationality, String annualSalary, String payrollNumber, LocalDate startDate, OnboardeeStatus state) {
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.state = state;
-        this.gender = gender;
-        this.nationality = nationality;
-        this.annualSalary = annualSalary;
-        this.payrollNumber = payrollNumber;
-        this.startDate = startDate;
-    }
+    @OneToMany(fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<StepInfo> stepsInfo;
 }
 

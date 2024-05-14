@@ -1,6 +1,7 @@
 package com.lifecycle.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,33 +10,26 @@ import java.util.List;
 
 @Getter
 @Setter
-
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "steps")
+@Table(name = "step")
 public class Step {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "step_id")
-    private long step_id;
+    @Column(name = "id")
+    private long id;
 
-    @Column(name="title", nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
 
     @Column(name = "description") // *nullable = true* is redundant
     private String description;
 
-    @Column(name="deadline", nullable = false)
+    @Column(name = "deadline", nullable = false)
     private int deadline; // type might be changed
 
-    @OneToMany(mappedBy="step", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @OneToMany(mappedBy = "step", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<StepInProcess> processes = new ArrayList<>();
-
-    public Step() { }
-
-    public Step(String title, String description, int deadline) {
-        this.title = title;
-        this.description = description;
-        this.deadline = deadline;
-    }
 }
