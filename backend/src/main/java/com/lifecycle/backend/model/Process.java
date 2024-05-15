@@ -1,6 +1,5 @@
 package com.lifecycle.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,5 +34,5 @@ public class Process {
     */
     @OneToMany(mappedBy = "process", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<StepInProcess> steps;
+    private List<StepInProcess> stepsInProcess;
 }

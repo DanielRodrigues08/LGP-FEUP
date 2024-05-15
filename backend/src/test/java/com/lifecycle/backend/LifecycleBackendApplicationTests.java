@@ -5,7 +5,6 @@ import com.lifecycle.backend.controller.StepController;
 import com.lifecycle.backend.model.Step;
 import com.lifecycle.backend.model.Process;
 import com.lifecycle.backend.model.StepInProcess;
-import org.apache.coyote.Response;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -59,7 +58,7 @@ class LifecycleBackendApplicationTests {
 		response = processController.updateStepsInProcess(process.getProcess_id(), stepsToAdd);
 		System.out.println("Steps added to process, should show up in database!");
 		System.out.println("First step list:");
-		for (StepInProcess step : response.getBody().getSteps()) {
+		for (StepInProcess step : response.getBody().getStepsInProcess()) {
 			System.out.println("ID: " + step.getStep().getStep_id() + ", " + "Position: " + step.getPosition());
 		}
 		System.out.println("Received HTTP status " + response.getStatusCode());
@@ -72,7 +71,7 @@ class LifecycleBackendApplicationTests {
 		response = processController.updateStepsInProcess(process.getProcess_id(), stepsToAdd);
 		System.out.println("Steps updated!");
 		System.out.println("Second step list: ");
-		for (StepInProcess step : response.getBody().getSteps()) {
+		for (StepInProcess step : response.getBody().getStepsInProcess()) {
 			System.out.println("- ID: " + step.getStep().getStep_id() + ", " + "Position: " + step.getPosition());
 		}
 	 	System.out.println("Received HTTP status " + response.getStatusCode());

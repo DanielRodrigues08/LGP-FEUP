@@ -1,6 +1,5 @@
 package com.lifecycle.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,5 +30,5 @@ public class Step {
 
     @OneToMany(mappedBy = "step", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<StepInProcess> processes = new ArrayList<>();
+    private List<StepInProcess> stepsInProcess = new ArrayList<>();
 }

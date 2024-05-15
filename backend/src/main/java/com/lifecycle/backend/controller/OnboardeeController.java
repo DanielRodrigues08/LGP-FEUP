@@ -93,7 +93,7 @@ public class OnboardeeController {
         boolean addNewStepsInfo = true;
 
         for (StepInfo stepInfo : _onboardee.getStepsInfo()) {
-            if (stepInfo.getStep().getProcess().getId() == idProcess) {
+            if (stepInfo.getStepInProcess().getProcess().getId() == idProcess) {
                 stepInfo.setStatus(StepInfoStatus.NOT_STARTED);
                 addNewStepsInfo = false;
             } else {
@@ -102,10 +102,10 @@ public class OnboardeeController {
         }
 
         if (addNewStepsInfo) {
-            for (StepInProcess stepInProcess : _process.getSteps()) {
+            for (StepInProcess stepInProcess : _process.getStepsInProcess()) {
                 StepInfo stepInfo = new StepInfo();
                 stepInfo.setOnboardee(_onboardee);
-                stepInfo.setStep(stepInProcess);
+                stepInfo.setStepInProcess(stepInProcess);
                 stepInfo.setStatus(StepInfoStatus.NOT_STARTED);
                 stepInfoRepository.save(stepInfo);
                 _onboardee.getStepsInfo().add(stepInfo);
@@ -134,7 +134,7 @@ public class OnboardeeController {
 
         List<StepInfo> stepsInfo = new ArrayList<>();
         for (StepInfo stepInfo : _onboardee.getStepsInfo()) {
-            if (stepInfo.getStep().getProcess().getId() == _process.getId()) {
+            if (stepInfo.getStepInProcess().getProcess().getId() == _process.getId()) {
                 stepsInfo.add(stepInfo);
             }
         }

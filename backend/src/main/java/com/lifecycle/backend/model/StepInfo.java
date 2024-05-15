@@ -27,7 +27,7 @@ public class StepInfo {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "step_in_process_id", nullable = false)
     @JsonBackReference
-    private StepInProcess step;
+    private StepInProcess stepInProcess;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "onboardee_id", nullable = false)

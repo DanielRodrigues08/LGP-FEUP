@@ -1,9 +1,7 @@
 package com.lifecycle.backend.controller;
 
 import com.lifecycle.backend.model.*;
-import com.lifecycle.backend.repository.OnboardeeRepository;
 import com.lifecycle.backend.repository.StepInfoRepository;
-import com.lifecycle.backend.repository.StepRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,7 +67,7 @@ public class StepInfoController {
             if (newStatus == StepInfoStatus.ABORTED) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Cannot set a step to aborted"));
             } else if (newStatus == StepInfoStatus.COMPLETED) {
-                List<StepInProcess> dependencies = stepInfoToUpdate.getStep().getDependencies();
+                List<StepInProcess> dependencies = stepInfoToUpdate.getStepInProcess().getDependencies();
                 for (StepInProcess dependency : dependencies) {
                     Optional<StepInfo> dependencyStepInfo = stepInfoRepository.findByStepAndOnboardee(dependency, stepInfoToUpdate.getOnboardee());
                     if (dependencyStepInfo.isEmpty() || dependencyStepInfo.get().getStatus() != StepInfoStatus.COMPLETED) {
