@@ -84,6 +84,7 @@ public class OnboardeeController {
         }
 
         Optional<Process> process = processRepository.findById(idProcess);
+
         if (process.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Process not found"));
         }
@@ -98,7 +99,6 @@ public class OnboardeeController {
             } else {
                 stepInfo.setStatus(StepInfoStatus.ABORTED);
             }
-            stepInfoRepository.save(stepInfo);
         }
 
         if (addNewStepsInfo) {
@@ -108,8 +108,11 @@ public class OnboardeeController {
                 stepInfo.setStep(stepInProcess);
                 stepInfo.setStatus(StepInfoStatus.NOT_STARTED);
                 stepInfoRepository.save(stepInfo);
+                _onboardee.getStepsInfo().add(stepInfo);
             }
         }
+        _onboardee.setActiveProcess(_process);
+        onboardeeRepository.save(_onboardee);
 
         return ResponseEntity.ok(_onboardee);
     }
