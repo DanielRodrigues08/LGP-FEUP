@@ -1,6 +1,7 @@
 package com.lifecycle.backend.controller;
 
 import com.lifecycle.backend.model.User;
+import com.lifecycle.backend.payload.response.MessageResponse;
 import com.lifecycle.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,7 +41,13 @@ public class UserController {
 
     // POST create user
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<?> createUser(@RequestBody User user) {
+
+        if (userRepository.existsByEmail(user.getEmail())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Email is already in use!"));
+        }
 
         // Create new user's account
         User newUser = new User(user.getEmail(),
