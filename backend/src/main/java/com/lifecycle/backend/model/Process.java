@@ -1,10 +1,12 @@
 package com.lifecycle.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Getter
 @Setter
@@ -18,7 +20,7 @@ public class Process {
     @Column(name = "process_id")
     private long process_id;
 
-    @Column(name="title", nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
 
     @Column(name = "description") // *nullable = true* is redundant
@@ -30,10 +32,15 @@ public class Process {
     -> there is no CascadeType option because we do not want steps
     -> to be deleted from the Steps table when a Process is deleted.
     */
-    @OneToMany(mappedBy="process", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "process", cascade = CascadeType.ALL)
     private List<StepInProcess> steps;
 
-    public Process() { }
+    @OneToMany(mappedBy = "process", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Onboardee> onboardees;
+
+    public Process() {
+    }
 
     public Process(String title, String description) {
         this.title = title;

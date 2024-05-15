@@ -1,6 +1,7 @@
 package com.lifecycle.backend.repository;
 
 import com.lifecycle.backend.model.Onboardee;
+import com.lifecycle.backend.model.Step;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

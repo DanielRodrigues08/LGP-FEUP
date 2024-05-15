@@ -1,11 +1,17 @@
 package com.lifecycle.backend.controller;
 
 import com.lifecycle.backend.model.Onboardee;
+import com.lifecycle.backend.model.Process;
+import com.lifecycle.backend.model.StepInfo;
 import com.lifecycle.backend.repository.OnboardeeRepository;
+import com.lifecycle.backend.repository.ProcessRepository;
+import com.lifecycle.backend.repository.StepInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,12 +25,18 @@ public class OnboardeeController {
     @Autowired
     private OnboardeeRepository onboardeeRepository;
 
+    @Autowired
+    private ProcessRepository processRepository;
+    @Autowired
+    private StepInfoRepository stepInfoRepository;
+
     // GET all onboardees
     @GetMapping
     public ResponseEntity<List<Onboardee>> getAllOnboardees() {
         List<Onboardee> onboardees = onboardeeRepository.findAll();
         return ResponseEntity.ok(onboardees);
     }
+
     // POST create onboardee
     @PostMapping
     public ResponseEntity<Onboardee> createOnboardee(@RequestBody Onboardee onboardee) {
@@ -59,5 +71,62 @@ public class OnboardeeController {
         }
         onboardeeRepository.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/process")
+    public ResponseEntity<Process> getProcess(@PathVariable Long id) {
+        Optional<Onboardee> onboardee = onboardeeRepository.findById(id);
+        if (onboardee.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return new ResponseEntity<>(onboardee.get().getProcess(), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/process")
+    public ResponseEntity<Object> updateProcess(@PathVariable Long id, @RequestBody Map<String, Object> patch) {
+        if (!patch.containsKey("process_id")) {
+            return new ResponseEntity<>(Map.of("message", "Process not found!"), HttpStatus.NOT_FOUND);
+        }
+
+        Optional<Onboardee> onboardee = onboardeeRepository.findById(id);
+        if (onboardee.isEmpty()) {
+            return new ResponseEntity<>(Map.of("message", "Onboardee not found!"), HttpStatus.NOT_FOUND);
+        }
+
+        Onboardee _onboardee = onboardee.get();
+
+        Process _process;
+
+        if (patch.get("process_id") == null) {
+            _process = null;
+        } else {
+            long process_id;
+            try {
+                process_id = Long.parseLong(patch.get("process_id").toString());
+            } catch (Exception e) {
+                return new ResponseEntity<>(Map.of("message", "Invalid process ID!"), HttpStatus.BAD_REQUEST);
+            }
+
+            Optional<Process> process = processRepository.findById(process_id);
+
+            if (process.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            _process = process.get();
+        }
+
+        if (_onboardee.getProcess().equals(_process)) {
+            return ResponseEntity.ok().build();
+        }
+
+        List<StepInfo> stepInfos = stepInfoRepository.findByOnboardee(_onboardee);
+        stepInfoRepository.deleteAll(stepInfos);
+
+        _onboardee.setProcess(_process);
+        onboardeeRepository.save(_onboardee);
+
+        return ResponseEntity.ok().build();
     }
 }
