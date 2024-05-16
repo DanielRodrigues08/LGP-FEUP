@@ -9,10 +9,7 @@ FROM step;
 DELETE
 FROM process;
 DELETE
-FROM onboardee;
-DELETE
 FROM step_info;
-
 
 INSERT INTO users (email, password, name, phone_number, permission_level)
 VALUES ('user1@example.com', 'password1', 'João Silva', '+351911111111', 'ADMIN'),
@@ -44,6 +41,15 @@ VALUES ('Step 1', 'Step 1 description', 5),
        ('Step 9', 'Step 9 description', 13),
        ('Step 10', 'Step 10 description', 14);
 
+INSERT INTO step_in_process(step_id, process_id)
+VALUES (1, 1),
+       (1, 2),
+       (2, 1),
+       (2, 3),
+       (3, 1),
+       (3, 4),
+       (4, 1);
+
 INSERT INTO onboardee (name, phone_number, email, gender, nationality, annual_salary, payroll_number, start_date,
                         state)
 VALUES ('João Silva', '+351912345678', 'joao.silva@example.com', 'male', 'Portugal', '55000', 'ABC123', '2024-05-03',
@@ -66,3 +72,6 @@ VALUES ('João Silva', '+351912345678', 'joao.silva@example.com', 'male', 'Portu
         'COMPLETED'),
        ('Lucas Garcia', '+351911234567', 'lucas.garcia@example.com', 'female', 'Portugal', '15000', 'ABC124',
         '2024-05-03', 'ABORTED');
+
+INSERT INTO step_info (status, description, step_in_process_id, onboardee_id)
+VALUES ('NOT_STARTED', 'Test StepInfo', 1, 1);

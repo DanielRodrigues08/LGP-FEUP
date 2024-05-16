@@ -55,7 +55,7 @@ public class Onboardee {
     @Column(name = "start_date")
     private LocalDate startDate;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "onboardee")
     @JsonManagedReference
     private List<StepInfo> stepsInfo;
 

@@ -69,7 +69,7 @@ public class StepInfoController {
             } else if (newStatus == StepInfoStatus.COMPLETED) {
                 List<StepInProcess> dependencies = stepInfoToUpdate.getStepInProcess().getDependencies();
                 for (StepInProcess dependency : dependencies) {
-                    Optional<StepInfo> dependencyStepInfo = stepInfoRepository.findByStepAndOnboardee(dependency, stepInfoToUpdate.getOnboardee());
+                    Optional<StepInfo> dependencyStepInfo = stepInfoRepository.findByStepInProcessAndOnboardee(dependency, stepInfoToUpdate.getOnboardee());
                     if (dependencyStepInfo.isEmpty() || dependencyStepInfo.get().getStatus() != StepInfoStatus.COMPLETED) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Cannot complete a step with incomplete dependencies"));
                     }
