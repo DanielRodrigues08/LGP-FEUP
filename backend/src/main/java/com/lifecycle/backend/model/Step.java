@@ -46,8 +46,6 @@ public class Step {
     @JsonManagedReference
     private List<StepInProcess> stepsInProcess = new ArrayList<>();
 
-    public Step() { }
-
     public Step(String title, String description, int deadline, int duration, User owner, User backup) {
         this.title = title;
         this.description = description;

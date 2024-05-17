@@ -3,6 +3,7 @@ package com.lifecycle.backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -34,5 +35,10 @@ public class Process {
     */
     @OneToMany(mappedBy = "process", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<StepInProcess> stepsInProcess;
+    private List<StepInProcess> stepsInProcess = new ArrayList<>();
+
+    public Process(String title, String description) {
+        this.title = title;
+        this.description = description;
+    }
 }

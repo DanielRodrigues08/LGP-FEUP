@@ -19,11 +19,11 @@ VALUES (1, 'user1@example.com', 'password1', 'João Silva', '+351911111111', 'AD
        (10, 'user10@example.com', 'password10', 'Inês Oliveira', '+351900000000', 'EMPLOYEE');
 
 -- Insert processes
-INSERT INTO processes (process_id, title, description)
-VALUES (1, 'Portugal', 'Process for onboarding employees in Portugal'),
-       (2, 'UK', 'Process for onboarding employees in the UK'),
-       (3, 'France', 'Process for onboarding employees in France'),
-       (4, 'Spain', 'Process for onboarding employees in Spain');
+INSERT INTO process (title, description)
+VALUES ('Portugal', 'Process for onboarding employees in Portugal'),
+       ('UK', 'Process for onboarding employees in the UK'),
+       ('France', 'Process for onboarding employees in France'),
+       ('Spain', 'Process for onboarding employees in Spain');
 
 -- Insert steps
 INSERT INTO steps (step_id, title, description, deadline, duration, owner, backup)
