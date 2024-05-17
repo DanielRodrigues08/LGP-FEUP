@@ -46,7 +46,7 @@
         };
         console.log(this.password)
 
-        await axios.post('http://localhost:8081/api/auth/signin', requestData)
+        await axios.post(`${import.meta.env.VITE_API_URL}/auth/signin`, requestData)
           .then(response => {
             console.log(response)
             const token = response.data.token;

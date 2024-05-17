@@ -92,7 +92,7 @@ export default {
         startDate: this.startDate
       };
 
-      await axios.post('http://localhost:8081/api/onboardees', requestData)
+      await axios.post(`${import.meta.env.VITE_API_URL}/onboardees`, requestData)
         .then(response => {
           this.$router.push({ name: 'onboardees' });
         })
