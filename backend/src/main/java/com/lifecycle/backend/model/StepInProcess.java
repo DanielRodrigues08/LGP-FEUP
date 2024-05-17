@@ -1,37 +1,40 @@
 package com.lifecycle.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
-
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "steps_in_process")
+@Table(name = "step_in_process")
 public class StepInProcess {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "steps_in_process_id")
-    private long step_in_process_id;
+    @Column(name = "id")
+    private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "step_id")
+    @JsonBackReference
     private Step step;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "process_id")
-    @JsonIgnore
+    @JsonBackReference
     private Process process;
 
-    @Column(name = "position", nullable = false)
-    private int position;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<StepInProcess> dependencies;
 
-    public StepInProcess() {}
-
-    public StepInProcess(Step step, Process process, int position) {
-        this.step = step;
-        this.process = process;
-        this.position = position;
-    }
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "stepInProcess", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<StepInfo> stepsInfo;
 }

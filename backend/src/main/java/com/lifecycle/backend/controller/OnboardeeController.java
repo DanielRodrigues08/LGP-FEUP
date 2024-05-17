@@ -1,8 +1,7 @@
 package com.lifecycle.backend.controller;
 
-import com.lifecycle.backend.model.Onboardee;
+import com.lifecycle.backend.model.*;
 import com.lifecycle.backend.model.Process;
-import com.lifecycle.backend.model.StepInfo;
 import com.lifecycle.backend.repository.OnboardeeRepository;
 import com.lifecycle.backend.repository.ProcessRepository;
 import com.lifecycle.backend.repository.StepInfoRepository;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,60 +70,97 @@ public class OnboardeeController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}/process")
-    public ResponseEntity<Process> getProcess(@PathVariable Long id) {
-        Optional<Onboardee> onboardee = onboardeeRepository.findById(id);
-        if (onboardee.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return new ResponseEntity<>(onboardee.get().getProcess(), HttpStatus.OK);
-    }
-
     @PatchMapping("/{id}/process")
-    public ResponseEntity<Object> updateProcess(@PathVariable Long id, @RequestBody Map<String, Object> patch) {
-        if (!patch.containsKey("process_id")) {
-            return new ResponseEntity<>(Map.of("message", "Process not found!"), HttpStatus.NOT_FOUND);
-        }
-
+    public ResponseEntity<Object> updateOnboardeeProcess(@PathVariable long id, @RequestBody long idProcess) {
         Optional<Onboardee> onboardee = onboardeeRepository.findById(id);
         if (onboardee.isEmpty()) {
-            return new ResponseEntity<>(Map.of("message", "Onboardee not found!"), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Onboardee not found"));
         }
 
         Onboardee _onboardee = onboardee.get();
 
-        Process _process;
-
-        if (patch.get("process_id") == null) {
-            _process = null;
-        } else {
-            long process_id;
-            try {
-                process_id = Long.parseLong(patch.get("process_id").toString());
-            } catch (Exception e) {
-                return new ResponseEntity<>(Map.of("message", "Invalid process ID!"), HttpStatus.BAD_REQUEST);
-            }
-
-            Optional<Process> process = processRepository.findById(process_id);
-
-            if (process.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
-
-            _process = process.get();
+        if (_onboardee.getActiveProcess() != null && _onboardee.getActiveProcess().getId() == idProcess) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Onboardee already has this process"));
         }
 
-        if (_onboardee.getProcess().equals(_process)) {
-            return ResponseEntity.ok().build();
+        Optional<Process> process = processRepository.findById(idProcess);
+
+        if (process.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Process not found"));
+        }
+        Process _process = process.get();
+
+        boolean addNewStepsInfo = true;
+
+        for (StepInfo stepInfo : _onboardee.getStepsInfo()) {
+            if (stepInfo.getStepInProcess().getProcess().getId() == idProcess) {
+                stepInfo.setStatus(StepInfoStatus.NOT_STARTED);
+                addNewStepsInfo = false;
+            } else {
+                stepInfo.setStatus(StepInfoStatus.ABORTED);
+            }
         }
 
-        List<StepInfo> stepInfos = stepInfoRepository.findByOnboardee(_onboardee);
-        stepInfoRepository.deleteAll(stepInfos);
-
-        _onboardee.setProcess(_process);
+        if (addNewStepsInfo) {
+            for (StepInProcess stepInProcess : _process.getStepsInProcess()) {
+                StepInfo stepInfo = new StepInfo();
+                stepInfo.setOnboardee(_onboardee);
+                stepInfo.setStepInProcess(stepInProcess);
+                stepInfo.setStatus(StepInfoStatus.NOT_STARTED);
+                stepInfoRepository.save(stepInfo);
+                _onboardee.getStepsInfo().add(stepInfo);
+            }
+        }
+        _onboardee.setActiveProcess(_process);
         onboardeeRepository.save(_onboardee);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(_onboardee);
     }
+
+
+    @GetMapping("/{id}/process/active")
+    public ResponseEntity<Object> getProcess(@PathVariable Long id) {
+        Optional<Onboardee> onboardee = onboardeeRepository.findById(id);
+        if (onboardee.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Onboardee not found"));
+        }
+        Onboardee _onboardee = onboardee.get();
+
+        Process _process = _onboardee.getActiveProcess();
+
+        if (_process == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "The onboardee has no active process"));
+        }
+
+        List<StepInfo> stepsInfo = new ArrayList<>();
+        for (StepInfo stepInfo : _onboardee.getStepsInfo()) {
+            if (stepInfo.getStepInProcess().getProcess().getId() == _process.getId()) {
+                stepsInfo.add(stepInfo);
+            }
+        }
+
+        return ResponseEntity.ok(Map.of("process", _process, "stepsInfo", stepsInfo));
+
+    }
+
+    @GetMapping("/{id}/process/archived")
+    public ResponseEntity<Object> getStepsInfoArchived(@PathVariable Long id) {
+        Optional<Onboardee> onboardee = onboardeeRepository.findById(id);
+        if (onboardee.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Onboardee not found"));
+        }
+        Onboardee _onboardee = onboardee.get();
+
+        List<StepInfo> stepsInfo = new ArrayList<>();
+        for (StepInfo stepInfo : _onboardee.getStepsInfo()) {
+            if (stepInfo.getStatus() == StepInfoStatus.ABORTED) {
+                stepsInfo.add(stepInfo);
+            }
+        }
+
+        return ResponseEntity.ok(stepsInfo);
+
+    }
+
+
 }

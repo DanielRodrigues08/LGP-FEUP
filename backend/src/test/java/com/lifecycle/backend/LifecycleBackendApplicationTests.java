@@ -68,7 +68,7 @@ class LifecycleBackendApplicationTests {
 		response = processController.updateStepsInProcess(process.getProcess_id(), stepsToAdd);
 		System.out.println("Steps added to process, should show up in database!");
 		System.out.println("First step list:");
-		for (StepInProcess step : response.getBody().getSteps()) {
+		for (StepInProcess step : response.getBody().getStepsInProcess()) {
 			System.out.println("ID: " + step.getStep().getStep_id() + ", " + "Position: " + step.getPosition());
 		}
 		System.out.println("Received HTTP status " + response.getStatusCode());
@@ -81,7 +81,7 @@ class LifecycleBackendApplicationTests {
 		response = processController.updateStepsInProcess(process.getProcess_id(), stepsToAdd);
 		System.out.println("Steps updated!");
 		System.out.println("Second step list: ");
-		for (StepInProcess step : response.getBody().getSteps()) {
+		for (StepInProcess step : response.getBody().getStepsInProcess()) {
 			System.out.println("- ID: " + step.getStep().getStep_id() + ", " + "Position: " + step.getPosition());
 		}
 	 	System.out.println("Received HTTP status " + response.getStatusCode());
