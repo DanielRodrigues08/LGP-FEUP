@@ -80,6 +80,7 @@ export default {
   },
   methods: {
     async handleSubmit() {
+      console.log(this.startDate)
       const requestData = {
         name: this.name,
         phoneNumber: this.phone,

@@ -22,6 +22,10 @@ const boards = ref([
         route: "/onboardees"
     },
     {
+        name: "Statistics",
+        route: "/statistics"
+    },
+    {
         name: "Admin area",
         route: "/admin-area"
     }
