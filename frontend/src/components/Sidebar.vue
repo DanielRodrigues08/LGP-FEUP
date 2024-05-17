@@ -14,10 +14,6 @@ const boards = ref([
         route: "/dashboard1"
     },
     {
-        name: "Dashboard 2",
-        route: "/dashboard2"
-    },
-    {
         name: "Onboardees",
         route: "/onboardees"
     },

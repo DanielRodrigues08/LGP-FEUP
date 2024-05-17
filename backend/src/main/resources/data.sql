@@ -69,7 +69,7 @@ VALUES ('João Silva', '+351912345678', 'joao.silva@example.com', 'male', 'Portu
         'COMPLETED'),
        ('Maria Garcia', '+34911234567', 'maria.garcia@example.com', 'female', 'Spain', '58000', 'VWX234', '2024-05-03',
         'COMPLETED'),
-       ('Lucas Garcia', '+351911234567', 'lucas.garcia@example.com', 'female', 'Portugal', '15000', 'ABC124',
+       ('Lucas Garcia', '+351911234567', 'lucas.garcia@example.com', 'other', 'Portugal', '15000', 'ABC124',
         '2024-05-03', 'ABORTED');
 
 -- Insert step info

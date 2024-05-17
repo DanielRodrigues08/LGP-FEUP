@@ -224,6 +224,13 @@ export default {
 .date-range-container {
   margin-top: 20px;
 }
+.filter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  margin: 3em auto;
+}
 
 .date-range-container input,
 .date-range-container button {
