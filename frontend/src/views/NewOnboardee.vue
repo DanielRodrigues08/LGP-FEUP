@@ -89,7 +89,7 @@ export default {
         nationality: this.nationality,
         annualSalary: this.annualSalary,
         payrollNumber: this.payrollNumber,
-        startDate: this.startDate
+        startDate: this.startDate,
       };
 
       await axios.post('http://localhost:8081/api/onboardees', requestData)
