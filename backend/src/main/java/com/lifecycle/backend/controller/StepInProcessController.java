@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/step-in-processes")
+@RequestMapping("/api/step-in-processes")
 public class StepInProcessController {
     @Autowired
     private ProcessRepository processRepository;

@@ -17,7 +17,7 @@ import java.util.*;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/processes")
+@RequestMapping("/api/processes")
 public class ProcessController {
 
     @Autowired

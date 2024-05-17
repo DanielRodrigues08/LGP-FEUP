@@ -11,7 +11,7 @@ import java.util.*;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/steps-info")
+@RequestMapping("/api/steps-info")
 public class StepInfoController {
 
     @Autowired
