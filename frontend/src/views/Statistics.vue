@@ -188,9 +188,14 @@ export default {
       };
     },
     filterData() {
+      this.startDate.setHours(0, 0, 0, 0);
+      this.endDate.setHours(23, 59, 59, 999);
+
       // Filter onboardees based on startDate and endDate
       this.filteredOnboardees = this.onboardees.filter(onboardee => {
         const startDate = new Date(onboardee.startDate);
+        startDate.setHours(0, 0, 0, 0);
+
         return startDate >= this.startDate && startDate <= this.endDate;
       });
       // Update charts based on filtered data
@@ -206,18 +211,25 @@ export default {
 .chart-container {
   display: flex;
   justify-content: space-around;
-  align-items: center; /* Center items vertically */
+  align-items: center;
   width: 100%;
   padding: 20px;
   border-radius: 10px;
 }
 
 .surface-card {
-  width: 300px; /* Increase the width */
+  width: 300px;
 }
 
 .date-range-container {
   margin-top: 20px;
+}
+.filter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  margin: 3em auto;
 }
 
 .date-range-container input,

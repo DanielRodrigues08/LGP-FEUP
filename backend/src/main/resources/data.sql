@@ -51,7 +51,7 @@ VALUES (1, 1),
 
 -- Insert onboardees
 INSERT INTO onboardee (name, phone_number, email, gender, nationality, annual_salary, payroll_number, start_date, state)
-VALUES ('João Silva', '+351912345678', 'joao.silva@example.com', 'male', 'Portugal', '55000', 'ABC123', '2024-05-03',
+VALUES ('João Silva', '+351912345678', 'joao.silva@example.com', 'male', 'Portugal', '55000', 'ABC123', '2024-05-10',
         'INCOMING'),
        ('Marta Santos', '+351923456789', 'marta.santos@example.com', 'female', 'Portugal', '50000', 'DEF456',
         '2024-05-03', 'INCOMING'),
@@ -69,7 +69,7 @@ VALUES ('João Silva', '+351912345678', 'joao.silva@example.com', 'male', 'Portu
         'COMPLETED'),
        ('Maria Garcia', '+34911234567', 'maria.garcia@example.com', 'female', 'Spain', '58000', 'VWX234', '2024-05-03',
         'COMPLETED'),
-       ('Lucas Garcia', '+351911234567', 'lucas.garcia@example.com', 'female', 'Portugal', '15000', 'ABC124',
+       ('Lucas Garcia', '+351911234567', 'lucas.garcia@example.com', 'other', 'Portugal', '15000', 'ABC124',
         '2024-05-03', 'ABORTED');
 
 -- Insert step info
