@@ -47,6 +47,7 @@ public class OnboardeeController {
     // GET onboardee by ID
     @GetMapping("/{id}")
     public ResponseEntity<Onboardee> getOnboardeeById(@PathVariable Long id) {
+        System.out.println("aquiiiiii");
         Optional<Onboardee> onboardee = onboardeeRepository.findById(id);
         return onboardee.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }

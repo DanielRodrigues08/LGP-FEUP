@@ -10,8 +10,13 @@
     </div>
     
     <div v-for="(stateOnboardees, state) in filteredOnboardees" :key="state">
-      <h3 :class="stateClass(state)">{{ toTitleCase(state) }}  onboardees</h3>
-      <DataTable class="custom-table" :value="stateOnboardees" :globalFilter="globalFilter" @filter="filterOnboardees">
+      <h3 :class="stateClass(state)">{{ toTitleCase(state) }} onboardees</h3>
+      <DataTable
+        class="custom-table"
+        :value="stateOnboardees"
+        :globalFilter="globalFilter"
+        @row-click="handleRowClick"
+      >
         <Column field="id" header="ID"></Column>
         <Column field="name" header="Name"></Column>
         <Column field="email" header="Email"></Column>
@@ -46,7 +51,6 @@ export default {
   },
   mounted() {
     this.fetchOnboardees();
-
   },
   computed: {
     filteredOnboardees() {
@@ -66,7 +70,6 @@ export default {
         const response = await axios.get('http://localhost:8081/onboardees');
         this.onboardees = response.data;
         this.originalOnboardees = response.data;
-
       } catch (error) {
         console.error('Error fetching onboardees:', error);
       }
@@ -83,6 +86,10 @@ export default {
         this.onboardees = this.originalOnboardees.filter(item => item.name.toLowerCase().includes(this.globalFilter.value.toLowerCase()));
       }    
     },
+    handleRowClick(event) {
+      const onboardeeId = event.data.id;
+      this.$router.push(`/onboardees/${onboardeeId}`);
+    },
     stateClass(state) {
       return {
         'incoming': state === 'INCOMING',
@@ -95,48 +102,45 @@ export default {
       return str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     }
   }
-
 };
 </script>
 
 <style scoped>
-  h3 {
-    font-weight:500;
-    margin-left: 2.1rem;
-    margin-top: 1.5rem;
-  }
-  .incoming {
-    color: green;
-  }
-  .ongoing {
-    color: #1976D2;
-  }
-  .completed {
-    color: purple;
-  }
-  .aborted {
-    color: #C81E1E;
-  }
-  .add-button {
-    background-color: #033A65;
-    color: white;
-    border-color: rgba(0, 0, 0, 0.1); 
-  }
-  .search-container {
-    display: flex;
-    align-items: center;
-    margin-top: 1.5rem;
-    margin-left: 2rem;
-  }
-
-  .search-container > div {
-    margin-right: 1rem;
-  }
-  .custom-table {
-    max-width: 90%;
-    margin: 0 auto;
-    margin-top: 0.5em;
-    margin-bottom: 2em;
-
-  }
+h3 {
+  font-weight: 500;
+  margin-left: 2.1rem;
+  margin-top: 1.5rem;
+}
+.incoming {
+  color: green;
+}
+.ongoing {
+  color: #1976D2;
+}
+.completed {
+  color: purple;
+}
+.aborted {
+  color: #C81E1E;
+}
+.add-button {
+  background-color: #033A65;
+  color: white;
+  border-color: rgba(0, 0, 0, 0.1); 
+}
+.search-container {
+  display: flex;
+  align-items: center;
+  margin-top: 1.5rem;
+  margin-left: 2rem;
+}
+.search-container > div {
+  margin-right: 1rem;
+}
+.custom-table {
+  max-width: 90%;
+  margin: 0 auto;
+  margin-top: 0.5em;
+  margin-bottom: 2em;
+}
 </style>
