@@ -1,6 +1,3 @@
-DELETE FROM onboardees;
-DELETE FROM users;
-
 
 INSERT INTO onboardees (name, phone_number, email, gender, nationality, annual_salary, payroll_number, start_date, state) VALUES
 ('João Silva', '+351912345678', 'joao.silva@example.com', 'male', 'Portugal', '55000', 'ABC123', '2024-05-03', 'INCOMING'),
@@ -15,7 +12,7 @@ INSERT INTO onboardees (name, phone_number, email, gender, nationality, annual_s
 ( 'Lucas Garcia', '+351911234567', 'lucas.garcia@example.com', 'female', 'Portugal', '15000', 'ABC124', '2024-05-03', 'ABORTED');
 
 
-INSERT INTO users (email, password, name, phone_number, permission_level) VALUES 
+INSERT INTO users (email, password, name, phone_number, permission_level) VALUES
 ('user1@example.com', '$2a$12$QNmvz/MnZMpAN5eBUjMATuXFIhzV0jKiQ7dQu86tq9fihiZgaBi12', 'João Silva', '+351911111111', 'ADMIN'),
 ('user2@example.com', '$2a$12$6pe.T5UbCUarKQwMyfdT/urhWhR8RkFKY87vOxdfNT1UnuTBkNOUW', 'Marta Santos', '+351922222222', 'ADMIN'),
 ('user3@example.com', '$2a$12$2vdAdQRzUyopkMVbwdEzo.BVXZR4khHYLv0QL.05BAd3Q/DAnFuku', 'Pedro Costa', '+351933333333', 'HR'),
