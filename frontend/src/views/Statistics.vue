@@ -188,9 +188,14 @@ export default {
       };
     },
     filterData() {
+      this.startDate.setHours(0, 0, 0, 0);
+      this.endDate.setHours(23, 59, 59, 999);
+
       // Filter onboardees based on startDate and endDate
       this.filteredOnboardees = this.onboardees.filter(onboardee => {
         const startDate = new Date(onboardee.startDate);
+        startDate.setHours(0, 0, 0, 0);
+
         return startDate >= this.startDate && startDate <= this.endDate;
       });
       // Update charts based on filtered data
