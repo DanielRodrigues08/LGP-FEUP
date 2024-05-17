@@ -40,8 +40,7 @@ const router = createRouter({
       component: NotFound 
     },
     {
-      path: '/onboardee_profile/:id',
-      //path: '/onboardee_profile/:id',
+      path: '/onboardees/:id',
       name: 'OnboardeeProfile',
       component: OnboardeeProfileView
     },
