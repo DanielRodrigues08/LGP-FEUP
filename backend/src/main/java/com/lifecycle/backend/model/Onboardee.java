@@ -36,9 +36,6 @@ public class Onboardee {
     private String email;
 
     // New attributes for Onboardee
-    @Enumerated(EnumType.STRING) // Add this annotation
-    @Column(name = "state")
-    private OnboardeeStatus state;
 
     @Column(name = "gender")
     private String gender;
@@ -55,6 +52,10 @@ public class Onboardee {
     @Column(name = "start_date")
     private LocalDate startDate;
 
+    @Enumerated(EnumType.STRING) // Add this annotation
+    @Column(name = "state")
+    private OnboardeeStatus state;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "onboardee")
     @JsonManagedReference
     private List<StepInfo> stepsInfo;
@@ -62,5 +63,18 @@ public class Onboardee {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
     private Process activeProcess;
+
+    // Constructor for Onboardee class
+    public Onboardee(String name, String phoneNumber, String email, String gender, String nationality, String annualSalary, String payrollNumber, LocalDate startDate) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.gender = gender;
+        this.nationality = nationality;
+        this.annualSalary = annualSalary;
+        this.payrollNumber = payrollNumber;
+        this.startDate = startDate;
+        this.state = OnboardeeStatus.INCOMING;
+    }
 }
 

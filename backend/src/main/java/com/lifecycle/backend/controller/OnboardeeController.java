@@ -2,6 +2,8 @@ package com.lifecycle.backend.controller;
 
 import com.lifecycle.backend.model.*;
 import com.lifecycle.backend.model.Process;
+import com.lifecycle.backend.model.OnboardeeStatus;
+import com.lifecycle.backend.payload.request.OnboardeeRequest;
 import com.lifecycle.backend.repository.OnboardeeRepository;
 import com.lifecycle.backend.repository.ProcessRepository;
 import com.lifecycle.backend.repository.StepInfoRepository;
@@ -37,8 +39,20 @@ public class OnboardeeController {
 
     // POST create onboardee
     @PostMapping
-    public ResponseEntity<Onboardee> createOnboardee(@RequestBody Onboardee onboardee) {
-        Onboardee savedOnboardee = onboardeeRepository.save(onboardee);
+    public ResponseEntity<Onboardee> createOnboardee(@RequestBody OnboardeeRequest onboardee) {
+
+        Onboardee newOnboardee = new Onboardee(onboardee.getName(),
+            onboardee.getPhoneNumber(),
+            onboardee.getEmail(),
+            onboardee.getGender(),
+            onboardee.getNationality(),
+            onboardee.getAnnualSalary(),
+            onboardee.getPayrollNumber(),
+            onboardee.getStartDate()
+        );
+
+        Onboardee savedOnboardee = onboardeeRepository.save(newOnboardee);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(savedOnboardee);
     }
 
