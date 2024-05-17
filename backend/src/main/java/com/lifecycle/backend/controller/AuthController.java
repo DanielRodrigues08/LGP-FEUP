@@ -28,7 +28,7 @@ import static com.lifecycle.backend.model.UserPermission.ADMIN;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
   @Autowired
   AuthenticationManager authenticationManager;

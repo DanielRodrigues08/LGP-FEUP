@@ -53,7 +53,7 @@ export default {
 
     const fetchOnboardeeById = async (userId) => {
       try {
-        const response = await axios.get(`http://localhost:8081/users/${userId}`);
+        const response = await axios.get(`http://localhost:8081/api/users/${userId}`);
         user.value = response.data;
       } catch (error) {
         console.error('Error fetching user:', error);
@@ -66,7 +66,7 @@ export default {
         if (newPassword.value) {
           updateData.password = newPassword.value;
         }
-        await axios.put(`http://localhost:8081/users/${userId}`, updateData);
+        await axios.put(`http://localhost:8081/api/users/${userId}`, updateData);
         showProfileDialog.value = false;
       } catch (error) {
         console.error('Error saving changes:', error);

@@ -81,7 +81,7 @@
     methods: {
       async fetchUsers() {
         try {
-          const response = await axios.get('http://localhost:8081/users');
+          const response = await axios.get('http://localhost:8081/api/users');
           this.users = response.data;
           this.originalUsers = response.data;
         } catch (error) {
@@ -99,7 +99,7 @@
       async saveEditedUser() {
         this.selectedUser.permissionLevel = this.tempPermissionLevel.value;
         try {
-          // await axios.post(`http://localhost:8081/users/${this.selectedUser.id}/permissions`, {
+          // await axios.post(`http://localhost:8081/api/users/${this.selectedUser.id}/permissions`, {
           //   permissionLevel: this.tempPermissionLevel
           // });
           console.log('Permission updated successfully!');

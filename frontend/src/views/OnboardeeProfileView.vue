@@ -44,7 +44,7 @@ export default {
     methods: {
         async fetchOnboardeeById(onboardeeId) {
             try {
-                const response = await axios.get(`http://localhost:8081/onboardees/${onboardeeId}`);
+                const response = await axios.get(`http://localhost:8081/api/onboardees/${onboardeeId}`);
                 this.onboardee = response.data;
             } catch (error) {
                 console.error('Error fetching user:', error);

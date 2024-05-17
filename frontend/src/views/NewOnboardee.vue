@@ -92,7 +92,7 @@ export default {
         startDate: this.startDate
       };
 
-      await axios.post('http://localhost:8081/onboardees', requestData)
+      await axios.post('http://localhost:8081/api/onboardees', requestData)
         .then(response => {
           this.$router.push({ name: 'onboardees' });
         })
