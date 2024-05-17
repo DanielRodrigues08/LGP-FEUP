@@ -85,7 +85,7 @@ export default {
   methods: {
     async fetchOnboardees() {
       try {
-        const response = await axios.get('http://localhost:8081/api/onboardees');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/onboardees`);
         this.onboardees = response.data;
         this.calculateMinMaxDate();
         this.filteredOnboardees = response.data;
