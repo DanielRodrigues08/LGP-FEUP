@@ -70,6 +70,9 @@ public class StepController {
             if (patch.containsKey("title")) _step.setTitle((String) patch.get("title"));
             if (patch.containsKey("description")) _step.setDescription((String) patch.get("description"));
             if (patch.containsKey("deadline")) _step.setDeadline((int) patch.get("deadline"));
+            if (patch.containsKey("duration")) _step.setDeadline((int) patch.get("duration"));
+            if (patch.containsKey("owner")) _step.setDeadline((int) patch.get("owner"));
+            if (patch.containsKey("backup")) _step.setDeadline((int) patch.get("backup"));
             return new ResponseEntity<>(stepRepository.save(_step), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

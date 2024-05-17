@@ -2,9 +2,13 @@ package com.lifecycle.backend;
 
 import com.lifecycle.backend.controller.ProcessController;
 import com.lifecycle.backend.controller.StepController;
+import com.lifecycle.backend.controller.UserController;
 import com.lifecycle.backend.model.Step;
 import com.lifecycle.backend.model.Process;
 import com.lifecycle.backend.model.StepInProcess;
+import com.lifecycle.backend.model.User;
+import com.lifecycle.backend.repository.UserRepository;
+import org.apache.coyote.Response;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,10 +28,13 @@ class LifecycleBackendApplicationTests {
 	private ProcessController processController;
 	@Autowired
 	private StepController stepController;
+	@Autowired
+	private UserController userController;
 
 	@Test
 	void stepCreation() {
-		Step step = new Step("testStep", null, 1);
+		User owner = userController.getAllUsers().getBody().get(0);
+		Step step = new Step("testStep", null, 1, 0, owner, null);
 		ResponseEntity<Step> response = stepController.createStep(step);
 		System.out.println("Step " + response.getBody().getStep_id() + " added to the database.");
 		System.out.println("Received HTTP status " + response.getStatusCode());
@@ -37,8 +44,11 @@ class LifecycleBackendApplicationTests {
 
 	@Test
 	void processCRUD() {
-		Step step1 = new Step("processStep1", null, 1);
-		Step step2 = new Step("processStep2", null, 1);
+
+		User owner = userController.getAllUsers().getBody().get(0);
+
+		Step step1 = new Step("processStep1", null, 1, 0, owner, null);
+		Step step2 = new Step("processStep2", null, 1, 0, owner, null);
 		ResponseEntity<Step> stepCreationResponse1 = stepController.createStep(step1);
 		ResponseEntity<Step> stepCreationResponse2 = stepController.createStep(step2);
 		List<Long> stepsToAdd = new ArrayList<>();
