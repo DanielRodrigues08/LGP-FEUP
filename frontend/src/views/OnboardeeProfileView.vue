@@ -44,7 +44,6 @@ export default {
     methods: {
         async fetchOnboardeeById(onboardeeId) {
             try {
-                console.log('onboardeeId:', onboardeeId)
                 const response = await axios.get(`http://localhost:8081/onboardees/${onboardeeId}`);
                 this.onboardee = response.data;
             } catch (error) {
