@@ -206,14 +206,14 @@ export default {
 .chart-container {
   display: flex;
   justify-content: space-around;
-  align-items: center; /* Center items vertically */
+  align-items: center;
   width: 100%;
   padding: 20px;
   border-radius: 10px;
 }
 
 .surface-card {
-  width: 300px; /* Increase the width */
+  width: 300px;
 }
 
 .date-range-container {

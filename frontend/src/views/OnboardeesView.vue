@@ -17,7 +17,6 @@
         :globalFilter="globalFilter"
         @row-click="handleRowClick"
       >
-        <Column field="id" header="ID"></Column>
         <Column field="name" header="Name"></Column>
         <Column field="email" header="Email"></Column>
         <Column field="phoneNumber" header="Phone"></Column>
