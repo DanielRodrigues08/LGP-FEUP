@@ -11,8 +11,6 @@
           <i class="pi pi-users text-blue-500 text-xl"></i>
         </div>
       </div>
-      <span class="text-green-500 font-medium">24 new </span>
-      <span class="text-500">since last visit</span>
     </div>
     <Chart :type="'doughnut'" :data="genderChartData" :options="genderChartOptions" />
   </div>
