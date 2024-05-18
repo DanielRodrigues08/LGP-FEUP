@@ -214,6 +214,7 @@ h1 {
   font-weight:600;
   margin-right: 2rem;
 }
+
 .title-container {
   display: flex;
   align-items: center;
