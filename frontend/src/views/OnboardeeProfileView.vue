@@ -104,7 +104,6 @@
                 try {
                     const response = await axios.get(`${import.meta.env.VITE_API_URL}/onboardees/${onboardeeId}`);
                     this.onboardee = response.data;
-                    console.log(this.onboardee)
                     this.editOnboardee = { ...response.data };
                 } catch (error) {
                     console.error('Error fetching onboardee:', error);
@@ -120,11 +119,8 @@
             },
             async saveChanges() {
                 try {
-                    console.log(this.editOnboardee.value)
-                    let data = JSON.stringify(this.editOnboardee);
-                    const updateData = { ...this.editOnboardee };
 
-                    data = {
+                    let data = {
                         id: this.editOnboardee.id,
                         name: this.editOnboardee.name,
                         email: this.editOnboardee.email,
@@ -140,17 +136,7 @@
 
                     };
                     console.log(data)
-
-                    await axios.put(
-                        `${import.meta.env.VITE_API_URL}/onboardees/${this.onboardee.id}`,
-                        data,
-                        {
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        }
-                    );
-
+                    await axios.put(`${import.meta.env.VITE_API_URL}/onboardees/${this.onboardee.id}`,data);
                     this.onboardee = { ...this.editOnboardee };
                     this.showEditDialog = false;
                 } catch (error) {

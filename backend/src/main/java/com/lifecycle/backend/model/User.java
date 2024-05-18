@@ -1,6 +1,7 @@
 package com.lifecycle.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -37,11 +38,11 @@ public class User {
     private UserPermission permissionLevel;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JsonManagedReference
     List<Step> ownerSteps;
 
     @OneToMany(mappedBy = "backup", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JsonManagedReference
     List<Step> backupSteps;
 
     // Constructor for User class

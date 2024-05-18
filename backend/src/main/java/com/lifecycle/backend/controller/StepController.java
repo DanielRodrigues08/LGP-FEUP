@@ -1,7 +1,10 @@
 package com.lifecycle.backend.controller;
 
 import com.lifecycle.backend.model.Step;
+import com.lifecycle.backend.model.User;
+import com.lifecycle.backend.payload.request.StepRequest;
 import com.lifecycle.backend.repository.StepRepository;
+import com.lifecycle.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,9 @@ public class StepController {
 
     @Autowired
     StepRepository stepRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @GetMapping("")
     public ResponseEntity<List<Step>> getAllSteps(@RequestParam(required = false) String title) {
@@ -52,28 +58,66 @@ public class StepController {
 
     // Step Creation
     @PostMapping("/create")
-    public ResponseEntity<Step> createStep(@RequestBody Step step) {
-        stepRepository.save(step);
-        return new ResponseEntity<>(step, HttpStatus.OK);
+    public ResponseEntity<Object> createStep(@RequestBody StepRequest stepRequest) {
+        Optional<User> owner = userRepository.findById(stepRequest.getOwner());
+        if (owner.isEmpty()) {
+            return new ResponseEntity<>("Owner not found", HttpStatus.NOT_FOUND);
+        }
+
+        Optional<User> backup = userRepository.findById(stepRequest.getBackup());
+        if (backup.isEmpty()) {
+            return new ResponseEntity<>("Backup not found", HttpStatus.NOT_FOUND);
+        }
+
+        Step step = new Step(
+                stepRequest.getTitle(),
+                stepRequest.getDescription(),
+                stepRequest.getDeadline(),
+                stepRequest.getDuration(),
+                owner.get(),
+                backup.get()
+        );
+
+        try {
+            Step _step = stepRepository.save(step);
+            return new ResponseEntity<>(_step, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Step> updateStep(@PathVariable("id") long id, @RequestBody Map<String, Object> patch) {
+    public ResponseEntity<Step> updateStep(@PathVariable("id") long id, @RequestBody StepRequest stepPatch) {
         Optional<Step> stepToChange = stepRepository.findById(id);
 
         if (stepToChange.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
+        Step _stepToChange = stepToChange.get();
+
+        if (stepPatch.getTitle() != null) _stepToChange.setTitle(stepPatch.getTitle());
+        if (stepPatch.getDescription() != null) _stepToChange.setDescription(stepPatch.getDescription());
+        if (stepPatch.getDeadline() != null) _stepToChange.setDeadline(stepPatch.getDeadline());
+        if (stepPatch.getDuration() != null) _stepToChange.setDuration(stepPatch.getDuration());
+        if (stepPatch.getOwner() != null) {
+            Optional<User> owner = userRepository.findById(stepPatch.getOwner());
+            if (owner.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            _stepToChange.setOwner(owner.get());
+        }
+        if (stepPatch.getBackup() != null) {
+            Optional<User> backup = userRepository.findById(stepPatch.getBackup());
+            if (backup.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            _stepToChange.setBackup(backup.get());
+        }
+
         try {
-            Step _step = stepToChange.get();
-            if (patch.containsKey("title")) _step.setTitle((String) patch.get("title"));
-            if (patch.containsKey("description")) _step.setDescription((String) patch.get("description"));
-            if (patch.containsKey("deadline")) _step.setDeadline((int) patch.get("deadline"));
-            if (patch.containsKey("duration")) _step.setDeadline((int) patch.get("duration"));
-            if (patch.containsKey("owner")) _step.setDeadline((int) patch.get("owner"));
-            if (patch.containsKey("backup")) _step.setDeadline((int) patch.get("backup"));
-            return new ResponseEntity<>(stepRepository.save(_step), HttpStatus.OK);
+            Step updatedStep = stepRepository.save(_stepToChange);
+            return new ResponseEntity<>(updatedStep, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

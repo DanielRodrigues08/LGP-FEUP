@@ -65,13 +65,24 @@ public class OnboardeeController {
 
     // PUT update onboardee
     @PutMapping("/{id}")
-    public ResponseEntity<Onboardee> updateOnboardee(@PathVariable Long id, @RequestBody Onboardee onboardee) {
-        System.out.println("aquii");
-        if (!onboardeeRepository.existsById(id)) {
+    public ResponseEntity<Onboardee> updateOnboardee(@PathVariable Long id, @RequestBody OnboardeeRequest onboardeeRequest) {
+        Optional<Onboardee> onboardeeOptional = onboardeeRepository.findById(id);
+        if (!onboardeeOptional.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        onboardee.setId(id); // Ensure ID is set for the update operation
-        Onboardee updatedOnboardee = onboardeeRepository.save(onboardee);
+
+        Onboardee onboardeeToUpdate = onboardeeOptional.get();
+        onboardeeToUpdate.setName(onboardeeRequest.getName());
+        onboardeeToUpdate.setPhoneNumber(onboardeeRequest.getPhoneNumber());
+        onboardeeToUpdate.setEmail(onboardeeRequest.getEmail());
+        onboardeeToUpdate.setGender(onboardeeRequest.getGender());
+        onboardeeToUpdate.setNationality(onboardeeRequest.getNationality());
+        onboardeeToUpdate.setAnnualSalary(onboardeeRequest.getAnnualSalary());
+        onboardeeToUpdate.setPayrollNumber(onboardeeRequest.getPayrollNumber());
+        onboardeeToUpdate.setStartDate(onboardeeRequest.getStartDate());
+        onboardeeToUpdate.setState(onboardeeRequest.getState());
+
+        Onboardee updatedOnboardee = onboardeeRepository.save(onboardeeToUpdate);
         return ResponseEntity.ok(updatedOnboardee);
     }
 

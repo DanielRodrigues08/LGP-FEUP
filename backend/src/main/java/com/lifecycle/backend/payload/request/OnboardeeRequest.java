@@ -1,4 +1,5 @@
 package com.lifecycle.backend.payload.request;
+import com.lifecycle.backend.model.OnboardeeStatus;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,5 +18,6 @@ public class OnboardeeRequest {
     private String annualSalary;
     private String payrollNumber;
     private LocalDate startDate;
+    private OnboardeeStatus state;
 }
 
