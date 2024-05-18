@@ -27,10 +27,10 @@ public class Step {
     private String description;
 
     @Column(name="deadline", nullable = false)
-    private int deadline; // days
+    private Integer deadline; // days
 
     @Column(name="duration")
-    private int duration; // days
+    private Integer duration; // days
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner", referencedColumnName = "user_id", nullable = false)
