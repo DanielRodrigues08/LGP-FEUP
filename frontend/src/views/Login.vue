@@ -49,10 +49,10 @@
         await axios.post(`${import.meta.env.VITE_API_URL}/auth/signin`, requestData)
           .then(response => {
             console.log(response)
-            const token = response.data.token;
+            const token = response.data.accessToken;
 
             localStorage.setItem('token', token);
-            console.log('Login successful');
+            console.log(token);
           })
           .catch(error => {
             // Handle login error

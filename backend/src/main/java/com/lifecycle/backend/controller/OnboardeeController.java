@@ -66,6 +66,7 @@ public class OnboardeeController {
     // PUT update onboardee
     @PutMapping("/{id}")
     public ResponseEntity<Onboardee> updateOnboardee(@PathVariable Long id, @RequestBody Onboardee onboardee) {
+        System.out.println("aquii");
         if (!onboardeeRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
