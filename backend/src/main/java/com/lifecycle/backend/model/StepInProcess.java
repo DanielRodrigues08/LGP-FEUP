@@ -37,4 +37,10 @@ public class StepInProcess {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "stepInProcess", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<StepInfo> stepsInfo;
+
+    public StepInProcess(Step step, Process process, List<StepInProcess> dependencies) {
+        this.step = step;
+        this.process = process;
+        this.dependencies = dependencies;
+    }
 }

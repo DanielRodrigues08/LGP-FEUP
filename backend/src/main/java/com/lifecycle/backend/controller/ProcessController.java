@@ -1,5 +1,6 @@
 package com.lifecycle.backend.controller;
 
+import com.lifecycle.backend.dto.ProcessDTO;
 import com.lifecycle.backend.model.Onboardee;
 import com.lifecycle.backend.model.Process;
 import com.lifecycle.backend.model.Step;
@@ -26,7 +27,11 @@ public class ProcessController {
     @GetMapping("")
     public ResponseEntity<Object> getAllProcesses() {
         List<Process> processes = processRepository.findAll();
-        return ResponseEntity.ok(processes);
+        List<ProcessDTO> processesDTO = new ArrayList<>();
+        for (Process process : processes) {
+            processesDTO.add(ProcessDTO.convertToDTO(process));
+        }
+        return ResponseEntity.ok(processesDTO);
     }
 
     @GetMapping("/{id}")
@@ -35,30 +40,36 @@ public class ProcessController {
         if (process.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(process.get());
+        return ResponseEntity.ok(ProcessDTO.convertToDTO(process.get()));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Object> createProcess(@RequestBody Process process) {
-        processRepository.save(process);
-        return ResponseEntity.ok(process);
+    public ResponseEntity<Object> createProcess(@RequestBody ProcessDTO processDTO) {
+        try {
+            Process process = new Process(processDTO.getTitle(), processDTO.getDescription());
+            Process processSaved = processRepository.save(process);
+            return ResponseEntity.ok(ProcessDTO.convertToDTO(processSaved));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> updateProcess(@PathVariable long id, @RequestBody Map<String, Object> patch) {
+    public ResponseEntity<Object> updateProcess(@PathVariable long id, @RequestBody ProcessDTO processDTO) {
         Optional<Process> process = processRepository.findById(id);
         if (process.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         Process _process = process.get();
-        try {
-            if (patch.containsKey("title")) _process.setTitle((String) patch.get("title"));
-            if (patch.containsKey("description")) _process.setDescription((String) patch.get("description"));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Invalid patch request");
-        }
 
-        processRepository.save(_process);
-        return ResponseEntity.ok(_process);
+        if (processDTO.getTitle() != null) _process.setTitle(processDTO.getTitle());
+        if (processDTO.getDescription() != null) _process.setDescription(processDTO.getDescription());
+
+        try {
+            Process processSaved = processRepository.save(_process);
+            return ResponseEntity.ok(ProcessDTO.convertToDTO(processSaved));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.lifecycle.backend.controller;
 
+import com.lifecycle.backend.dto.StepInfoDTO;
 import com.lifecycle.backend.model.*;
 import com.lifecycle.backend.repository.StepInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,12 @@ public class StepInfoController {
     @GetMapping
     public ResponseEntity<Object> getAllStepInfo() {
         List<StepInfo> stepInfo = stepInfoRepository.findAll();
-        return new ResponseEntity<>(stepInfo, HttpStatus.OK);
+        List<StepInfoDTO> stepInfoDTOs = new ArrayList<>();
+        for (StepInfo step : stepInfo) {
+            stepInfoDTOs.add(StepInfoDTO.convertToDTO(step));
+        }
+
+        return new ResponseEntity<>(stepInfoDTOs, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -30,11 +36,11 @@ public class StepInfoController {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(stepInfo.get());
+        return ResponseEntity.ok(StepInfoDTO.convertToDTO(stepInfo.get()));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> updateStepInfo(@PathVariable Long id, @RequestBody Map<String, Object> patch) {
+    public ResponseEntity<Object> updateStepInfo(@PathVariable Long id, @RequestBody StepInfoDTO stepInfoDTO) {
         Optional<StepInfo> stepInfo = stepInfoRepository.findById(id);
         if (stepInfo.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -48,21 +54,12 @@ public class StepInfoController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Cannot update a completed step"));
         }
 
-        if (patch.containsKey("description")) {
-            if (patch.get("description") instanceof String) {
-                stepInfoToUpdate.setDescription((String) patch.get("description"));
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "The description must be a string"));
-            }
+        if (stepInfoDTO.getDescription() != null) {
+            stepInfoToUpdate.setDescription(stepInfoDTO.getDescription());
         }
 
-        if (patch.containsKey("status")) {
-            StepInfoStatus newStatus;
-            try {
-                newStatus = StepInfoStatus.valueOf((String) patch.get("status"));
-            } catch (IllegalArgumentException e) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Invalid status"));
-            }
+        if (stepInfoDTO.getStatus() != null) {
+            StepInfoStatus newStatus = stepInfoDTO.getStatus();
 
             if (newStatus == StepInfoStatus.ABORTED) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Cannot set a step to aborted"));
@@ -80,6 +77,6 @@ public class StepInfoController {
         }
 
         StepInfo updatedStepInfo = stepInfoRepository.save(stepInfoToUpdate);
-        return ResponseEntity.ok(updatedStepInfo);
+        return ResponseEntity.ok(StepInfoDTO.convertToDTO(updatedStepInfo));
     }
 }
