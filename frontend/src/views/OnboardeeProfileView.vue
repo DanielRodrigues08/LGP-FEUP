@@ -14,7 +14,7 @@
                     <p>Status: 
                         <span :class="onboardee.state">{{ onboardee.state }}</span>
                     </p>
-                    <Button class="custom-button" icon="pi pi-pencil" rounded aria-label="Filter" @click="showEditDialog = true" />
+                    <Button class="custom-button" v-if="canEdit" icon="pi pi-pencil" rounded aria-label="Filter" @click="showEditDialog = true" />
                 </div>
                 <div class="emptyColumn"> </div>
             </div>
