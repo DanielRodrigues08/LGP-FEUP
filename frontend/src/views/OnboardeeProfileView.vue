@@ -79,6 +79,7 @@
     import Button from 'primevue/button';
     import Dialog from 'primevue/dialog';
     import InputText from 'primevue/inputtext';
+    import { useAuthStore } from '@/stores/auth';
 
     export default {
         components: {
@@ -98,6 +99,7 @@
             const onboardeeId = this.$route.params.id;
             this.fetchOnboardeeById(onboardeeId);
             this.fetchCountries();
+            this.checkUserRoles();
         },
         methods: {
             async fetchOnboardeeById(onboardeeId) {
@@ -108,6 +110,11 @@
                 } catch (error) {
                     console.error('Error fetching onboardee:', error);
                 }
+            },
+            async checkUserRoles() {
+                const authStore = useAuthStore();
+                // Check if the user has the necessary roles to edit
+                this.canEdit = !authStore.user.roles.includes('EMPLOYEE');
             },
             async fetchCountries() {
                 try {

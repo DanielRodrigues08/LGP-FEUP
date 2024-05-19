@@ -11,6 +11,8 @@ import NewUser from '@/views/NewUser.vue';
 import Statistics from '@/views/Statistics.vue';
 import NotFound from '@/views/NotFound.vue';
 import OnboardeeProfileView from '@/views/OnboardeeProfileView.vue';
+import ForbiddenView from '@/views/ForbiddenView.vue';
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,30 +21,40 @@ const router = createRouter({
     { path: '/user/:id', name: 'user', component: UserView, props: true },
     { path: '/onboardees', name: 'onboardees', component: OnboardeesView },
     { path: '/add-onboardee', name: 'add-onboardee', component: NewOnboardee },
-    { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFound },
     { path: '/onboardees/:id', name: 'OnboardeeProfile', component: OnboardeeProfileView },
     { path: '/login', name: 'login', component: Login },
     { path: '/admin-area', name: 'admin-area', component: AdminArea },
     { path: '/add-user', name: 'add-user', component: NewUser },
-    { path: '/statistics', name: 'statistics', component: Statistics }
+    { path: '/statistics', name: 'statistics', component: Statistics },
+    { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFound },
+    { path: '/forbidden', name: 'forbidden', component: ForbiddenView },
   ]
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
+
   if (!authStore.user && authStore.token) {
-    authStore.loadStoredUser();
+    try {
+      await authStore.loadStoredUser();
+    } catch (error) {
+      console.error('Error loading stored user:', error);
+    }
   }
-  if (to.name !== 'login' && !authStore.user) {
+
+  // Redirect to login if the user is not authenticated and not already on the login page
+  if (!authStore.user && to.name !== 'login') {
     next({ name: 'login' });
-  } else {
-    console.log(authStore.user.roles)
-    if (to.name === 'admin-area' && (!authStore.user || !authStore.user.roles.includes('ADMIN'))) {
-      next({ name: 'statistics' });
+  } else if (authStore.user) {
+    if (to.name === 'admin-area' && !authStore.user.roles.includes('ADMIN')) {
+      next({ name: 'forbidden' });
     } else {
       next();
     }
+  } else {
+    next();
   }
 });
+
 
 export default router;

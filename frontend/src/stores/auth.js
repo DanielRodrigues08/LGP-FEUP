@@ -19,7 +19,7 @@ export const useAuthStore = defineStore('auth', {
         console.error('Error during login:', error);
       }
     },
-    loadStoredUser() {
+    async loadStoredUser() {
       const storedUser = localStorage.getItem('user');
       if (storedUser !== null && storedUser !== undefined) {
         try {

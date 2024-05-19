@@ -1,106 +1,6 @@
-<script>
-import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import axios from "axios";
-import Dialog from 'primevue/dialog';
-import ProfileIcon from './icons/ProfileIcon.vue';
-import InputText from 'primevue/inputtext';
-import Button from 'primevue/button';
-import Menu from 'primevue/menu';
-import Avatar from 'primevue/avatar';
-import { useAuthStore } from '@/stores/auth';
-export default {
-  components: {
-    Dialog,
-    ProfileIcon,
-    InputText,
-    Button,
-    Menu,
-    Avatar,
-  },
-  setup() {
-    const showProfileDialog = ref(false);
-    const user = ref(null);
-    const newPassword = ref('');
-    const authStore = useAuthStore(); // Use your authentication store
-
-    // Get the logged-in user's information from the authentication store
-    console.log(authStore.user);
-    const router = useRouter();
-
-    const fetchOnboardeeById = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8081/api/users/${authStore.user.id}`);
-        console.log(response.data)
-        user.value = response.data;
-      } catch (error) {
-        console.error('Error fetching user:', error);
-      }
-    };
-
-    const saveChanges = async () => {
-      try {
-        const updateData = { ...user.value };
-        if (newPassword.value) {
-          updateData.password = newPassword.value;
-        }
-        await axios.put(`http://localhost:8081/api/users/${user.value.id}`, updateData);
-        showProfileDialog.value = false;
-      } catch (error) {
-        console.error('Error saving changes:', error);
-      }
-    };
-
-    const logout = () => {
-      authStore.logout();
-      router.push('/login');
-    };
-    
-    const cancelEdit = () => {
-      showProfileDialog.value = false;
-    };
-
-    onMounted(() => {
-      fetchOnboardeeById();
-    });
-
-    const toggle = (event) => {
-      profile_menu.value.toggle(event);
-    };
-
-    const editProfile = () => {
-      showProfileDialog.value = true;
-    };
-
-    const profile_menu = ref();
-    const profile_items = ref([
-      {
-        items: [
-          {
-            separator: true
-          },
-          {
-            label: 'Edit Profile',
-            icon: 'pi pi-cog',
-            action: editProfile
-          },
-          {
-            label: 'Logout',
-            icon: 'pi pi-sign-out',
-            action: logout
-          }
-        ]
-      }
-    ]);
-
-    return { showProfileDialog, toggle, profile_menu, profile_items, user, newPassword, saveChanges, cancelEdit };
-  },
-};
-</script>
-
 <template>
   <div class="flex justify-content-center">
-    <Button text rounded type="button" @click="toggle" aria-haspopup="true" class="ml-2 mr-2 menu-button" aria-controls="overlay_menu">
+    <Button v-if="user" text rounded type="button" @click="toggle" aria-haspopup="true" class="ml-2 mr-2 menu-button" aria-controls="overlay_menu">
       <ProfileIcon class="p-0 navbar-profile"/>
     </Button>
     <Menu ref="profile_menu" class="p-0" :model="profile_items" :popup="true" :header="false">
@@ -142,11 +42,121 @@ export default {
       <p>User not found</p>
     </div>
     <div class="flex justify-content-end gap-2">
-      <Button type="button" label="Cancel" severity="secondary" @click="showProfileDialog = false"></Button>
+      <Button type="button" label="Cancel" severity="secondary" @click="cancelEdit"></Button>
       <Button type="button" label="Save" @click="saveChanges"></Button>
     </div>
   </Dialog>
 </template>
+
+<script>
+import { ref, onMounted, watch } from "vue";
+import { useRouter } from "vue-router";
+import axios from "axios";
+import Dialog from 'primevue/dialog';
+import ProfileIcon from './icons/ProfileIcon.vue';
+import InputText from 'primevue/inputtext';
+import Button from 'primevue/button';
+import Menu from 'primevue/menu';
+import Avatar from 'primevue/avatar';
+import { useAuthStore } from '@/stores/auth';
+
+export default {
+  components: {
+    Dialog,
+    ProfileIcon,
+    InputText,
+    Button,
+    Menu,
+    Avatar,
+  },
+  setup() {
+    const showProfileDialog = ref(false);
+    const user = ref(null);
+    const newPassword = ref('');
+    const authStore = useAuthStore();
+    const router = useRouter();
+
+    const fetchOnboardeeById = async () => {
+      try {
+        if (authStore.user) {
+          const response = await axios.get(`http://localhost:8081/api/users/${authStore.user.id}`);
+          user.value = response.data;
+        }
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    };
+
+    const saveChanges = async () => {
+      try {
+        const updateData = { ...user.value };
+        if (newPassword.value) {
+          updateData.password = newPassword.value;
+        }
+        await axios.put(`http://localhost:8081/api/users/${user.value.id}`, updateData);
+        showProfileDialog.value = false;
+      } catch (error) {
+        console.error('Error saving changes:', error);
+      }
+    };
+
+    const logout = () => {
+      authStore.logout();
+      router.push('/login');
+    };
+
+    const cancelEdit = () => {
+      showProfileDialog.value = false;
+      newPassword.value = ''; // Reset the password field when cancelling the edit
+    };
+
+    onMounted(() => {
+      authStore.loadStoredUser(); // Load stored user information
+      if (authStore.user) {
+        fetchOnboardeeById();
+      }
+    });
+
+    const toggle = (event) => {
+      profile_menu.value.toggle(event);
+    };
+
+    const editProfile = () => {
+      newPassword.value = ''; // Reset the password field when editing the profile
+      showProfileDialog.value = true;
+    };
+
+    const profile_menu = ref();
+    const profile_items = ref([
+      {
+        items: [
+          {
+            separator: true
+          },
+          {
+            label: 'Edit Profile',
+            icon: 'pi pi-cog',
+            action: editProfile
+          },
+          {
+            label: 'Logout',
+            icon: 'pi pi-sign-out',
+            action: logout
+          }
+        ]
+      }
+    ]);
+
+    watch(() => authStore.user, (newUser) => {
+      if (newUser) {
+        fetchOnboardeeById();
+      }
+    });
+
+    return { showProfileDialog, toggle, profile_menu, profile_items, user, newPassword, saveChanges, cancelEdit };
+  },
+};
+</script>
 
 <style scoped>
 .primary-color {
