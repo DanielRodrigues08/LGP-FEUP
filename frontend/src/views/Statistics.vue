@@ -1,4 +1,7 @@
 <template>
+  <div class="title-container">
+    <h1>Onboardees Statistics</h1>
+    </div>
   <div class="chart-container">
     <Chart :type="'pie'" :data="nationalityChartData" :options="nationalityChartOptions" />
     <div class="surface-card shadow-2 p-3 border-round">
@@ -14,7 +17,6 @@
     </div>
     <Chart :type="'doughnut'" :data="genderChartData" :options="genderChartOptions" />
   </div>
-  
   <div class="filter-container">
     <div class="p-inputgroup">
       <span class="p-inputgroup-addon">
@@ -207,6 +209,18 @@ export default {
 </script>
 
 <style scoped>
+h1 {
+  color: #033A65;
+  font-weight:600;
+  margin-right: 2rem;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  margin-top: 1.5rem;
+  margin-left: 2rem;
+}
 
 .chart-container {
   display: flex;
