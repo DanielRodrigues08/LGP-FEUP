@@ -7,6 +7,8 @@ import Button from 'primevue/button';
 import Menu from 'primevue/menu';
 import Avatar from 'primevue/avatar';
 import axios from 'axios';
+import router from "@/router";
+import { authData } from "@/api/AuthProvider";
 
 export default {
   components: {
@@ -21,7 +23,6 @@ export default {
     const showProfileDialog = ref(false);
     const user = ref(null);
     const newPassword = ref('');
-    const userId = 2;
 
     const toggle = (event) => {
       profile_menu.value.toggle(event);
@@ -30,6 +31,15 @@ export default {
     const editProfile = () => {
       showProfileDialog.value = true;
     };
+
+    const logoutUser = () => {
+      localStorage.setItem("token", undefined);
+      location.reload();
+    }
+
+    const loginUser = () => {
+      router.push("/login");
+    }
 
     const profile_menu = ref();
     const profile_items = ref([
@@ -45,18 +55,30 @@ export default {
           },
           {
             label: 'Logout',
-            icon: 'pi pi-sign-out'
+            icon: 'pi pi-sign-out',
+            action: logoutUser
+          }
+        ]
+      }
+    ]);
+    const profile_items_logged_out = ref([
+      {
+        items: [
+          {
+            label: 'Login',
+            icon: 'pi pi-sign-in',
+            action: loginUser
           }
         ]
       }
     ]);
 
-    const fetchOnboardeeById = async (userId) => {
+    const fetchAuthenticatedUser = async () => {
       try {
-        const response = await axios.get(`http://localhost:8081/api/users/${userId}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/auth`, {headers: authData()});
         user.value = response.data;
       } catch (error) {
-        console.error('Error fetching user:', error);
+        // console.error('Error fetching user:', error);
       }
     };
 
@@ -66,7 +88,7 @@ export default {
         if (newPassword.value) {
           updateData.password = newPassword.value;
         }
-        await axios.put(`http://localhost:8081/api/users/${userId}`, updateData);
+        await axios.put(`${import.meta.env.VITE_API_URL}/users/${user.value.id}`, updateData, {headers: authData()});
         showProfileDialog.value = false;
       } catch (error) {
         console.error('Error saving changes:', error);
@@ -77,9 +99,9 @@ export default {
       showProfileDialog.value = false;
     };
 
-    fetchOnboardeeById(userId);
+    fetchAuthenticatedUser();
 
-    return { showProfileDialog, toggle, profile_menu, profile_items, user, newPassword, saveChanges, cancelEdit };
+    return { showProfileDialog, toggle, profile_menu, profile_items, profile_items_logged_out, user, newPassword, saveChanges, cancelEdit };
   }
 }
 </script>
@@ -89,14 +111,29 @@ export default {
       <Button text rounded type="button" @click="toggle" aria-haspopup="true" class="ml-2 mr-2 menu-button" aria-controls="overlay_menu">
           <ProfileIcon class="p-0 navbar-profile"/>
       </Button>
-      <Menu ref="profile_menu" class="p-0" :model="profile_items" :popup="true" :header="false">
+      <Menu v-if="user" ref="profile_menu" class="p-0" :model="profile_items" :popup="true" :header="false">
           <template #submenuheader>
               <button class="relative overflow-hidden w-full p-link flex align-items-center p-2 hover:surface-200 border-noround">
                   <Avatar image="https://www.seaprodexhanoi.com.vn/img/no_avatar.jpg" class="mr-2" shape="circle" />
                   <div class="text-xs inline-flex flex-column">
-                  <span class="primary-color font-bold">Name Surname</span>
-                  <span>Admin</span>
+                  <span class="primary-color font-bold">{{ user.name }}</span>
+                  <span>{{ user.permissionLevel }}</span>
                   </div>
+              </button>
+          </template>
+          <template #item="{ item }">
+              <a class="relative overflow-hidden w-full p-link p-2 flex align-items-center pl-2 pr-2 hover:surface-200 border-noround" @click="item.action()">
+                  <span :class="item.icon" class="primary-color"></span>
+                  <span class="text-color text-xs ml-2">{{ item.label }}</span>
+              </a>
+          </template>
+      </Menu>
+      <Menu v-else ref="profile_menu" class="p-0" :model="profile_items_logged_out" :popup="true" :header="false">
+        <template #submenuheader>
+              <button class="relative overflow-hidden w-full p-link flex align-items-center p-2 hover:surface-200 border-noround">
+                <div class="text-xs text-color flex-column">
+                  <span>User not logged in.</span>
+                </div>
               </button>
           </template>
           <template #item="{ item }">

@@ -79,6 +79,7 @@
     import Button from 'primevue/button';
     import Dialog from 'primevue/dialog';
     import InputText from 'primevue/inputtext';
+    import { authData } from "@/api/AuthProvider";
 
     export default {
         components: {
@@ -102,7 +103,7 @@
         methods: {
             async fetchOnboardeeById(onboardeeId) {
                 try {
-                    const response = await axios.get(`${import.meta.env.VITE_API_URL}/onboardees/${onboardeeId}`);
+                    const response = await axios.get(`${import.meta.env.VITE_API_URL}/onboardees/${onboardeeId}`, {headers: authData()});
                     this.onboardee = response.data;
                     this.editOnboardee = { ...response.data };
                 } catch (error) {
@@ -136,7 +137,7 @@
 
                     };
                     console.log(data)
-                    await axios.put(`${import.meta.env.VITE_API_URL}/onboardees/${this.onboardee.id}`,data);
+                    await axios.put(`${import.meta.env.VITE_API_URL}/onboardees/${this.onboardee.id}`, data, {headers: authData()});
                     this.onboardee = { ...this.editOnboardee };
                     this.showEditDialog = false;
                 } catch (error) {

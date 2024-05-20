@@ -32,6 +32,7 @@ import Column from 'primevue/column';
 import axios from 'axios';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
+import { authData } from "@/api/AuthProvider";
 
 export default {
   components: {
@@ -66,7 +67,7 @@ export default {
   methods: {
     async fetchOnboardees() {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/onboardees`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/onboardees`, {headers: authData()});
         this.onboardees = response.data;
         this.originalOnboardees = response.data;
       } catch (error) {
@@ -141,5 +142,6 @@ h3 {
   margin: 0 auto;
   margin-top: 0.5em;
   margin-bottom: 2em;
+  cursor: pointer;
 }
 </style>
