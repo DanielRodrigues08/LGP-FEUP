@@ -57,6 +57,7 @@
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';  
 import axios from 'axios';
+import { authData } from "@/api/AuthProvider";
 
 export default {
   data() {
@@ -92,7 +93,7 @@ export default {
         startDate: this.startDate,
       };
 
-      await axios.post(`${import.meta.env.VITE_API_URL}/onboardees`, requestData)
+      await axios.post(`${import.meta.env.VITE_API_URL}/onboardees`, requestData, {headers: authData()})
         .then(response => {
           this.$router.push({ name: 'onboardees' });
         })

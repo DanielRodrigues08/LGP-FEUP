@@ -49,6 +49,7 @@ import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import Dialog from 'primevue/dialog';
 import Dropdown from 'primevue/dropdown';
+import { authData } from "@/api/AuthProvider";
 
 export default {
   components: {
@@ -80,7 +81,7 @@ export default {
   methods: {
     async fetchUsers() {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/users`, {headers: authData()});
         this.users = response.data;
         this.originalUsers = response.data;
       } catch (error) {
@@ -99,7 +100,7 @@ export default {
     async saveEditedUser() {
       this.selectedUser.permissionLevel = this.tempPermissionLevel.value;
       try {
-        await axios.put(`${import.meta.env.VITE_API_URL}/users/${this.selectedUser.id}`, this.selectedUser);
+        await axios.put(`${import.meta.env.VITE_API_URL}/users/${this.selectedUser.id}`, this.selectedUser, {headers: authData()});
         this.fetchUsers(); // Refresh the user list
       } catch (error) {
         console.error('Error updating user:', error);

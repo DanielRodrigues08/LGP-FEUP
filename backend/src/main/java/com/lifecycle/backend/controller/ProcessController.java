@@ -12,6 +12,7 @@ import com.lifecycle.backend.repository.StepRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -19,6 +20,7 @@ import java.util.*;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/processes")
+@Secured({"EMPLOYEE", "HR", "ADMIN"})
 public class ProcessController {
 
     @Autowired
@@ -44,6 +46,7 @@ public class ProcessController {
     }
 
     @PostMapping("/create")
+    @Secured({"HR", "ADMIN"})
     public ResponseEntity<Object> createProcess(@RequestBody ProcessDTO processDTO) {
         try {
             Process process = new Process(processDTO.getTitle(), processDTO.getDescription());
@@ -55,6 +58,7 @@ public class ProcessController {
     }
 
     @PatchMapping("/{id}")
+    @Secured({"HR", "ADMIN"})
     public ResponseEntity<Object> updateProcess(@PathVariable long id, @RequestBody ProcessDTO processDTO) {
         Optional<Process> process = processRepository.findById(id);
         if (process.isEmpty()) {

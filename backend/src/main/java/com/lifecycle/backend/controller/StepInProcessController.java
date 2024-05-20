@@ -8,6 +8,7 @@ import com.lifecycle.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/step-in-processes")
+@Secured({"HR", "ADMIN"})
 public class StepInProcessController {
     @Autowired
     private ProcessRepository processRepository;

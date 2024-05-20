@@ -16,7 +16,10 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
+      meta: {
+        reload: true
+      },
     },
     {
       path: '/user/:id', // Define the path for the user information page with a route parameter for the user ID
