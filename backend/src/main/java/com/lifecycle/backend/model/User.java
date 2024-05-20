@@ -3,9 +3,7 @@ package com.lifecycle.backend.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
-
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Getter
@@ -37,10 +35,12 @@ public class User {
     @Column(name = "permission_level")
     private UserPermission permissionLevel;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     List<Step> ownerSteps;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "backup", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     List<Step> backupSteps;
