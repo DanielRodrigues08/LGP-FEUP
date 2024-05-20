@@ -6,17 +6,18 @@ import com.lifecycle.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
-import static com.lifecycle.backend.model.UserPermission.ADMIN;
-
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/users")
+@Secured({"HR", "ADMIN"})
 public class UserController {
 
     @Autowired
@@ -41,6 +42,7 @@ public class UserController {
 
     // POST create user
     @PostMapping
+    @Secured("ADMIN")
     public ResponseEntity<?> createUser(@RequestBody User user) {
 
         if (userRepository.existsByEmail(user.getEmail())) {
@@ -64,6 +66,7 @@ public class UserController {
 
     // PUT update user
     @PutMapping("/{id}")
+    @Secured("ADMIN")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
         if (!userRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
@@ -75,7 +78,12 @@ public class UserController {
 
     // DELETE user by ID
     @DeleteMapping("/{id}")
+    @Secured("ADMIN")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var roles = authentication.getAuthorities();
+        System.out.println(roles);
+
         if (!userRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }

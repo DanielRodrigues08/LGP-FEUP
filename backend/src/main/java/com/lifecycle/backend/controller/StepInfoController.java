@@ -6,6 +6,7 @@ import com.lifecycle.backend.repository.StepInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -13,6 +14,7 @@ import java.util.*;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/steps-info")
+@Secured({"HR", "ADMIN"})
 public class StepInfoController {
 
     @Autowired
@@ -40,6 +42,7 @@ public class StepInfoController {
     }
 
     @PatchMapping("/{id}")
+    @Secured({"HR", "ADMIN"})
     public ResponseEntity<Object> updateStepInfo(@PathVariable Long id, @RequestBody StepInfoDTO stepInfoDTO) {
         Optional<StepInfo> stepInfo = stepInfoRepository.findById(id);
         if (stepInfo.isEmpty()) {

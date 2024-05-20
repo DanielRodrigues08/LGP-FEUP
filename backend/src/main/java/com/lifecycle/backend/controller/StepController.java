@@ -5,9 +5,11 @@ import com.lifecycle.backend.model.User;
 import com.lifecycle.backend.dto.StepDTO;
 import com.lifecycle.backend.repository.StepRepository;
 import com.lifecycle.backend.repository.UserRepository;
+import com.lifecycle.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/steps")
+@Secured({"EMPLOYEE", "HR", "ADMIN"})
 public class StepController {
 
     @Autowired
@@ -25,15 +28,22 @@ public class StepController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    UserService userService;
+
     @GetMapping("")
     public ResponseEntity<Object> getAllSteps(@RequestParam(required = false) String title) {
         try {
             List<Step> steps = new ArrayList<>();
 
             if (title == null)
-                steps.addAll(stepRepository.findAll());
+                stepRepository.findAll().forEach(step -> {
+                    if (userService.checkStepOwnership(step)) steps.add(step);
+                });
             else
-                steps.addAll(stepRepository.findByTitle(title));
+                stepRepository.findByTitle(title).forEach(step -> {
+                    if (userService.checkStepOwnership(step)) steps.add(step);
+                });
 
             if (steps.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -53,6 +63,9 @@ public class StepController {
     @GetMapping("/{id}")
     public ResponseEntity<Object> getStepById(@PathVariable("id") long id) {
         Optional<Step> stepData = stepRepository.findById(id);
+        if (stepData.isPresent() && !userService.checkStepOwnership(stepData.get())) {
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        }
         if (stepData.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
@@ -63,6 +76,7 @@ public class StepController {
 
 
     @PostMapping("/create")
+    @Secured({"HR", "ADMIN"})
     public ResponseEntity<Object> createStep(@RequestBody StepDTO stepDTO) {
         User owner;
         User backup = null;
@@ -103,6 +117,7 @@ public class StepController {
     }
 
     @PatchMapping("/{id}")
+    @Secured({"HR", "ADMIN"})
     public ResponseEntity<Object> updateStep(@PathVariable("id") long id, @RequestBody StepDTO stepPatch) {
         Optional<Step> stepToChange = stepRepository.findById(id);
 
@@ -142,6 +157,7 @@ public class StepController {
     }
 
     @DeleteMapping("/{id}")
+    @Secured({"HR", "ADMIN"})
     public ResponseEntity<HttpStatus> deleteStep(@PathVariable("id") long id) {
         try {
             stepRepository.deleteById(id);
