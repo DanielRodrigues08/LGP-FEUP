@@ -1,34 +1,25 @@
 <template>
     <div class="users">
       <div class="title-container">
-        <h1>Admin area</h1>
+        <h1>Processes</h1>
         <router-link to="/add-user">
-            <Button class="add-button" label="New User" icon="pi pi-plus" />
+            <Button class="add-button" label="New Process" icon="pi pi-plus" />
         </router-link>
       </div>
-      
+
       <div class="search-container">
         <div>
-          <InputText v-model="globalFilter.value" placeholder="Search for name" @input="filterUsers" />
+          <InputText v-model="globalFilter.value" placeholder="Search for name" @input="filterProcesses" />
         </div>
       </div>
 
-      <DataTable class="custom-table" :value="users" removableSort paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]" :globalFilter="globalFilter" @filter="filterUsers">
-        <Column field="id" header="ID" sortable :headerStyle="{ backgroundColor: '#033A65', color:'white' }"></Column>
-        <Column field="name" header="Name" sortable :headerStyle="{ backgroundColor: '#033A65', color:'white' }"></Column>
-        <Column field="email" header="Email" sortable :headerStyle="{ backgroundColor: '#033A65', color:'white' }"></Column>
-        <Column field="phoneNumber" header="Phone" sortable :headerStyle="{ backgroundColor: '#033A65', color:'white' }"></Column>
-        <Column field="permissionLevel" header="Permissions" sortable :headerStyle="{ backgroundColor: '#033A65', color:'white' }"></Column>
-        <Column header="" :headerStyle="{ backgroundColor: '#033A65', color:'white' }">
-          <template #body="slotProps">
-            <Button class="edit-button" @click="editUser(slotProps.data)">
-              <i class="pi pi-pencil" style="color: grey;"></i>
-            </Button>
-          </template>
-      </Column>
+      <DataTable class="custom-table" :value="processes" paginator :rows="5" :rowsPerPageOptions="[5,10,20,50]" :globalFilter="globalFilter" @filter="filterUsers">
+        <Column field="title" header="Title" class="custom-header" :headerStyle="{ backgroundColor: '#033A65', color:'white', width:'40%' }" ></Column>
+        <Column field="description" header="Description" class="custom-header" :headerStyle="{ backgroundColor: '#033A65', color:'white',width:'40%' }"></Column>
+        <Column field="steps" header="Number of steps" class="custom-header" :headerStyle="{ backgroundColor: '#033A65', color:'white',width:'20%'}"></Column>
       </DataTable>
 
-      <Dialog v-model="editDialogVisible" header="Edit User Permissions" :visible="editDialogVisible" modal :closable="false">
+      <!-- <Dialog v-model="editDialogVisible" header="Edit User Permissions" :visible="editDialogVisible" modal :closable="false">
         <div class="p-field">
           <label for="permissionLevel">Permission Level:</label>
           <Dropdown v-model="tempPermissionLevel" id="permissionLevel" :options="permissionOptions" optionLabel="label" />
@@ -37,7 +28,7 @@
           <Button label="Cancel" class="p-button-secondary" @click="cancelEdit" outlined />
           <Button label="Save" class="p-button-success" @click="saveEditedUser" outlined />
         </div>
-      </Dialog>
+      </Dialog> -->
 
     </div>
   </template>
@@ -81,7 +72,7 @@
     methods: {
       async fetchUsers() {
         try {
-          const response = await axios.get('http://localhost:8081/users');
+          const response = await axios.get('http://localhost:8081/processes');
           this.users = response.data;
           this.originalUsers = response.data;
         } catch (error) {
@@ -110,7 +101,7 @@
         this.editDialogVisible = false;
         this.selectedUser = null;
       },
-      filterUsers() {
+      filterProcesses() {
         this.globalFilter = {
           value: this.globalFilter.value,
           matchMode: 'contains',
@@ -151,6 +142,7 @@
     .search-container > div {
       margin-right: 1rem;
     }
+
     .custom-table {
       max-width: 90%;
       margin: 0 auto;
@@ -158,26 +150,10 @@
       margin-bottom: 1em;
 
     }
-    .edit-button {
-      background-color: transparent;
-      border: none;
-      cursor: pointer;
-    }
-    .dialog-buttons {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 1rem;
-    }
-  
-    .dialog-buttons > .p-button {
-      margin-left: 0.5rem;
-    }
-    label {
-      margin-right: 1rem;
-    }
 
-    .p-dropdown {
-      min-width: 10em;
-    }
+
+
+
+
   </style>
   

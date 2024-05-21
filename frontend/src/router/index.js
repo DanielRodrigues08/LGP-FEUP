@@ -6,6 +6,7 @@ import NewOnboardee from '@/views/NewOnboardee.vue'
 import Login from '@/views/Login.vue'
 import AdminArea from '@/views/AdminArea.vue'
 import NewUser from '@/views/NewUser.vue'
+import ProcessesView from '@/views/ProcessesView.vue'
 
 
 const router = createRouter({
@@ -46,6 +47,11 @@ const router = createRouter({
       path: '/add-user',
       name: 'add-user',
       component: NewUser
+    },
+    {
+      path: '/processes-view',
+      name: 'processesView',
+      component: ProcessesView
     }
   ]
 })
