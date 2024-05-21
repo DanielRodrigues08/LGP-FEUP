@@ -24,6 +24,10 @@ const boards = ref([
     {
         name: "Admin area",
         route: "/admin-area"
+    },
+    {
+        name: "Processes page",
+        route: "/processes-view"
     }
 ])
 </script>
