@@ -32,7 +32,7 @@ import Column from 'primevue/column';
 import axios from 'axios';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
-import { authData } from "@/api/AuthProvider";
+import { useAuthStore } from '@/stores/auth';
 
 export default {
   components: {
@@ -48,6 +48,10 @@ export default {
       globalFilter: { value: null, matchMode: 'contains', field: 'name' },
       selectedOnboardee: null
     };
+  },
+  setup() {
+    const authStore = useAuthStore();
+    return { authStore };
   },
   mounted() {
     this.fetchOnboardees();
@@ -67,7 +71,7 @@ export default {
   methods: {
     async fetchOnboardees() {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/onboardees`, {headers: authData()});
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/onboardees`, {headers: this.authStore.authData()});
         this.onboardees = response.data;
         this.originalOnboardees = response.data;
       } catch (error) {

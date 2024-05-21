@@ -72,20 +72,43 @@ public class UserController {
 
     // PUT update user
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user) {
         var authUser = userService.getAuthenticatedUser();
-        if (authUser.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (authUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         var authUserObj = authUser.get();
-        System.out.println(authUserObj.getPermissionLevel());
-        if (authUserObj.getId() == id || authUserObj.getPermissionLevel() == UserPermission.ADMIN) {
-            if (!userRepository.existsById(id)) {
+        if (authUserObj.getId().equals(id) || authUserObj.getPermissionLevel() == UserPermission.ADMIN) {
+            Optional<User> existingUserOpt = userRepository.findById(id);
+            if (!existingUserOpt.isPresent()) {
                 return ResponseEntity.notFound().build();
             }
-            user.setId(id); // Ensure ID is set for the update operation
-            User updatedUser = userRepository.save(user);
-            return ResponseEntity.ok(updatedUser);
 
+            User existingUser = existingUserOpt.get();
+
+            // Check if the email is being updated to one that's already in use
+            if (!existingUser.getEmail().equals(user.getEmail()) && userRepository.existsByEmail(user.getEmail())) {
+                return ResponseEntity
+                        .badRequest()
+                        .body(new MessageResponse("Error: Email is already in use!"));
+            }
+
+            // Update user details
+            existingUser.setEmail(user.getEmail());
+            existingUser.setName(user.getName());
+            existingUser.setPhoneNumber(user.getPhoneNumber());
+            existingUser.setPermissionLevel(user.getPermissionLevel());
+
+            // Update password if it's provided
+            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                existingUser.setPassword(encoder.encode(user.getPassword()));
+            }
+
+            User updatedUser = userRepository.save(existingUser);
+            return ResponseEntity.ok(updatedUser);
         }
+
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 

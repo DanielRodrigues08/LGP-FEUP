@@ -14,7 +14,7 @@
                     <p>Status: 
                         <span :class="onboardee.state">{{ onboardee.state }}</span>
                     </p>
-                    <Button class="custom-button" icon="pi pi-pencil" rounded aria-label="Filter" @click="showEditDialog = true" />
+                    <Button class="custom-button" v-if="canEdit" icon="pi pi-pencil" rounded aria-label="Filter" @click="showEditDialog = true" />
                 </div>
                 <div class="emptyColumn"> </div>
             </div>
@@ -79,7 +79,7 @@
     import Button from 'primevue/button';
     import Dialog from 'primevue/dialog';
     import InputText from 'primevue/inputtext';
-    import { authData } from "@/api/AuthProvider";
+    import { useAuthStore } from '@/stores/auth';
 
     export default {
         components: {
@@ -95,20 +95,30 @@
                 countries: []
             };
         },
+        setup() {
+            const authStore = useAuthStore();
+            return { authStore };
+        },
         mounted() {
             const onboardeeId = this.$route.params.id;
             this.fetchOnboardeeById(onboardeeId);
             this.fetchCountries();
+            this.checkUserRoles();
         },
         methods: {
             async fetchOnboardeeById(onboardeeId) {
                 try {
-                    const response = await axios.get(`${import.meta.env.VITE_API_URL}/onboardees/${onboardeeId}`, {headers: authData()});
+                    const response = await axios.get(`${import.meta.env.VITE_API_URL}/onboardees/${onboardeeId}`, {headers: this.authStore.authData()});
                     this.onboardee = response.data;
                     this.editOnboardee = { ...response.data };
                 } catch (error) {
                     console.error('Error fetching onboardee:', error);
                 }
+            },
+            async checkUserRoles() {
+                const authStore = useAuthStore();
+                // Check if the user has the necessary roles to edit
+                this.canEdit = !authStore.user.roles.includes('EMPLOYEE');
             },
             async fetchCountries() {
                 try {
@@ -134,10 +144,8 @@
                         state: this.editOnboardee.state,
                         stepsInfo: this.editOnboardee.stepsInfo,
                         activeProcess: this.editOnboardee.activeProcess
-
                     };
-                    console.log(data)
-                    await axios.put(`${import.meta.env.VITE_API_URL}/onboardees/${this.onboardee.id}`, data, {headers: authData()});
+                    await axios.put(`${import.meta.env.VITE_API_URL}/onboardees/${this.onboardee.id}`, data, {headers: this.authStore.authData()});
                     this.onboardee = { ...this.editOnboardee };
                     this.showEditDialog = false;
                 } catch (error) {

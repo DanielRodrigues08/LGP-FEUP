@@ -40,7 +40,6 @@
 
   </div>
 </template>
-
 <script>
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
@@ -49,7 +48,7 @@ import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import Dialog from 'primevue/dialog';
 import Dropdown from 'primevue/dropdown';
-import { authData } from "@/api/AuthProvider";
+import { useAuthStore } from '@/stores/auth';
 
 export default {
   components: {
@@ -64,7 +63,7 @@ export default {
     return {
       users: [],
       originalUsers: [],
-      globalFilter: { value: null, matchMode: 'contains', field: 'name' },
+      globalFilter: { value: '' },
       editDialogVisible: false,
       selectedUser: null,
       tempPermissionLevel: null,
@@ -75,13 +74,17 @@ export default {
       ]
     };
   },
+  setup() {
+    const authStore = useAuthStore();
+    return { authStore };
+  },
   mounted() {
     this.fetchUsers();
   },
   methods: {
     async fetchUsers() {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/users`, {headers: authData()});
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/users`, { headers: this.authStore.authData() });
         this.users = response.data;
         this.originalUsers = response.data;
       } catch (error) {
@@ -100,7 +103,7 @@ export default {
     async saveEditedUser() {
       this.selectedUser.permissionLevel = this.tempPermissionLevel.value;
       try {
-        await axios.put(`${import.meta.env.VITE_API_URL}/users/${this.selectedUser.id}`, this.selectedUser, {headers: authData()});
+        await axios.put(`${import.meta.env.VITE_API_URL}/users/${this.selectedUser.id}`, this.selectedUser, { headers: this.authStore.authData() });
         this.fetchUsers(); // Refresh the user list
       } catch (error) {
         console.error('Error updating user:', error);
@@ -110,12 +113,7 @@ export default {
       this.selectedUser = null;
     },
     filterUsers() {
-      this.globalFilter = {
-        value: this.globalFilter.value,
-        matchMode: 'contains',
-        field: 'name'
-      };
-      if (this.globalFilter.value === '') {
+      if (!this.globalFilter.value) {
         this.users = this.originalUsers;
       } else {
         this.users = this.originalUsers.filter(item => item.name.toLowerCase().includes(this.globalFilter.value.toLowerCase()));
@@ -124,6 +122,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 h1 {

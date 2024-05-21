@@ -36,7 +36,7 @@ import axios from 'axios';
 import Chart from 'primevue/chart';
 import Calendar from 'primevue/calendar';
 import Button from 'primevue/button';
-import { authData } from "@/api/AuthProvider";
+import { useAuthStore } from '@/stores/auth';
 
 export default {
   components: {
@@ -82,13 +82,17 @@ export default {
       maxDate: null
     };
   },
+  setup() {
+    const authStore = useAuthStore();
+    return { authStore };
+  },
   mounted() {
     this.fetchOnboardees();
   },
   methods: {
     async fetchOnboardees() {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/onboardees`, {headers: authData()});
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/onboardees`, {headers: this.authStore.authData()});
         this.onboardees = response.data;
         this.calculateMinMaxDate();
         this.filteredOnboardees = response.data;

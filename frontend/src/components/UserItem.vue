@@ -13,33 +13,36 @@
 
 <script>
 import axios from "axios";
-import { authData } from "@/api/AuthProvider";
+import { useAuthStore } from '@/stores/auth';
+import { ref, onMounted } from "vue";
 
 export default {
-  data() {
-    return {
-      user: null
+  setup() {
+    const authStore = useAuthStore();
+    const user = ref(null);
+    const userId = ref(null);
+
+    const fetchUser = async (userId) => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}`, { headers: authStore.authData() });
+        user.value = response.data;
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
     };
-  },
-  mounted() {
-    // Fetch user information based on user ID from URL parameter
-    const userId = this.$route.params.id; // Assuming the route parameter is named 'id'
-    this.fetchUser(userId);
-  },
-  methods: {
-    fetchUser(userId) {
-      // Make an API call to retrieve user information based on user ID
-      axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}`, {headers: authData()})
-          .then(response => {
-            this.user = response.data;
-          })
-          .catch(error => {
-            console.error('Error fetching user:', error);
-          });
-    }
+
+    onMounted(() => {
+      userId.value = this.$route.params.id; // Assuming the route parameter is named 'id'
+      fetchUser(userId.value);
+    });
+
+    return {
+      user
+    };
   }
 };
 </script>
+
 
 <style scoped>
 /* Add styles as needed */
