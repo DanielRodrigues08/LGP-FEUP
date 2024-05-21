@@ -95,6 +95,10 @@
                 countries: []
             };
         },
+        setup() {
+            const authStore = useAuthStore();
+            return { authStore };
+        },
         mounted() {
             const onboardeeId = this.$route.params.id;
             this.fetchOnboardeeById(onboardeeId);
@@ -104,7 +108,7 @@
         methods: {
             async fetchOnboardeeById(onboardeeId) {
                 try {
-                    const response = await axios.get(`${import.meta.env.VITE_API_URL}/onboardees/${onboardeeId}`);
+                    const response = await axios.get(`${import.meta.env.VITE_API_URL}/onboardees/${onboardeeId}`, {headers: this.authStore.authData()});
                     this.onboardee = response.data;
                     this.editOnboardee = { ...response.data };
                 } catch (error) {
@@ -140,10 +144,8 @@
                         state: this.editOnboardee.state,
                         stepsInfo: this.editOnboardee.stepsInfo,
                         activeProcess: this.editOnboardee.activeProcess
-
                     };
-                    console.log(data)
-                    await axios.put(`${import.meta.env.VITE_API_URL}/onboardees/${this.onboardee.id}`,data);
+                    await axios.put(`${import.meta.env.VITE_API_URL}/onboardees/${this.onboardee.id}`, data, {headers: this.authStore.authData()});
                     this.onboardee = { ...this.editOnboardee };
                     this.showEditDialog = false;
                 } catch (error) {

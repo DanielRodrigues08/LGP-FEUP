@@ -14,6 +14,9 @@
         <div class="forgot-password">
           <a href="#">Forgot your password?</a>
         </div>
+        <div id="credentials" ref="credentials" class="hidden error-color pt-1 text-xs w-full align-items-center">
+            Invalid credentials.
+          </div>
         <div class="button-container">
           <div class="go-back" @click="goBack">
             <i class="pi pi-arrow-left"></i>
@@ -41,7 +44,11 @@ export default {
     const router = useRouter();
 
     const handleSubmit = async () => {
-      await authStore.login(email.value, password.value);
+      const response = await authStore.login(email.value, password.value);
+      if (response == "Invalid credentials"){
+        var credentials = document.getElementById( 'credentials' );
+        credentials.classList.remove("hidden")
+      }
       router.push('/');
     };
 

@@ -1,7 +1,6 @@
 package com.lifecycle.backend.controller;
 
 import com.lifecycle.backend.config.jwt.JwtUtils;
-import com.lifecycle.backend.model.UserPermission;
 import com.lifecycle.backend.model.User;
 import com.lifecycle.backend.payload.request.LoginRequest;
 import com.lifecycle.backend.payload.request.SignupRequest;
@@ -9,7 +8,7 @@ import com.lifecycle.backend.payload.response.JwtResponse;
 import com.lifecycle.backend.payload.response.MessageResponse;
 import com.lifecycle.backend.repository.UserRepository;
 import com.lifecycle.backend.model.MyUserDetails;
-import com.lifecycle.backend.service.UserDetailsServiceImpl;
+import com.lifecycle.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,9 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.lifecycle.backend.model.UserPermission.ADMIN;
@@ -41,6 +38,9 @@ public class AuthController {
 
   @Autowired
   JwtUtils jwtUtils;
+
+  @Autowired
+  UserService userService;
 
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
@@ -82,6 +82,14 @@ public class AuthController {
     userRepository.save(user);
 
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+  }
+
+  @GetMapping
+  public ResponseEntity<User> getAuthenticatedUser() {
+    var authUser = userService.getAuthenticatedUser();
+    if (authUser.isEmpty()) return ResponseEntity.notFound().build();
+    var user = authUser.get();
+    return ResponseEntity.ok(user);
   }
 
 }

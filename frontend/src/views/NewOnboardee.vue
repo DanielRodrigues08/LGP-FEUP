@@ -57,6 +57,7 @@
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';  
 import axios from 'axios';
+import { useAuthStore } from '@/stores/auth';
 
 export default {
   data() {
@@ -72,6 +73,10 @@ export default {
       startDate: ''
     };
   },
+  setup() {
+    const authStore = useAuthStore();
+    return { authStore };
+  },
   mounted() {
     axios
       .get('https://api.openaq.org/v1/countries')
@@ -80,7 +85,6 @@ export default {
   },
   methods: {
     async handleSubmit() {
-      console.log(this.startDate)
       const requestData = {
         name: this.name,
         phoneNumber: this.phone,
@@ -92,7 +96,7 @@ export default {
         startDate: this.startDate,
       };
 
-      await axios.post(`${import.meta.env.VITE_API_URL}/onboardees`, requestData)
+      await axios.post(`${import.meta.env.VITE_API_URL}/onboardees`, requestData, {headers: this.authStore.authData()})
         .then(response => {
           this.$router.push({ name: 'onboardees' });
         })
