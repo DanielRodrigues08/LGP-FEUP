@@ -25,9 +25,8 @@ import java.util.Arrays;
 
 @Configuration
 @EnableMethodSecurity
-// (securedEnabled = true,
-// jsr250Enabled = true,
-// prePostEnabled = true) // by default
+ (securedEnabled = true,
+ jsr250Enabled = true) //enables Secured annotations
 public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
   @Autowired
   UserDetailsServiceImpl userDetailsService;
@@ -92,7 +91,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
         .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> 
-          auth.requestMatchers("/**").permitAll()
+          auth.requestMatchers("/api/auth/**").permitAll()
               .anyRequest().authenticated()
         );
     

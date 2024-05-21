@@ -1,6 +1,6 @@
 <template>
   <div class="not-found-container">
-    <img src="../assets/404.png" alt="404 Not Found" class="not-found-image">
+    <img src="../assets/403.png" alt="404 Not Found" class="not-found-image">
     <h3 class="not-found-text">You don't have permissions to access this resource</h3>
     <span @click="goBack" class="back-link">Go back to previous page</span>
   </div>

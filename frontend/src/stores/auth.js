@@ -16,7 +16,9 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('token', this.token);
         localStorage.setItem('user', JSON.stringify(this.user)); // Store user info in local storage
       } catch (error) {
-        console.error('Error during login:', error);
+        if (+error.response.status == 401) {
+          return "Invalid credentials";
+        }
       }
     },
     async loadStoredUser() {
@@ -36,5 +38,8 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
     },
+    authData() {
+      return {'Authorization': `Bearer ${localStorage.getItem('token')}`}
+    } 
   },
 });

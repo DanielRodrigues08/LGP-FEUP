@@ -1,20 +1,35 @@
 <template>
   <div class="flex justify-content-center">
-    <Button v-if="user" text rounded type="button" @click="toggle" aria-haspopup="true" class="ml-2 mr-2 menu-button" aria-controls="overlay_menu">
+    <Button text rounded type="button" @click="toggle" aria-haspopup="true" class="ml-2 mr-2 menu-button" aria-controls="overlay_menu">
       <ProfileIcon class="p-0 navbar-profile"/>
     </Button>
-    <Menu ref="profile_menu" class="p-0" :model="profile_items" :popup="true" :header="false">
+    <Menu v-if="user" ref="profile_menu" class="p-0" :model="profile_items" :popup="true" :header="false">
       <template #submenuheader>
         <button class="relative overflow-hidden w-full p-link flex align-items-center p-2 hover:surface-200 border-noround">
           <Avatar image="https://www.seaprodexhanoi.com.vn/img/no_avatar.jpg" class="mr-2" shape="circle" />
           <div class="text-xs inline-flex flex-column">
-            <span class="primary-color font-bold">{{ user ? user.name : '' }}</span>
-            <span>{{ user ? user.permissionLevel : '' }}</span>
+            <span class="primary-color font-bold">{{ user.name }}</span>
+            <span>{{ user.permissionLevel }}</span>
           </div>
         </button>
       </template>
       <template #item="{ item }">
-        <a class="relative overflow-hidden w-full p-link p-2 flex align-items-center pl-2 pr-2 hover:surface-200 border-noround" @click="item.action()">
+        <a class="relative overflow-hidden w-full p-link p-2 flex align-items-center pl-2 pr-2 hover:surface-200 border-noround" @click="item.action">
+          <span :class="item.icon" class="primary-color"></span>
+          <span class="text-color text-xs ml-2">{{ item.label }}</span>
+        </a>
+      </template>
+    </Menu>
+    <Menu v-else ref="profile_menu" class="p-0" :model="profile_items_logged_out" :popup="true" :header="false">
+      <template #submenuheader>
+        <button class="relative overflow-hidden w-full p-link flex align-items-center p-2 hover:surface-200 border-noround">
+          <div class="text-xs text-color flex-column">
+            <span>User not logged in.</span>
+          </div>
+        </button>
+      </template>
+      <template #item="{ item }">
+        <a class="relative overflow-hidden w-full p-link p-2 flex align-items-center pl-2 pr-2 hover:surface-200 border-noround" @click="item.action">
           <span :class="item.icon" class="primary-color"></span>
           <span class="text-color text-xs ml-2">{{ item.label }}</span>
         </a>
@@ -48,6 +63,7 @@
   </Dialog>
 </template>
 
+
 <script>
 import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
@@ -75,11 +91,16 @@ export default {
     const newPassword = ref('');
     const authStore = useAuthStore();
     const router = useRouter();
+    
+    const cancelEdit = () => {
+      showProfileDialog.value = false;
+      newPassword.value = ''; // Reset the password field when cancelling the edit
+    };
 
-    const fetchOnboardeeById = async () => {
+    const fetchAuthenticatedUser = async () => {
       try {
         if (authStore.user) {
-          const response = await axios.get(`http://localhost:8081/api/users/${authStore.user.id}`);
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/auth`, { headers: authStore.authData() });
           user.value = response.data;
         }
       } catch (error) {
@@ -93,29 +114,12 @@ export default {
         if (newPassword.value) {
           updateData.password = newPassword.value;
         }
-        await axios.put(`http://localhost:8081/api/users/${user.value.id}`, updateData);
+        await axios.put(`${import.meta.env.VITE_API_URL}/users/${user.value.id}`, updateData, { headers: authStore.authData() });
         showProfileDialog.value = false;
       } catch (error) {
         console.error('Error saving changes:', error);
       }
     };
-
-    const logout = () => {
-      authStore.logout();
-      router.push('/login');
-    };
-
-    const cancelEdit = () => {
-      showProfileDialog.value = false;
-      newPassword.value = ''; // Reset the password field when cancelling the edit
-    };
-
-    onMounted(() => {
-      authStore.loadStoredUser(); // Load stored user information
-      if (authStore.user) {
-        fetchOnboardeeById();
-      }
-    });
 
     const toggle = (event) => {
       profile_menu.value.toggle(event);
@@ -126,34 +130,57 @@ export default {
       showProfileDialog.value = true;
     };
 
+    const logoutUser = () => {
+      authStore.logout();
+      router.push('/login');
+    };
+
+    const loginUser = () => {
+      router.push("/login");
+    };
+
     const profile_menu = ref();
     const profile_items = ref([
       {
         items: [
-          {
-            separator: true
-          },
-          {
-            label: 'Edit Profile',
-            icon: 'pi pi-cog',
-            action: editProfile
-          },
-          {
-            label: 'Logout',
-            icon: 'pi pi-sign-out',
-            action: logout
-          }
+          { separator: true },
+          { label: 'Edit Profile', icon: 'pi pi-cog', action: editProfile },
+          { label: 'Logout', icon: 'pi pi-sign-out', action: logoutUser }
+        ]
+      }
+    ]);
+    const profile_items_logged_out = ref([
+      {
+        items: [
+          { label: 'Login', icon: 'pi pi-sign-in', action: loginUser }
         ]
       }
     ]);
 
     watch(() => authStore.user, (newUser) => {
       if (newUser) {
-        fetchOnboardeeById();
+        fetchAuthenticatedUser();
       }
     });
 
-    return { showProfileDialog, toggle, profile_menu, profile_items, user, newPassword, saveChanges, cancelEdit };
+    onMounted(() => {
+      authStore.loadStoredUser(); // Load stored user information
+      if (authStore.user) {
+        fetchAuthenticatedUser();
+      }
+    });
+
+    return {
+      showProfileDialog,
+      toggle,
+      profile_menu,
+      profile_items,
+      profile_items_logged_out,
+      user,
+      newPassword,
+      saveChanges,
+      cancelEdit,
+    };
   },
 };
 </script>

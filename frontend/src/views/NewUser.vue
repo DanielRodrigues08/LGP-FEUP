@@ -35,6 +35,7 @@
   import Button from 'primevue/button';
   import InputText from 'primevue/inputtext';  
   import axios from 'axios';
+  import { useAuthStore } from '@/stores/auth';
   
   export default {
     data() {
@@ -51,7 +52,7 @@
           email: this.email,
           permissionLevel: this.permissionLevel
         };
-  
+        // TODO
       },
       goBack() {
         this.$router.go(-1);

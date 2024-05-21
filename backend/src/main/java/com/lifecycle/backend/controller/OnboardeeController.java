@@ -7,9 +7,11 @@ import com.lifecycle.backend.repository.OnboardeeRepository;
 import com.lifecycle.backend.repository.ProcessRepository;
 import com.lifecycle.backend.repository.StepInfoRepository;
 import com.lifecycle.backend.service.OnboardeeService;
+import com.lifecycle.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -20,6 +22,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/onboardees")
+@Secured({"HR", "ADMIN"})
 public class OnboardeeController {
 
     @Autowired
@@ -27,6 +30,9 @@ public class OnboardeeController {
 
     @Autowired
     private OnboardeeService onboardeeService;
+
+    @Autowired
+    private UserService userService;
 
     // GET all onboardees
     @GetMapping
