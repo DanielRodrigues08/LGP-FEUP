@@ -43,31 +43,31 @@ public class OnboardeeDTO {
     }
 
     public boolean isNameEmpty() {
-        return this.name == null || this.name.isEmpty();
+        return this.name == null || this.name.trim().trim().isEmpty();
     }
 
     public boolean isPhoneNumberEmpty() {
-        return this.phoneNumber == null || this.phoneNumber.isEmpty();
+        return this.phoneNumber == null || this.phoneNumber.trim().isEmpty();
     }
 
     public boolean isEmailEmpty() {
-        return this.email == null || this.email.isEmpty();
+        return this.email == null || this.email.trim().isEmpty();
     }
 
     public boolean isGenderEmpty() {
-        return this.gender == null || this.gender.isEmpty();
+        return this.gender == null || this.gender.trim().isEmpty();
     }
 
     public boolean isNationalityEmpty() {
-        return this.gender == null || this.nationality.isEmpty();
+        return this.gender == null || this.nationality.trim().isEmpty();
     }
 
     public boolean isAnnualSalaryEmpty() {
-        return this.annualSalary == null || this.annualSalary.isEmpty();
+        return this.annualSalary == null || this.annualSalary.trim().isEmpty();
     }
 
     public boolean isPayrollNumberEmpty() {
-        return this.payrollNumber == null || this.payrollNumber.isEmpty();
+        return this.payrollNumber == null || this.payrollNumber.trim().isEmpty();
     }
 
     public boolean isStartDateEmpty() {
