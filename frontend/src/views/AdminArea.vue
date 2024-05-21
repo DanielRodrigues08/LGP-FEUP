@@ -13,7 +13,7 @@
       </div>
     </div>
 
-    <DataTable class="custom-table" removableSort :value="users" :globalFilter="globalFilter" @filter="filterUsers" tableStyle="min-width: 50rem">
+    <DataTable class="custom-table" removableSort :value="users" :globalFilter="globalFilter" @filter="filterUsers" tableStyle="min-width: 50rem" paginator :rows="10" :rowsPerPageOptions="[5,10,20,50]">
       <Column field="name" header="Name" sortable :headerStyle="{ backgroundColor: '#033A65', color:'white'}"></Column>
       <Column field="email" header="Email" :headerStyle="{ backgroundColor: '#033A65', color:'white'}"></Column>
       <Column field="phoneNumber" header="Phone" :headerStyle="{ backgroundColor: '#033A65', color:'white'}"></Column>

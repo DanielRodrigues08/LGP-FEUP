@@ -13,7 +13,7 @@
         </div>
       </div>
 
-      <DataTable class="custom-table" removableSort :value="processes" paginator :rows="5" :rowsPerPageOptions="[5,10,20,50]" :globalFilter="globalFilter" @filter="filterUsers">
+      <DataTable class="custom-table" removableSort :value="processes" paginator :rows="10" :rowsPerPageOptions="[5,10,20,50]" :globalFilter="globalFilter" @filter="filterUsers">
         <Column field="title" sortable header="Title" class="custom-header" :headerStyle="{ backgroundColor: '#033A65', color:'white', width:'20%' }" ></Column>
         <Column field="description" header="Description" class="custom-header" :headerStyle="{ backgroundColor: '#033A65', color:'white',width:'60%' }"></Column>
         <Column field="stepsCount"  class="custom-header " style="text-align: center;" :header="centeredHeader" :headerStyle="{ backgroundColor: '#033A65', color:'white',width:'20%'}">
@@ -35,7 +35,7 @@
   import axios from 'axios';
   import Button from 'primevue/button';
   import InputText from 'primevue/inputtext';
-  import { authData } from "@/api/AuthProvider";
+  import { useAuthStore } from '@/stores/auth';
 
   export default {
     components: {
@@ -51,13 +51,17 @@
         globalFilter: { value: null, matchMode: 'contains', field: 'title' }
       };
     },
+    setup() {
+      const authStore = useAuthStore();
+      return { authStore };
+    },
     mounted() {
       this.fetchProcesses();
     },
     methods: {
       async fetchProcesses() {
         try {
-          const response = await axios.get(`${import.meta.env.VITE_API_URL}/processes`, {headers: authData()});
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/processes`, {headers: this.authStore.authData()});
           this.processes = response.data.map(process =>({
             ...process,
             stepsCount: process.stepsInProcess.length,

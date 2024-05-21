@@ -18,6 +18,7 @@
         @row-click="handleRowClick"
         tableStyle="min-width: 50rem"
         removableSort
+        paginator :rows="5" :rowsPerPageOptions="[5,10,20,50]"
       >
         <Column field="name" sortable header="Name" :headerStyle="{ backgroundColor: '#033A65', color:'white'}"></Column>
         <Column field="email" header="Email" :headerStyle="{ backgroundColor: '#033A65', color:'white'}"></Column>
