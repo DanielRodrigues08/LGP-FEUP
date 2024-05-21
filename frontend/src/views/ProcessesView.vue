@@ -2,8 +2,8 @@
     <div class="users">
       <div class="title-container">
         <h1>Processes</h1>
-        <router-link to="/add-user">
-            <Button class="add-button" label="New Process" icon="pi pi-plus" />
+        <router-link to="/"> <!--! CHANGE THIS LINK -->
+        <Button class="add-button" label="New Process" icon="pi pi-plus" />
         </router-link>
       </div>
 
@@ -13,8 +13,8 @@
         </div>
       </div>
 
-      <DataTable class="custom-table" :value="processes" paginator :rows="5" :rowsPerPageOptions="[5,10,20,50]" :globalFilter="globalFilter" @filter="filterUsers">
-        <Column field="title" header="Title" class="custom-header" :headerStyle="{ backgroundColor: '#033A65', color:'white', width:'20%' }" ></Column>
+      <DataTable class="custom-table" removableSort :value="processes" paginator :rows="5" :rowsPerPageOptions="[5,10,20,50]" :globalFilter="globalFilter" @filter="filterUsers">
+        <Column field="title" sortable header="Title" class="custom-header" :headerStyle="{ backgroundColor: '#033A65', color:'white', width:'20%' }" ></Column>
         <Column field="description" header="Description" class="custom-header" :headerStyle="{ backgroundColor: '#033A65', color:'white',width:'60%' }"></Column>
         <Column field="stepsCount"  class="custom-header " style="text-align: center;" :header="centeredHeader" :headerStyle="{ backgroundColor: '#033A65', color:'white',width:'20%'}">
           <template #header>
