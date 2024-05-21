@@ -13,6 +13,7 @@
 
 <script>
 import axios from "axios";
+import { authData } from "@/api/AuthProvider";
 
 export default {
   data() {
@@ -28,7 +29,7 @@ export default {
   methods: {
     fetchUser(userId) {
       // Make an API call to retrieve user information based on user ID
-      axios.get(`/users/${userId}`)
+      axios.get(`${import.meta.env.VITE_API_URL}/users/${userId}`, {headers: authData()})
           .then(response => {
             this.user = response.data;
           })

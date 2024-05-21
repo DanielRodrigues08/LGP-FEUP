@@ -57,6 +57,7 @@
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';  
 import axios from 'axios';
+import { authData } from "@/api/AuthProvider";
 
 export default {
   data() {
@@ -80,6 +81,7 @@ export default {
   },
   methods: {
     async handleSubmit() {
+      console.log(this.startDate)
       const requestData = {
         name: this.name,
         phoneNumber: this.phone,
@@ -88,10 +90,10 @@ export default {
         nationality: this.nationality,
         annualSalary: this.annualSalary,
         payrollNumber: this.payrollNumber,
-        startDate: this.startDate
+        startDate: this.startDate,
       };
 
-      await axios.post('http://localhost:8081/onboardees', requestData)
+      await axios.post(`${import.meta.env.VITE_API_URL}/onboardees`, requestData, {headers: authData()})
         .then(response => {
           this.$router.push({ name: 'onboardees' });
         })

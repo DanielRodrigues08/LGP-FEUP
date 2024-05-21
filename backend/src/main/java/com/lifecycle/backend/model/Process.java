@@ -6,19 +6,22 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Getter
 @Setter
-
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "processes")
+@Table(name = "process")
 
 public class Process {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "process_id")
-    private long process_id;
+    @Column(name = "id")
+    private long id;
 
-    @Column(name="title", nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
 
     @Column(name = "description") // *nullable = true* is redundant
@@ -30,22 +33,12 @@ public class Process {
     -> there is no CascadeType option because we do not want steps
     -> to be deleted from the Steps table when a Process is deleted.
     */
-    @OneToMany(mappedBy="process", cascade = CascadeType.ALL)
-    private List<StepInProcess> steps;
-
-    public Process() { }
+    @OneToMany(mappedBy = "process", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<StepInProcess> stepsInProcess = new ArrayList<>();
 
     public Process(String title, String description) {
         this.title = title;
         this.description = description;
-        // this.steps = new ArrayList<>();
     }
-
-    public StepInProcess getStepInProcessByID(Long id) {
-        return this.steps.stream()
-                .filter(step -> id.equals(step.getStep().getStep_id()))
-                .findAny()
-                .orElse(null);
-    }
-
 }
