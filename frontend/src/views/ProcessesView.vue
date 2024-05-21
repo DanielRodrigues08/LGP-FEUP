@@ -14,21 +14,17 @@
       </div>
 
       <DataTable class="custom-table" :value="processes" paginator :rows="5" :rowsPerPageOptions="[5,10,20,50]" :globalFilter="globalFilter" @filter="filterUsers">
-        <Column field="title" header="Title" class="custom-header" :headerStyle="{ backgroundColor: '#033A65', color:'white', width:'40%' }" ></Column>
-        <Column field="description" header="Description" class="custom-header" :headerStyle="{ backgroundColor: '#033A65', color:'white',width:'40%' }"></Column>
-        <Column field="steps" header="Number of steps" class="custom-header" :headerStyle="{ backgroundColor: '#033A65', color:'white',width:'20%'}"></Column>
+        <Column field="title" header="Title" class="custom-header" :headerStyle="{ backgroundColor: '#033A65', color:'white', width:'20%' }" ></Column>
+        <Column field="description" header="Description" class="custom-header" :headerStyle="{ backgroundColor: '#033A65', color:'white',width:'60%' }"></Column>
+        <Column field="stepsCount"  class="custom-header " style="text-align: center;" :header="centeredHeader" :headerStyle="{ backgroundColor: '#033A65', color:'white',width:'20%'}">
+          <template #header>
+            <div class="center-text" style="margin: auto;">Number of steps</div>
+          </template> 
+          <template #body="slotProps">
+            <div class="center-text">{{ slotProps.data.stepsCount }}</div>
+          </template>
+        </Column>
       </DataTable>
-
-      <!-- <Dialog v-model="editDialogVisible" header="Edit User Permissions" :visible="editDialogVisible" modal :closable="false">
-        <div class="p-field">
-          <label for="permissionLevel">Permission Level:</label>
-          <Dropdown v-model="tempPermissionLevel" id="permissionLevel" :options="permissionOptions" optionLabel="label" />
-        </div>
-        <div class="dialog-buttons">
-          <Button label="Cancel" class="p-button-secondary" @click="cancelEdit" outlined />
-          <Button label="Save" class="p-button-success" @click="saveEditedUser" outlined />
-        </div>
-      </Dialog> -->
 
     </div>
   </template>
@@ -39,78 +35,52 @@
   import axios from 'axios';
   import Button from 'primevue/button';
   import InputText from 'primevue/inputtext';
-  import Dialog from 'primevue/dialog';
-  import Dropdown from 'primevue/dropdown';
+  import { authData } from "@/api/AuthProvider";
 
   export default {
     components: {
       DataTable,
       Column,
       Button,
-      InputText,
-      Dialog,
-      Dropdown
+      InputText
     },
     data() {
       return {
-        users: [],
-        originalUsers: [],
-        globalFilter: { value: null, matchMode: 'contains', field: 'name' },
-        editDialogVisible: false,
-        selectedUser: null,
-        tempPermissionLevel: null,
-        permissionOptions: [
-        { value: 'ADMIN', label: 'Admin' },
-        { value: 'HR', label: 'HR' },
-        { value: 'EMPLOYEE', label: 'Employee' }
-      ]
+        processes: [],
+        originalProcesses: [],
+        globalFilter: { value: null, matchMode: 'contains', field: 'title' }
       };
     },
     mounted() {
-      this.fetchUsers();
+      this.fetchProcesses();
     },
     methods: {
-      async fetchUsers() {
+      async fetchProcesses() {
         try {
-          const response = await axios.get('http://localhost:8081/processes');
-          this.users = response.data;
-          this.originalUsers = response.data;
-        } catch (error) {
-          console.error('Error fetching users:', error);
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/processes`, {headers: authData()});
+          this.processes = response.data.map(process =>({
+            ...process,
+            stepsCount: process.stepsInProcess.length,
+          }));
+          console.log(this.processes)
+          this.originalProcesses = response.data.map(process =>({
+            ...process,
+            stepsCount: process.stepsInProcess.length,
+          }));
+          } catch (error) {
+          console.error('Error fetching processes:', error);
         }
-      },
-      editUser(user) {
-        this.selectedUser = user;
-        this.editDialogVisible = true;
-      },
-      cancelEdit() {
-        this.editDialogVisible = false;
-        this.selectedUser = null;
-      },
-      async saveEditedUser() {
-        this.selectedUser.permissionLevel = this.tempPermissionLevel.value;
-        try {
-          // await axios.post(`http://localhost:8081/users/${this.selectedUser.id}/permissions`, {
-          //   permissionLevel: this.tempPermissionLevel
-          // });
-          console.log('Permission updated successfully!');
-        } catch (error) {
-          console.error('Error updating permission:', error);
-        }
-        this.tempPermissionLevel = null;
-        this.editDialogVisible = false;
-        this.selectedUser = null;
       },
       filterProcesses() {
         this.globalFilter = {
           value: this.globalFilter.value,
           matchMode: 'contains',
-          field: 'name'
+          field: 'title'
         };
         if (this.globalFilter.value === '') {
-          this.users = this.originalUsers;
+          this.processes = this.originalProcesses;
         } else {
-          this.users = this.originalUsers.filter(item => item.name.toLowerCase().includes(this.globalFilter.value.toLowerCase()));
+          this.processes = this.originalProcesses.filter(item => item.title.toLowerCase().includes(this.globalFilter.value.toLowerCase()));
         }
       }
     }
@@ -149,6 +119,10 @@
       margin-top: 1em;
       margin-bottom: 1em;
 
+    }
+
+    .center-text {
+      text-align: center;
     }
 
 
