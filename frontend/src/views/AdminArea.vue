@@ -13,14 +13,14 @@
       </div>
     </div>
 
-    <DataTable class="custom-table" :value="users" :globalFilter="globalFilter" @filter="filterUsers">
-      <Column field="name" header="Name"></Column>
-      <Column field="email" header="Email"></Column>
-      <Column field="phoneNumber" header="Phone"></Column>
-      <Column field="permissionLevel" header="Permissions"></Column>
-      <Column header="">
+    <DataTable class="custom-table" removableSort :value="users" :globalFilter="globalFilter" @filter="filterUsers" tableStyle="min-width: 50rem">
+      <Column field="name" header="Name" sortable :headerStyle="{ backgroundColor: '#033A65', color:'white'}"></Column>
+      <Column field="email" header="Email" :headerStyle="{ backgroundColor: '#033A65', color:'white'}"></Column>
+      <Column field="phoneNumber" header="Phone" :headerStyle="{ backgroundColor: '#033A65', color:'white'}"></Column>
+      <Column field="permissionLevel" header="Permissions" :headerStyle="{ backgroundColor: '#033A65', color:'white'}"></Column>
+      <Column header="" :headerStyle="{ backgroundColor: '#033A65', color:'white'}">
         <template #body="slotProps">
-          <Button class="edit-button" @click="editUser(slotProps.data)">
+          <Button class="edit-button" @click="editUser(slotProps.data)" >
             <i class="pi pi-pencil" style="color: grey;"></i>
           </Button>
         </template>

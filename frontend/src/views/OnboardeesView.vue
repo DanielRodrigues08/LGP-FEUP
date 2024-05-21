@@ -9,18 +9,20 @@
       </router-link>
     </div>
     
-    <div v-for="(stateOnboardees, state) in filteredOnboardees" :key="state">
-      <h3 :class="stateClass(state)">{{ toTitleCase(state) }} onboardees</h3>
+    <div v-for="(stateOnboardees, state) in filteredOnboardees" :key="state" >
+      <h2 style="margin-left:5%; margin-top: 20px;" :class="stateClass(state)">{{ toTitleCase(state) }} onboardees</h2>
       <DataTable
         class="custom-table"
         :value="stateOnboardees"
         :globalFilter="globalFilter"
         @row-click="handleRowClick"
+        tableStyle="min-width: 50rem"
+        removableSort
       >
-        <Column field="name" header="Name"></Column>
-        <Column field="email" header="Email"></Column>
-        <Column field="phoneNumber" header="Phone"></Column>
-        <Column field="startDate" header="Start date"></Column>
+        <Column field="name" sortable header="Name" :headerStyle="{ backgroundColor: '#033A65', color:'white'}"></Column>
+        <Column field="email" header="Email" :headerStyle="{ backgroundColor: '#033A65', color:'white'}"></Column>
+        <Column field="phoneNumber" header="Phone" :headerStyle="{ backgroundColor: '#033A65', color:'white'}"></Column>
+        <Column field="startDate" header="Start date" :headerStyle="{ backgroundColor: '#033A65', color:'white'}"></Column>
       </DataTable>
     </div>
   </div>

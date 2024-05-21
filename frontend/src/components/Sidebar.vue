@@ -44,6 +44,10 @@
     {
       name: "Admin area",
       route: "/admin-area"
+    },
+    {
+      name: "Processes",
+      route: "/processes"
     }
   ]);
   

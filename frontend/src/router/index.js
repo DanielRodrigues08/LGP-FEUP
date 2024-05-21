@@ -12,6 +12,7 @@ import Statistics from '@/views/Statistics.vue';
 import NotFound from '@/views/NotFound.vue';
 import OnboardeeProfileView from '@/views/OnboardeeProfileView.vue';
 import ForbiddenView from '@/views/ForbiddenView.vue';
+import ProcessesView from '@/views/ProcessesView.vue';
 
 
 const router = createRouter({
@@ -28,6 +29,7 @@ const router = createRouter({
     { path: '/statistics', name: 'statistics', component: Statistics },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFound },
     { path: '/forbidden', name: 'forbidden', component: ForbiddenView },
+    { path: '/processes', name: 'processes', component: ProcessesView },
   ]
 });
 
