@@ -111,7 +111,6 @@ export default {
     const saveChanges = async () => {
       try {
         const updateData = { ...user.value };
-        console.log(updateData)
         if (newPassword.value) {
           updateData.password = newPassword.value;
         }
