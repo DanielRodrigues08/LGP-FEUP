@@ -81,8 +81,7 @@ public class OnboardeeController {
         }
     }
 
-    // PUT update onboardee
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<Object> updateOnboardee(@PathVariable Long id, @RequestBody OnboardeeDTO onboardeeRequest) {
         Optional<Onboardee> onboardeeOptional = onboardeeRepository.findById(id);
         if (!onboardeeOptional.isPresent()) {
@@ -90,15 +89,43 @@ public class OnboardeeController {
         }
 
         Onboardee onboardeeToUpdate = onboardeeOptional.get();
-        onboardeeToUpdate.setName(onboardeeRequest.getName());
-        onboardeeToUpdate.setPhoneNumber(onboardeeRequest.getPhoneNumber());
-        onboardeeToUpdate.setEmail(onboardeeRequest.getEmail());
-        onboardeeToUpdate.setGender(onboardeeRequest.getGender());
-        onboardeeToUpdate.setNationality(onboardeeRequest.getNationality());
-        onboardeeToUpdate.setAnnualSalary(onboardeeRequest.getAnnualSalary());
-        onboardeeToUpdate.setPayrollNumber(onboardeeRequest.getPayrollNumber());
-        onboardeeToUpdate.setStartDate(onboardeeRequest.getStartDate());
-        onboardeeToUpdate.setState(onboardeeRequest.getState());
+
+        if (!onboardeeRequest.isProcessIdEmpty()) {
+            try {
+                onboardeeToUpdate = onboardeeService.updateOnboardeeProcess(id, onboardeeRequest.getProcessId());
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+            }
+        }
+
+        if (!onboardeeRequest.isNameEmpty()) {
+            onboardeeToUpdate.setName(onboardeeRequest.getName());
+        }
+        if (!onboardeeRequest.isPhoneNumberEmpty()) {
+            onboardeeToUpdate.setPhoneNumber(onboardeeRequest.getPhoneNumber());
+        }
+        if (!onboardeeRequest.isEmailEmpty()) {
+            onboardeeToUpdate.setEmail(onboardeeRequest.getEmail());
+        }
+        if (!onboardeeRequest.isGenderEmpty()) {
+            onboardeeToUpdate.setGender(onboardeeRequest.getGender());
+        }
+        if (!onboardeeRequest.isNationalityEmpty()) {
+            onboardeeToUpdate.setNationality(onboardeeRequest.getNationality());
+        }
+        if (!onboardeeRequest.isAnnualSalaryEmpty()) {
+            onboardeeToUpdate.setAnnualSalary(onboardeeRequest.getAnnualSalary());
+        }
+        if (!onboardeeRequest.isPayrollNumberEmpty()) {
+            onboardeeToUpdate.setPayrollNumber(onboardeeRequest.getPayrollNumber());
+        }
+        if (!onboardeeRequest.isStartDateEmpty()) {
+            onboardeeToUpdate.setStartDate(onboardeeRequest.getStartDate());
+        }
+        if (!onboardeeRequest.isStateEmpty()) {
+            onboardeeToUpdate.setState(onboardeeRequest.getState());
+        }
+
 
         Onboardee updatedOnboardee = onboardeeRepository.save(onboardeeToUpdate);
         return ResponseEntity.ok(OnboardeeDTO.convertToDTO(updatedOnboardee));
@@ -113,17 +140,6 @@ public class OnboardeeController {
         onboardeeRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
-    @PatchMapping("/{id}/process")
-    public ResponseEntity<Object> updateOnboardeeProcess(@PathVariable long id, @RequestBody long idProcess) {
-        try {
-            Onboardee savedOnboardee = onboardeeService.updateOnboardeeProcess(id, idProcess);
-            return ResponseEntity.ok(OnboardeeDTO.convertToDTO(savedOnboardee));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
-        }
-    }
-
 
     @GetMapping("/{id}/process/active")
     public ResponseEntity<Object> getProcess(@PathVariable Long id) {

@@ -41,4 +41,44 @@ public class OnboardeeDTO {
 
         return dto;
     }
+
+    public boolean isNameEmpty() {
+        return this.name == null || this.name.isEmpty();
+    }
+
+    public boolean isPhoneNumberEmpty() {
+        return this.phoneNumber == null || this.phoneNumber.isEmpty();
+    }
+
+    public boolean isEmailEmpty() {
+        return this.email == null || this.email.isEmpty();
+    }
+
+    public boolean isGenderEmpty() {
+        return this.gender == null || this.gender.isEmpty();
+    }
+
+    public boolean isNationalityEmpty() {
+        return this.gender == null || this.nationality.isEmpty();
+    }
+
+    public boolean isAnnualSalaryEmpty() {
+        return this.annualSalary == null || this.annualSalary.isEmpty();
+    }
+
+    public boolean isPayrollNumberEmpty() {
+        return this.payrollNumber == null || this.payrollNumber.isEmpty();
+    }
+
+    public boolean isStartDateEmpty() {
+        return this.startDate == null;
+    }
+
+    public boolean isStateEmpty() {
+        return this.state == null;
+    }
+
+    public boolean isProcessIdEmpty() {
+        return this.processId == null;
+    }
 }
