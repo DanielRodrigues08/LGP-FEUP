@@ -21,6 +21,7 @@ public class OnboardeeDTO {
     private String payrollNumber;
     private LocalDate startDate;
     private OnboardeeStatus state;
+    private Long processId;
 
     static public OnboardeeDTO convertToDTO(Onboardee onboardee) {
         OnboardeeDTO dto = new OnboardeeDTO();
@@ -34,6 +35,9 @@ public class OnboardeeDTO {
         dto.setPayrollNumber(onboardee.getPayrollNumber());
         dto.setStartDate(onboardee.getStartDate());
         dto.setState(onboardee.getState());
+
+        if (onboardee.getActiveProcess() != null)
+            dto.setProcessId(onboardee.getActiveProcess().getId());
 
         return dto;
     }

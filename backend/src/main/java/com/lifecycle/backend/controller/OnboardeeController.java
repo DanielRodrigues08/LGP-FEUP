@@ -3,10 +3,10 @@ package com.lifecycle.backend.controller;
 import com.lifecycle.backend.dto.*;
 import com.lifecycle.backend.model.*;
 import com.lifecycle.backend.model.Process;
-import com.lifecycle.backend.model.OnboardeeStatus;
 import com.lifecycle.backend.repository.OnboardeeRepository;
 import com.lifecycle.backend.repository.ProcessRepository;
 import com.lifecycle.backend.repository.StepInfoRepository;
+import com.lifecycle.backend.service.OnboardeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +26,7 @@ public class OnboardeeController {
     private OnboardeeRepository onboardeeRepository;
 
     @Autowired
-    private ProcessRepository processRepository;
-    @Autowired
-    private StepInfoRepository stepInfoRepository;
+    private OnboardeeService onboardeeService;
 
     // GET all onboardees
     @GetMapping
@@ -53,6 +51,14 @@ public class OnboardeeController {
 
         Onboardee savedOnboardee = onboardeeRepository.save(newOnboardee);
 
+        if (onboardee.getProcessId() != null) {
+            try {
+                savedOnboardee = onboardeeService.updateOnboardeeProcess(savedOnboardee.getId(), onboardee.getProcessId());
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+            }
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(OnboardeeDTO.convertToDTO(savedOnboardee));
     }
 
@@ -71,33 +77,8 @@ public class OnboardeeController {
         if (_process == null) {
             return ResponseEntity.ok(Map.of("onboardee", OnboardeeDTO.convertToDTO(_onboardee)));
         } else {
-            return ResponseEntity.ok(Map.of("onboardee", OnboardeeDTO.convertToDTO(_onboardee), "process", OnboardeeProcessDTO.convertToDTO(_onboardee)));
+            return ResponseEntity.ok(Map.of("onboardee", OnboardeeDTO.convertToDTO(_onboardee), "process", OnboardeeViewDTO.convertToDTO(_onboardee)));
         }
-    }
-
-    @GetMapping("/{id}/process")
-    public ResponseEntity<Object> getOnboardeeProcess(@PathVariable Long id) {
-        Optional<Onboardee> onboardee = onboardeeRepository.findById(id);
-        if (onboardee.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Onboardee not found"));
-        }
-        Onboardee _onboardee = onboardee.get();
-
-        Process _process = _onboardee.getActiveProcess();
-
-        if (_process == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "The onboardee has no active process"));
-        }
-
-        List<StepInfo> stepsInfo = new ArrayList<>();
-        for (StepInfo stepInfo : _onboardee.getStepsInfo()) {
-            if (stepInfo.getStepInProcess().getProcess().getId() == _process.getId()) {
-                stepsInfo.add(stepInfo);
-            }
-        }
-
-        return ResponseEntity.ok(Map.of("process", _process, "stepsInfo", stepsInfo));
-
     }
 
     // PUT update onboardee
@@ -135,49 +116,12 @@ public class OnboardeeController {
 
     @PatchMapping("/{id}/process")
     public ResponseEntity<Object> updateOnboardeeProcess(@PathVariable long id, @RequestBody long idProcess) {
-        Optional<Onboardee> onboardee = onboardeeRepository.findById(id);
-        if (onboardee.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Onboardee not found"));
+        try {
+            Onboardee savedOnboardee = onboardeeService.updateOnboardeeProcess(id, idProcess);
+            return ResponseEntity.ok(OnboardeeDTO.convertToDTO(savedOnboardee));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
         }
-
-        Onboardee _onboardee = onboardee.get();
-
-        if (_onboardee.getActiveProcess() != null && _onboardee.getActiveProcess().getId() == idProcess) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Onboardee already has this process"));
-        }
-
-        Optional<Process> process = processRepository.findById(idProcess);
-
-        if (process.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Process not found"));
-        }
-        Process _process = process.get();
-
-        boolean addNewStepsInfo = true;
-
-        for (StepInfo stepInfo : _onboardee.getStepsInfo()) {
-            if (stepInfo.getStepInProcess().getProcess().getId() == idProcess) {
-                stepInfo.setStatus(StepInfoStatus.NOT_STARTED);
-                addNewStepsInfo = false;
-            } else {
-                stepInfo.setStatus(StepInfoStatus.ABORTED);
-            }
-        }
-
-        if (addNewStepsInfo) {
-            for (StepInProcess stepInProcess : _process.getStepsInProcess()) {
-                StepInfo stepInfo = new StepInfo();
-                stepInfo.setOnboardee(_onboardee);
-                stepInfo.setStepInProcess(stepInProcess);
-                stepInfo.setStatus(StepInfoStatus.NOT_STARTED);
-                stepInfoRepository.save(stepInfo);
-                _onboardee.getStepsInfo().add(stepInfo);
-            }
-        }
-        _onboardee.setActiveProcess(_process);
-        onboardeeRepository.save(_onboardee);
-
-        return ResponseEntity.ok(_onboardee);
     }
 
 

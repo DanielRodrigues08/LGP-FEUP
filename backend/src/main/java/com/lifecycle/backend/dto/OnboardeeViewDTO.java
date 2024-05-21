@@ -11,20 +11,20 @@ import java.util.ArrayList;
 
 @Getter
 @Setter
-public class OnboardeeProcessDTO {
+public class OnboardeeViewDTO {
     private Long idProcess;
     private String processTitle;
-    private List<OnboardeeStepDTO> steps;
+    private List<StepViewDTO> steps;
 
-    static public OnboardeeProcessDTO convertToDTO(Onboardee onboardee) {
-        OnboardeeProcessDTO dto = new OnboardeeProcessDTO();
+    static public OnboardeeViewDTO convertToDTO(Onboardee onboardee) {
+        OnboardeeViewDTO dto = new OnboardeeViewDTO();
         dto.setIdProcess(onboardee.getActiveProcess().getId());
         dto.setProcessTitle(onboardee.getActiveProcess().getTitle());
 
-        List<OnboardeeStepDTO> steps = new ArrayList<>();
+        List<StepViewDTO> steps = new ArrayList<>();
         for (StepInfo stepInfo : onboardee.getStepsInfo()) {
             if (stepInfo.getStatus() != StepInfoStatus.ABORTED) {
-                steps.add(OnboardeeStepDTO.convertToDTO(stepInfo));
+                steps.add(StepViewDTO.convertToDTO(stepInfo));
             }
         }
         dto.setSteps(steps);
