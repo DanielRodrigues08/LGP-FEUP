@@ -105,8 +105,8 @@
             async fetchOnboardeeById(onboardeeId) {
                 try {
                     const response = await axios.get(`${import.meta.env.VITE_API_URL}/onboardees/${onboardeeId}`);
-                    this.onboardee = response.data;
-                    this.editOnboardee = { ...response.data };
+                    this.onboardee = response.data.onboardee;
+                    this.editOnboardee = { ...response.data.onboardee };
                 } catch (error) {
                     console.error('Error fetching onboardee:', error);
                 }
@@ -142,9 +142,9 @@
                         activeProcess: this.editOnboardee.activeProcess
 
                     };
-                    console.log(data)
-                    await axios.put(`${import.meta.env.VITE_API_URL}/onboardees/${this.onboardee.id}`,data);
-                    this.onboardee = { ...this.editOnboardee };
+                    const response = await axios.patch(`${import.meta.env.VITE_API_URL}/onboardees/${this.onboardee.id}`,data);
+                    this.onboardee = response.data;
+                    this.editOnboardee = {...response.data};
                     this.showEditDialog = false;
                 } catch (error) {
                     console.error('Error saving changes:', error);
