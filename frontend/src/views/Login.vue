@@ -15,8 +15,8 @@
           <a href="#">Forgot your password?</a>
         </div>
         <div id="credentials" ref="credentials" class="hidden error-color pt-1 text-xs w-full align-items-center">
-            Invalid credentials.
-          </div>
+          Invalid credentials.
+        </div>
         <div class="button-container">
           <div class="go-back" @click="goBack">
             <i class="pi pi-arrow-left"></i>
@@ -166,5 +166,9 @@ font-size: 0.85rem;
 
 .forgot-password a:hover {
 text-decoration: underline;
+}
+
+.error-color {
+  color: red;
 }
 </style>
