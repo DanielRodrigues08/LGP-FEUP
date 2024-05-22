@@ -18,7 +18,7 @@ import ProcessesView from '@/views/ProcessesView.vue';
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: '/', name: 'home', component: HomeView },
+    { path: '/', name: 'statistics', component: Statistics },
     { path: '/user/:id', name: 'user', component: UserView, props: true },
     { path: '/onboardees', name: 'onboardees', component: OnboardeesView },
     { path: '/add-onboardee', name: 'add-onboardee', component: NewOnboardee },
@@ -26,7 +26,6 @@ const router = createRouter({
     { path: '/login', name: 'login', component: Login },
     { path: '/admin-area', name: 'admin-area', component: AdminArea },
     { path: '/add-user', name: 'add-user', component: NewUser },
-    { path: '/statistics', name: 'statistics', component: Statistics },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFound },
     { path: '/forbidden', name: 'forbidden', component: ForbiddenView },
     { path: '/processes', name: 'processes', component: ProcessesView },

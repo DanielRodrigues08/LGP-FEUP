@@ -66,7 +66,6 @@
             ...process,
             stepsCount: process.stepsInProcess.length,
           }));
-          console.log(this.processes)
           this.originalProcesses = response.data.map(process =>({
             ...process,
             stepsCount: process.stepsInProcess.length,

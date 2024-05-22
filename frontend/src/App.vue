@@ -7,7 +7,6 @@ import Navbar from './components/Navbar.vue';
   <header>
     <div class="wrapper">
       <Navbar/>
-      <HomeView/>
     </div>
   </header>
 

@@ -30,6 +30,12 @@
           </select>
         </div>
         <div class="form-group">
+          <label for="process">Process:</label>
+          <select id="process" v-model="idProcess">
+            <option v-for="proc in processes" :value="proc.id" :key="proc.id">{{ proc.title }}</option>
+          </select>
+        </div>
+        <div class="form-group">
           <label for="annualSalary">Annual Salary:</label>
           <InputText id="annualSalary" v-model="annualSalary" />
         </div>
@@ -63,11 +69,13 @@ export default {
   data() {
     return {
       countries: [],
+      processes: [],
       name: '',
       email: '',
       phone: '',
       gender: '',
       nationality: '',
+      idProcess: '',
       annualSalary: '',
       payrollNumber: '',
       startDate: ''
@@ -82,6 +90,11 @@ export default {
       .get('https://api.openaq.org/v1/countries')
       .then(response => (this.countries = response.data.results))
       .catch(console.log);
+    
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/processes`, { headers: this.authStore.authData() })
+      .then(response => (this.processes = response.data))
+      .catch(console.log);
   },
   methods: {
     async handleSubmit() {
@@ -94,6 +107,7 @@ export default {
         annualSalary: this.annualSalary,
         payrollNumber: this.payrollNumber,
         startDate: this.startDate,
+        idProcess: this.idProcess,
       };
 
       await axios.post(`${import.meta.env.VITE_API_URL}/onboardees`, requestData, {headers: this.authStore.authData()})
@@ -155,7 +169,7 @@ label {
 
 select,
 input[type="date"] {
-  width: 100%; /* Adjust the width here */
+  width: 100%;
   padding: 0.5rem;
   font-size: 0.8rem;
   border-radius: 5px;
