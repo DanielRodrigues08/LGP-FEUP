@@ -45,12 +45,20 @@
                                             <div class="step-title-desc">
                                                 {{ step.stepDescription }}
                                             </div>
-                                            <div class="font-bold text-black pt-2">
-                                                Deadline: 
-                                                <span>
-                                                    {{ getDeadlineDate(onboardee.startDate, 5).toLocaleDateString("en-US") }}
-                                                    <span class="date-color">({{ calculateDaysLeft(getDeadlineDate(onboardee.startDate, 5)) }} days left)</span>
-                                                </span>
+                                            <div class="flex flex-column align-items-end">
+                                                <div class="font-bold text-black pt-2">
+                                                    Deadline: 
+                                                    <span>
+                                                        {{ new Date(step.dueDate).toLocaleDateString("en-UK") }}
+                                                        <span class="date-color">
+                                                            ({{ calculateDaysLeft(new Date(step.dueDate)) == 1 ? '1 day left' : calculateDaysLeft(new Date(step.dueDate)) + ' days left' }})
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                                <div class="font-bold text-black pt-2">
+                                                    Duration: 
+                                                    <span>{{ step.duration == 1 ? '1 day' : step.duration + ' days' }}</span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="step-title-owners">
@@ -267,7 +275,6 @@ export default {
                 this.onboardee = response.data.onboardee;
                 this.onboardee.startDate = new Date(response.data.onboardee.startDate);
                 this.process = response.data.process;
-                console.log(this.process)
                 this.editOnboardee = { ...response.data.onboardee };
             } catch (error) {
                 console.error('Error fetching onboardee:', error);
@@ -346,7 +353,6 @@ export default {
                             stepInProcessId: step.stepInProcessId,
                             onboardeeId: this.onboardee.id
                         }
-                        console.log(request)
                         await axios.patch(`${import.meta.env.VITE_API_URL}/steps-info/${step.stepInfoId}`, request, {headers: this.authStore.authData()});
                         step.stepInfoStatus = status
                     }  catch (error) {
@@ -365,7 +371,6 @@ export default {
                     stepInProcessId: step.stepInProcessId,
                     onboardeeId: this.onboardee.id
                 }
-                console.log(request)
                 await axios.patch(`${import.meta.env.VITE_API_URL}/steps-info/${request.id}`, request, {headers: this.authStore.authData()}).then(res => {
                     this.editInfo = false
                 });
