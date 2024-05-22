@@ -13,6 +13,7 @@ import NotFound from '@/views/NotFound.vue';
 import OnboardeeProfileView from '@/views/OnboardeeProfileView.vue';
 import ForbiddenView from '@/views/ForbiddenView.vue';
 import ProcessesView from '@/views/ProcessesView.vue';
+import JobSchedulingView from '@/views/JobSchedulingView.vue';
 
 
 const router = createRouter({
@@ -30,6 +31,7 @@ const router = createRouter({
     { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFound },
     { path: '/forbidden', name: 'forbidden', component: ForbiddenView },
     { path: '/processes', name: 'processes', component: ProcessesView },
+    { path: '/job-scheduling', name: 'job-scheduling', component: JobSchedulingView },
   ]
 });
 
