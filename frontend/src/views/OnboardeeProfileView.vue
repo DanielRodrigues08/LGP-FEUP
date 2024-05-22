@@ -267,6 +267,7 @@ export default {
                 this.onboardee = response.data.onboardee;
                 this.onboardee.startDate = new Date(response.data.onboardee.startDate);
                 this.process = response.data.process;
+                console.log(this.process)
                 this.editOnboardee = { ...response.data.onboardee };
             } catch (error) {
                 console.error('Error fetching onboardee:', error);
