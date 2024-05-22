@@ -51,6 +51,15 @@
                         </select>
                     </div>
                     <div class="flex align-items-center gap-5 mb-3">
+                        <label for="state" class="font-semibold w-6rem">State</label>
+                        <select id="state" v-model="editOnboardee.state" class="flex-auto">
+                            <option value="INCOMING">INCOMING</option>
+                            <option value="ONGOING">ONGOING</option>
+                            <option value="COMPLETED">COMPLETED</option>
+                            <option value="ABORTED">ABORTED</option>
+                        </select>
+                    </div>
+                    <div class="flex align-items-center gap-5 mb-3">
                         <label for="annualSalary" class="font-semibold w-6rem">Annual Salary</label>
                         <InputText id="annualSalary" v-model="editOnboardee.annualSalary" class="flex-auto" autocomplete="off" />
                     </div>

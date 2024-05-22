@@ -34,12 +34,12 @@
   
   const boards = ref([
     {
-      name: "Onboardees",
-      route: "/onboardees"
+      name: "Statistics",
+      route: "/"
     },
     {
-      name: "Statistics",
-      route: "/statistics"
+      name: "Onboardees",
+      route: "/onboardees"
     },
     {
       name: "Admin area",
