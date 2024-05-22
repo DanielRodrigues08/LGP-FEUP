@@ -33,7 +33,9 @@
                 </div>
             </div>
             <div v-if="onboardee" class="info-process">
-                <span class="process-name" v-if="process">Active Process: <span>{{ process.processTitle }}</span></span>
+                <span class="process-name"
+                v-if="process">{{ process.steps.filter(step => step.stepInfoStatus == "COMPLETED").length == process.steps.length ? 'Finished' : 'Active' }}
+                    Process: <span>{{ process.processTitle }}</span></span>
                 <div class="info-process" v-if="process">
                 <Stepper orientation="vertical" class="stepper">
                         <StepperPanel v-for="(step, index) in this.process.steps" v-bind:key="index" :header="'&nbsp;'+step.stepTitle">
@@ -69,7 +71,7 @@
                                                 Backup: <a href="#" class="email-link" @click.prevent="sendEmailToEmployee(step.backupId)">{{ step.backupName }}</a>
                                             </div>
                                             <div v-if="step.dependencies.length > 0" class="font-bold text-black pt-3">
-                                                Depends on: <span>{{ step.dependencies.join(', ')}}</span>
+                                                Depends on: <span>{{ displayDependencies(step).join(', ')}}</span>
                                             </div>
                                             <div v-else/>
                                         </div>
@@ -255,7 +257,8 @@ export default {
             showEditDialog: false,
             editOnboardee: null,
             countries: [],
-            editInfo: false
+            editInfo: false,
+            processFinished: false
         };
     },
     setup() {
@@ -275,6 +278,7 @@ export default {
                 this.onboardee = response.data.onboardee;
                 this.onboardee.startDate = new Date(response.data.onboardee.startDate);
                 this.process = response.data.process;
+                if (response.data.process) this.processFinished = this.checkProcessFinished()
                 this.editOnboardee = { ...response.data.onboardee };
             } catch (error) {
                 console.error('Error fetching onboardee:', error);
@@ -361,6 +365,16 @@ export default {
                 }
             })
         },
+        displayDependencies(step) {
+            const allStepInProcessIds = step.dependencies.map(dep => {
+                const currStep = this.process.steps.filter(step => step.stepInProcessId == dep)[0]
+                return currStep.stepInfoId
+            })
+            return allStepInProcessIds;
+        },
+        checkProcessFinished() {
+            return this.process.steps.filter(step => step.stepInfoStatus == "COMPLETED").length == this.process.steps.length
+        },
         async postStepInfo(step) {
             this.editInfo = true
             try {
@@ -374,6 +388,7 @@ export default {
                 await axios.patch(`${import.meta.env.VITE_API_URL}/steps-info/${request.id}`, request, {headers: this.authStore.authData()}).then(res => {
                     this.editInfo = false
                 });
+                this.checkProcessFinished()
             } catch (error) {
                 console.error("Error updating step info", error)
             }
@@ -441,6 +456,7 @@ export default {
 }
 .stepper {
     width: 80%;
+    margin-bottom: 1rem;
 }
 .not-found {
     font-size: large;
@@ -464,7 +480,6 @@ export default {
 }
 .info-process-not-found {
     display: flex;
-    margin-top: 0.3rem;
     height: min-content;
     width: 100%;
     height: calc(100vh - 3.55rem - 10rem - 0.3rem);
@@ -538,7 +553,6 @@ export default {
     padding-right: 2em;
     font-weight: bold;
     margin-top: 1em;
-    margin-bottom: 0.5em;
     text-align: center;
 }
 
