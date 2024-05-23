@@ -88,7 +88,7 @@
                                                     <Button
                                                     :disabled="step.stepInfoStatus == 'COMPLETED' || editInfo == true"
                                                     class="ml-2 company-color"
-                                                    :icon="(editInfo == false ? 'pi pi-check': 'pi pi-spin pi-spinner')" type="submit" size="small"  aria-label="Submit"/>
+                                                    :icon="(editInfo == false ? 'pi pi-check': 'pi pi-spin pi-spinner')" type="submit" size="small"  aria-label="Submit"style="color:white"/>
                                                 </form>
                                             </div>
                                             <div class="flex flex-column justify-content-end">
@@ -113,11 +113,13 @@
                                                     icon="pi pi-play-circle"
                                                     iconPos="left"
                                                     @click="changeStepStatus(step.stepInfoId, 'IN_PROGRESS')"
-                                                    :disabled="step.stepInfoStatus == 'COMPLETED'"/>
+                                                    :disabled="step.stepInfoStatus == 'COMPLETED'"
+                                                    style="color:white"
+                                                    />
                                                     
                                                     <Button label="&nbsp; Complete" severity="success" icon="pi pi-check-circle" iconPos="left"
                                                     :disabled="step.stepInfoStatus != 'IN_PROGRESS'"
-                                                    @click="changeStepStatus(step.stepInfoId, 'COMPLETED')" />
+                                                    @click="changeStepStatus(step.stepInfoId, 'COMPLETED')"  />
                                                     <Button class="ml-3" label="&nbsp; Abort" severity="danger" icon="pi pi-times-circle" iconPos="left"
                                                     :disabled="step.stepInfoStatus == 'ABORTED' || step.stepInfoStatus == 'COMPLETED'"
                                                     @click="changeStepStatus(step.stepInfoId, 'ABORTED')" />
