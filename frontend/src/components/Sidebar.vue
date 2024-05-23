@@ -48,6 +48,10 @@
     {
       name: "Processes",
       route: "/processes"
+    },
+    {
+      name: "Job Scheduling",
+      route: "/job-scheduling"
     }
   ]);
   
