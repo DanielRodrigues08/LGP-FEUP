@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import com.lifecycle.backend.exception.ProcessAlreadyAssignedException;
 
 import java.util.*;
 
@@ -100,7 +101,10 @@ public class OnboardeeController {
             try {
                 onboardeeToUpdate = onboardeeService.updateOnboardeeProcess(id, onboardeeRequest.getProcessId());
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
+                if (e instanceof ProcessAlreadyAssignedException)
+                    ;
+                else
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", e.getMessage()));
             }
         }
 

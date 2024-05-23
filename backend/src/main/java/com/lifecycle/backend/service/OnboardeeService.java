@@ -1,5 +1,6 @@
 package com.lifecycle.backend.service;
 
+import com.lifecycle.backend.exception.ProcessAlreadyAssignedException;
 import com.lifecycle.backend.model.*;
 import com.lifecycle.backend.model.Process;
 import com.lifecycle.backend.repository.OnboardeeRepository;
@@ -31,7 +32,7 @@ public class OnboardeeService {
         Onboardee _onboardee = onboardee.get();
 
         if (_onboardee.getActiveProcess() != null && _onboardee.getActiveProcess().getId() == processId) {
-            throw new Exception("Onboardee already has this process");
+            throw new ProcessAlreadyAssignedException("Onboardee already has this process");
         }
 
         Optional<Process> process = processRepository.findById(processId);
