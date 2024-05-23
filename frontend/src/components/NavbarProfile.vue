@@ -132,7 +132,8 @@ export default {
 
     const logoutUser = () => {
       authStore.logout();
-      router.push('/login');
+      router.push('/login')
+            .then(router.go(0));
     };
 
     const loginUser = () => {

@@ -7,8 +7,10 @@ import com.lifecycle.backend.model.User;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Locale;
 
 @Getter
 @Setter
@@ -19,6 +21,9 @@ public class StepViewDTO {
     private String stepTitle;
     private String stepDescription;
     private List<Long> dependencies;
+
+    private LocalDate dueDate;
+    private Integer duration;
 
     private String ownerName;
     private Long ownerId;
@@ -54,6 +59,9 @@ public class StepViewDTO {
             dto.setBackupName(backup.getName());
             dto.setBackupId(backup.getId());
         }
+
+        dto.setDueDate(stepInfo.getOnboardee().getStartDate().minusDays(stepInfo.getStepInProcess().getStep().getDeadline()));
+        dto.setDuration(stepInfo.getStepInProcess().getStep().getDuration());
 
         return dto;
     }
