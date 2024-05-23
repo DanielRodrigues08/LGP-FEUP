@@ -2,6 +2,7 @@ package com.lifecycle.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.lifecycle.backend.model.incoming.IncomingStep;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -51,6 +52,15 @@ public class Step {
         this.description = description;
         this.deadline = deadline;
         this.duration = duration;
+        this.owner = owner;
+        this.backup = backup;
+    }
+
+    public Step(IncomingStep incomingStep, User owner, User backup) {
+        this.title = incomingStep.getTitle();
+        this.description = incomingStep.getDescription();
+        this.deadline = incomingStep.getDeadline();
+        this.duration = incomingStep.getDuration();
         this.owner = owner;
         this.backup = backup;
     }

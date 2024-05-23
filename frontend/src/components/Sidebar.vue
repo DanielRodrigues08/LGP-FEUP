@@ -1,3 +1,47 @@
+<!-- eslint-disable vue/multi-word-component-names -->
+<script setup>
+import Sidebar from 'primevue/sidebar';
+import ListIcon from './icons/ListIcon.vue'
+import LifecycleIcon from './icons/LifecycleIcon.vue'
+import { RouterLink } from 'vue-router'
+import { ref } from "vue";
+import { useAuthStore } from '@/stores/auth';
+
+const visible = ref(false);
+  
+const boards = ref([
+  {
+      name: "Create",
+      route: "/process/create"
+  },
+  {
+    name: "Statistics",
+    route: "/"
+  },
+  {
+    name: "Onboardees",
+    route: "/onboardees"
+  },
+  {
+    name: "Admin area",
+    route: "/admin-area"
+  },
+  {
+    name: "Processes",
+    route: "/processes"
+  }
+]);
+
+// Function to check if the "Admin area" link should be shown
+const shouldShowBoard = (board) => {
+    const authStore = useAuthStore();
+    if(authStore.user){
+        return authStore.user.roles.includes('ADMIN') || board.name !== 'Admin area';
+    }
+  };
+
+</script>
+
 <template>
     <Sidebar v-model:visible="visible" class="sidebar w-16rem">
       <template #header>
@@ -20,49 +64,7 @@
     <Button text rounded @click="visible = true" class="ml-2 mr-2 menu-button">
       <ListIcon />
     </Button>
-  </template>
-  
-  <script setup>
-  import Sidebar from 'primevue/sidebar';
-  import ListIcon from './icons/ListIcon.vue';
-  import LifecycleIcon from './icons/LifecycleIcon.vue';
-  import { RouterLink } from 'vue-router';
-  import { ref } from "vue";
-  import { useAuthStore } from '@/stores/auth';
-  
-  const visible = ref(false);
-  
-  const boards = ref([
-    {
-      name: "Statistics",
-      route: "/"
-    },
-    {
-      name: "Onboardees",
-      route: "/onboardees"
-    },
-    {
-      name: "Admin area",
-      route: "/admin-area"
-    },
-    {
-      name: "Processes",
-      route: "/processes"
-    },
-    {
-      name: "Job Scheduling",
-      route: "/job-scheduling"
-    }
-  ]);
-  
-  // Function to check if the "Admin area" link should be shown
-  const shouldShowBoard = (board) => {
-    const authStore = useAuthStore();
-    if(authStore.user){
-        return authStore.user.roles.includes('ADMIN') || board.name !== 'Admin area';
-    }
-  };
-  </script>
+</template>
   
   <style>
   .p-sidebar .p-sidebar-content {
