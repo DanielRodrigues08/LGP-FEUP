@@ -12,13 +12,13 @@ import java.util.ArrayList;
 @Getter
 @Setter
 public class OnboardeeViewDTO {
-    private Long idProcess;
+    private Long processId;
     private String processTitle;
     private List<StepViewDTO> steps;
 
     static public OnboardeeViewDTO convertToDTO(Onboardee onboardee) {
         OnboardeeViewDTO dto = new OnboardeeViewDTO();
-        dto.setIdProcess(onboardee.getActiveProcess().getId());
+        dto.setProcessId(onboardee.getActiveProcess().getId());
         dto.setProcessTitle(onboardee.getActiveProcess().getTitle());
 
         List<StepViewDTO> steps = new ArrayList<>();

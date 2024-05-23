@@ -7,6 +7,7 @@ import lombok.*;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -75,6 +76,7 @@ public class Onboardee {
         this.payrollNumber = payrollNumber;
         this.startDate = startDate;
         this.state = OnboardeeStatus.INCOMING;
+        this.stepsInfo = new ArrayList<>();
     }
 }
 

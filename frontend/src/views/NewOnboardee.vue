@@ -31,7 +31,7 @@
         </div>
         <div class="form-group">
           <label for="process">Process:</label>
-          <select id="process" v-model="idProcess">
+          <select id="process" v-model="processId">
             <option v-for="proc in processes" :value="proc.id" :key="proc.id">{{ proc.title }}</option>
           </select>
         </div>
@@ -75,7 +75,7 @@ export default {
       phone: '',
       gender: '',
       nationality: '',
-      idProcess: '',
+      processId: '',
       annualSalary: '',
       payrollNumber: '',
       startDate: ''
@@ -107,7 +107,7 @@ export default {
         annualSalary: this.annualSalary,
         payrollNumber: this.payrollNumber,
         startDate: this.startDate,
-        idProcess: this.idProcess,
+        processId: this.processId,
       };
 
       await axios.post(`${import.meta.env.VITE_API_URL}/onboardees`, requestData, {headers: this.authStore.authData()})

@@ -223,6 +223,21 @@
                     <label for="startDate" class="font-semibold w-6rem">Start Date</label>
                     <InputText id="startDate" type="date" class="flex-auto" v-model="editOnboardee.startDate" />
                 </div>
+                <div class="flex align-items-center gap-5 mb-3">
+                    <label for="state" class="font-semibold w-6rem">State</label>
+                    <select id="state" v-model="editOnboardee.state" class="flex-auto">
+                        <option value="INCOMING">INCOMING</option>
+                        <option value="ONGOING">ONGOING</option>
+                        <option value="COMPLETED">COMPLETED</option>
+                        <option value="ABORTED">ABORTED</option>
+                    </select>
+                </div>
+                <div class="flex align-items-center gap-5 mb-3">
+                    <label for="process" class="font-semibold w-6rem">Process:</label>
+                    <select id="process" v-model="editOnboardee.processId" class="flex-auto">
+                        <option v-for="proc in processes" :value="proc.id" :key="proc.id">{{ proc.title }}</option>
+                    </select>
+                </div>
             </div>
             <div v-else>
                 <p>Onboardee not found</p>
@@ -257,6 +272,7 @@ export default {
             showEditDialog: false,
             editOnboardee: null,
             countries: [],
+            processes: [],
             editInfo: false,
             processFinished: false
         };
@@ -269,6 +285,7 @@ export default {
         const onboardeeId = this.$route.params.id;
         this.fetchOnboardeeById(onboardeeId);
         this.fetchCountries();
+        this.fetchProcesses();
         this.checkUserRoles();
     },
     methods: {
@@ -279,7 +296,7 @@ export default {
                 this.onboardee.startDate = new Date(response.data.onboardee.startDate);
                 this.process = response.data.process;
                 if (response.data.process) this.processFinished = this.checkProcessFinished()
-                this.editOnboardee = { ...response.data.onboardee };
+                this.editOnboardee = { ...this.onboardee };
             } catch (error) {
                 console.error('Error fetching onboardee:', error);
             }
@@ -297,27 +314,22 @@ export default {
                 console.error('Error fetching countries:', error);
             }
         },
+        async fetchProcesses() {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/processes`, { headers: this.authStore.authData() })
+                this.processes = response.data;
+            } catch (error) {
+                console.error('Error fetching countries:', error);
+            }
+        },
         async saveChanges() {
             try {
-
-                let data = {
-                    id: this.editOnboardee.id,
-                    name: this.editOnboardee.name,
-                    email: this.editOnboardee.email,
-                    gender: this.editOnboardee.gender,
-                    annualSalary: this.editOnboardee.annualSalary,
-                    nationality: this.editOnboardee.nationality,
-                    phoneNumber: this.editOnboardee.phoneNumber,
-                    payrollNumber: this.editOnboardee.payrollNumber,
-                    startDate: this.editOnboardee.startDate,
-                    state: this.editOnboardee.state,
-                    stepsInfo: this.editOnboardee.stepsInfo,
-                    activeProcess: this.editOnboardee.activeProcess
-                };
-                const response = await axios.patch(`${import.meta.env.VITE_API_URL}/onboardees/${this.onboardee.id}`,data, {headers: this.authStore.authData()});
+                const response = await axios.patch(`${import.meta.env.VITE_API_URL}/onboardees/${this.onboardee.id}`, this.editOnboardee, {headers: this.authStore.authData()});
                 this.onboardee = response.data;
                 this.editOnboardee = {...response.data};
                 this.showEditDialog = false;
+                this.fetchOnboardeeById(this.onboardee.id);
+
             } catch (error) {
                 console.error('Error saving changes:', error);
             }
@@ -504,7 +516,7 @@ export default {
     width: 100%;
     align-items: center;
     background-color: #033A65;
-    height: 10rem;
+    height: 9rem;
 }
 .onboardee-name {
     color: white;
@@ -521,7 +533,7 @@ export default {
 }
 .parent-onboardee {
     width: max-content;
-    margin-top: 0.3em;
+    margin-top: 0.1em;
     height: calc(100vh - 3.55rem - 10rem - 0.3rem);
 }
 .parent {
@@ -530,9 +542,12 @@ export default {
     height: calc(100vh - 3.55rem);
 }
 
-.PersonalInformation {
+.info-onboardee{
     background-color: #F9F9F9;
-    padding: 1em;
+
+}
+.PersonalInformation {
+    padding: 0 1em;
     overflow-y: auto;
 }
 
@@ -586,7 +601,7 @@ export default {
 .custom-button {
     background-color: #033A65 !important;
     color: white !important;
-    margin: 2em;
+    margin: 0.4em 2em;
     border: none;
 }
 
