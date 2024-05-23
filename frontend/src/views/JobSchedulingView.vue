@@ -17,7 +17,10 @@
       <Column field="stepTitle" sortable header="Step" class="custom-header"
         :headerStyle="{ backgroundColor: '#033A65', color: 'white', width: '20%' }"></Column>
       <Column field="onboardeeName" header="Onboardee" class="custom-header"
-        :headerStyle="{ backgroundColor: '#033A65', color: 'white', width: '20%' }"></Column>
+        :headerStyle="{ backgroundColor: '#033A65', color: 'white', width: '20%' }">
+        <template #body="slotProps">
+          <a class="url-style" :href="generateOnboardeeUrl(slotProps.data.onboardeeId)">{{ slotProps.data.onboardeeName }}</a>
+        </template></Column>
       <Column field="dueDate" sortable header="Due date" class="custom-header "
         :headerStyle="{ backgroundColor: '#033A65', color: 'white', width: '20%' }"></Column>
       <Column field="ownerName" header="Owner" class="custom-header "
@@ -64,6 +67,7 @@ export default {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/job-scheduling`, { headers: this.authStore.authData() });
         this.stepsInfo = response.data;
         this.originalStepsInfo = response.data;
+        console.log(this.stepsInfo)
       } catch (error) {
         console.error('Error fetching processes:', error);
       }
@@ -80,6 +84,9 @@ export default {
       } else {
         this.stepsInfo = this.originalStepsInfo.filter(item => item.ownerName.toLowerCase().includes(this.globalFilter.value.toLowerCase()));
       }
+    },    
+    generateOnboardeeUrl(onboardeeId) {
+      return `/onboardees/${encodeURIComponent(onboardeeId)}`;
     }
   }
 };
@@ -125,5 +132,14 @@ h1 {
 
 .center-text {
   text-align: center;
+}
+
+.url-style{
+  color: black;
+}
+
+.url-style:hover{
+  color: #003A65;
+  font-size: 105%;
 }
 </style>
