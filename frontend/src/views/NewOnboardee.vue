@@ -206,5 +206,4 @@ button {
   font-size: 0.8rem;
   border-radius: 5px;
 }
-
 </style>
