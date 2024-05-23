@@ -135,8 +135,7 @@ public class OnboardeeController {
         if (!onboardeeRequest.isStateEmpty()) {
             onboardeeToUpdate.setState(onboardeeRequest.getState());
         }
-
-
+        
         Onboardee updatedOnboardee = onboardeeRepository.save(onboardeeToUpdate);
         return ResponseEntity.ok(OnboardeeDTO.convertToDTO(updatedOnboardee));
     }

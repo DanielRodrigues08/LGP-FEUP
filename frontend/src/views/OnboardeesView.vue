@@ -105,12 +105,10 @@ export default {
       return str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     },
     downloadCSV(){
-      console.log(this.onboardees)
       let csv = 'name,email,phoneNumber,startDate,state\n';
       for(const row of this.onboardees){
         csv += `${row['name']},${row['email']},${row['phoneNumber']},${row['startDate']},${row['state']}\n`
       }
-      console.log(csv)
       const blob = new Blob([csv], { type: 'text/csv' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
