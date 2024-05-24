@@ -68,9 +68,9 @@ export default {
       selectedUser: null,
       tempPermissionLevel: null,
       permissionOptions: [
-        { value: 'ADMIN', label: 'Admin' },
+        { value: 'ADMIN', label: 'ADMIN' },
         { value: 'HR', label: 'HR' },
-        { value: 'EMPLOYEE', label: 'Employee' }
+        { value: 'EMPLOYEE', label: 'EMPLOYEE' }
       ]
     };
   },
@@ -103,7 +103,7 @@ export default {
     async saveEditedUser() {
       this.selectedUser.permissionLevel = this.tempPermissionLevel.value;
       try {
-        await axios.put(`${import.meta.env.VITE_API_URL}/users/${this.selectedUser.id}`, this.selectedUser, { headers: this.authStore.authData() });
+        await axios.patch(`${import.meta.env.VITE_API_URL}/users/${this.selectedUser.id}/role`, this.selectedUser, { headers: this.authStore.authData() });
         this.fetchUsers(); // Refresh the user list
       } catch (error) {
         console.error('Error updating user:', error);

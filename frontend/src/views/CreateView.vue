@@ -2,8 +2,10 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'; 
 
 const authStore = useAuthStore();
+const router = useRouter();
 
 import ProcessForm from '@/components/create/ProcessForm.vue';
 import StepBar from '@/components/create/StepBar.vue';
@@ -76,16 +78,12 @@ function createProcess() {
     description: process.value.desc,
     incomingSteps: Array.from(steps.value, (step) => step.data)
   }
-  console.log(process.value)
-  console.log(steps.value)
-
   loading.value = true
 
   // API call
-  // console.log(authStore.authData())
   axios.post(`${import.meta.env.VITE_API_URL}/processes/create-with-steps`, data, { headers: authStore.authData() })
   .then(function (response) {
-    console.log(response);
+    router.push('/processes');
   })
   .catch(function (error) {
     console.log(error);
