@@ -103,7 +103,7 @@ export default {
     async saveEditedUser() {
       this.selectedUser.permissionLevel = this.tempPermissionLevel.value;
       try {
-        await axios.put(`${import.meta.env.VITE_API_URL}/users/${this.selectedUser.id}`, this.selectedUser, { headers: this.authStore.authData() });
+        await axios.patch(`${import.meta.env.VITE_API_URL}/users/${this.selectedUser.id}/role`, this.selectedUser, { headers: this.authStore.authData() });
         this.fetchUsers(); // Refresh the user list
       } catch (error) {
         console.error('Error updating user:', error);

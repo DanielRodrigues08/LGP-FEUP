@@ -124,5 +124,21 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    // PATCH update user role
+    @PatchMapping("/{id}/role")
+    @Secured("ADMIN")
+    public ResponseEntity<?> updateUserRole(@PathVariable Long id, @RequestBody User user) {
+        Optional<User> existingUserOpt = userRepository.findById(id);
+        if (!existingUserOpt.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        User existingUser = existingUserOpt.get();
+        existingUser.setPermissionLevel(user.getPermissionLevel());
+
+        User updatedUser = userRepository.save(existingUser);
+        return ResponseEntity.ok(updatedUser);
+    }
+
 }
 
