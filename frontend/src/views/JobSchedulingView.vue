@@ -67,13 +67,11 @@ export default {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/job-scheduling`, { headers: this.authStore.authData() });
         this.stepsInfo = response.data;
         this.originalStepsInfo = response.data;
-        console.log(this.stepsInfo)
       } catch (error) {
-        console.error('Error fetching processes:', error);
+        console.error('Error fetching processes');
       }
     },
     filterStepsInfo() {
-      console.log(this.globalFilter.value);
       this.globalFilter = {
         value: this.globalFilter.value,
         matchMode: 'contains',

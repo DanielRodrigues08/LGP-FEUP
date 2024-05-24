@@ -85,7 +85,6 @@
   background-color: white;
   padding: 1.5rem;
   border-radius: 20px;
-  height: 70%;
   width: 30%;
   display: flex;
   flex-direction: column;

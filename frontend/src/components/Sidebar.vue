@@ -11,26 +11,27 @@ const visible = ref(false);
   
 const boards = ref([
   {
-      name: "Create",
-      route: "/process/create"
-  },
-  {
     name: "Statistics",
-    route: "/"
+    route: "/",
+    icon: "pi pi-chart-bar" 
   },
   {
     name: "Onboardees",
-    route: "/onboardees"
-  },
-  {
-    name: "Admin area",
-    route: "/admin-area"
+    route: "/onboardees",
+    icon: "pi pi-address-book" 
   },
   {
     name: "Processes",
-    route: "/processes"
+    route: "/processes",
+    icon: "pi pi-file"
+  },
+  {
+    name: "Admin area",
+    route: "/admin-area",
+    icon: "pi pi-wrench"
   }
 ]);
+
 
 // Function to check if the "Admin area" link should be shown
 const shouldShowBoard = (board) => {
@@ -54,6 +55,7 @@ const shouldShowBoard = (board) => {
           <RouterLink v-if="shouldShowBoard(board)" :to="board.route" class="p-0">
             <li>
               <a v-ripple class="boards flex align-items-center cursor-pointer p-3 text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                <i :class="board.icon" class="mr-2"></i>
                 <span class="font-semibold">{{ board.name }}</span>
               </a>
             </li>

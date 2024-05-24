@@ -68,9 +68,9 @@ export default {
       selectedUser: null,
       tempPermissionLevel: null,
       permissionOptions: [
-        { value: 'ADMIN', label: 'Admin' },
+        { value: 'ADMIN', label: 'ADMIN' },
         { value: 'HR', label: 'HR' },
-        { value: 'EMPLOYEE', label: 'Employee' }
+        { value: 'EMPLOYEE', label: 'EMPLOYEE' }
       ]
     };
   },

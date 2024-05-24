@@ -7,7 +7,6 @@ const authStore = useAuthStore();
 
 // get steps
 const steps = await fetchSteps();
-//console.log(steps)
 const show = ref(Array(steps.length).fill(false))
 const search = ref('')
 
@@ -17,7 +16,6 @@ async function fetchSteps() {
     try {
         // const response = await axios.get(`${import.meta.env.VITE_API_URL}/steps`);
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/steps`, {headers: authStore.authData()});
-        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('Error fetching steps:', error);

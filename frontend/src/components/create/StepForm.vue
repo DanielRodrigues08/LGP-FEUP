@@ -22,20 +22,16 @@ const maxDescLength = 120
 const fieldDensity = "default"
 
 const personnel = await fetchUsers()
-//console.log(personnel)
 
 async function fetchUsers() {
     try {
-        // console.log(authStore.authData())
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/users`, {headers: authStore.authData()});
         
         let users_trimmed = [];
         for (let user of response.data) {
-            // users_trimmed.push([user.id, user.name])
             users_trimmed.push({id: user.id, name: user.name})
         }
         
-        //console.log(users_trimmed);
         return users_trimmed;
     } catch (error) {
         console.error('Error fetching steps:', error);
