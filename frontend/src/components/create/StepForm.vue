@@ -11,7 +11,7 @@ const stepDeadline = defineModel('deadline', { required: true })
 const stepDuration = defineModel('duration', { required: true })
 const stepDependencies = defineModel('dependencies', { required: true })
 
-defineProps(['dependencyStepList'])
+defineProps(['dependencyStepList', 'isLocked'])
 
 const minDeadline = 1
 const maxDeadline = 90
@@ -22,23 +22,23 @@ const maxDescLength = 120
 const fieldDensity = "default"
 
 const personnel = await fetchUsers()
-console.log(personnel)
+//console.log(personnel)
 
 async function fetchUsers() {
     try {
-    // console.log(authStore.authData())
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/users`, {headers: authStore.authData()});
-    
-    let users_trimmed = [];
-    for (let user of response.data) {
-        // users_trimmed.push([user.id, user.name])
-        users_trimmed.push(user.id)
-    }
-    
-    console.log(users_trimmed);
-    return users_trimmed;
+        // console.log(authStore.authData())
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/users`, {headers: authStore.authData()});
+        
+        let users_trimmed = [];
+        for (let user of response.data) {
+            // users_trimmed.push([user.id, user.name])
+            users_trimmed.push({id: user.id, name: user.name})
+        }
+        
+        //console.log(users_trimmed);
+        return users_trimmed;
     } catch (error) {
-    console.error('Error fetching steps:', error);
+        console.error('Error fetching steps:', error);
     }
 }
 
@@ -92,8 +92,9 @@ const personnelRules = [
                 :counter="maxTitleLength"
                 :rules="titleRules"
                 :density="fieldDensity"
+                :readonly="isLocked"
+                :clearable="!isLocked"
                 label="Step title"
-                clearable
                 required
             ></v-text-field>
         </v-col>
@@ -104,11 +105,11 @@ const personnelRules = [
             :items="dependencyStepList"
             :density="fieldDensity"
             label="Depends on"
-                item-title="title"
-                item-value="value"
-                chips
-                closable-chips
-                multiple
+            item-title="title"
+            item-value="value"
+            chips
+            multiple
+            closable-chips
             >
             </v-select>
         </v-col>
@@ -119,8 +120,9 @@ const personnelRules = [
                 :counter="maxDescLength"
                 :rules="descRules"
                 :density="fieldDensity"
+                :readonly="isLocked"
+                :clearable="!isLocked"
                 label="Step description"
-                clearable
             ></v-text-field>
         </v-col>
 
@@ -131,6 +133,8 @@ const personnelRules = [
                         v-model="stepDeadline"
                         :rules="deadlineRules"
                         :density="fieldDensity"
+                        :readonly="isLocked"
+                        :clearable="!isLocked"
                         type="number"
                         label="Deadline in"
                         suffix="day(s)"
@@ -143,6 +147,7 @@ const personnelRules = [
                         :max=maxDeadline
                         :min=minDeadline
                         :step="1"
+                        :readonly="isLocked"
                     >
                     </v-slider>
                 </v-col>
@@ -156,6 +161,8 @@ const personnelRules = [
                         v-model="stepDuration"
                         :rules="durationRules"
                         :density="fieldDensity"
+                        :readonly="isLocked"
+                        :clearable="!isLocked"
                         type="number"
                         label="Duration:"
                         suffix="day(s)"
@@ -168,6 +175,7 @@ const personnelRules = [
                         :max=maxDuration
                         :min=minDuration
                         :step="1"
+                        :readonly="isLocked"
                     >
                     </v-slider>
                 </v-col>
@@ -181,11 +189,12 @@ const personnelRules = [
                 :items="personnel"
                 :rules="personnelRules"
                 :density="fieldDensity"
-                item-title="id"
+                :readonly="isLocked"
+                :clearable="!isLocked"
+                item-title="name"
                 item-value="id"
                 label="Step owner"
                 required
-                clearable
             >
             </v-autocomplete>
         </v-col>
@@ -197,11 +206,12 @@ const personnelRules = [
                 :items="personnel"
                 :rules="personnelRules"
                 :density="fieldDensity"
-                item-title="id"
+                :readonly="isLocked"
+                :clearable="!isLocked"
+                item-title="name"
                 item-value="id"
                 label="Step backup"
                 required
-                clearable
             >
             </v-autocomplete>
         </v-col>

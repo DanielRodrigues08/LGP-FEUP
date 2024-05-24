@@ -40,31 +40,34 @@ function removeStep(stepIndex) {
             ></v-tab>
         </v-tabs>
 
-        <v-col class="fill-height" cols=12>
+        <v-col style="height: 95%" cols="12">
             <v-window class="h-100" v-model="tab">
                 <v-window-item class="h-100" v-for="(stepData, index) in steps"
                     :key="index"
-                    :value="index">
+                    :value="index"
+                >
                     <Suspense>
                         <StepForm
-                            v-model:title="stepData.title"
-                            v-model:desc="stepData.description"
-                            v-model:deadline="stepData.deadline"
-                            v-model:duration="stepData.duration"
-                            v-model:owner="stepData.owner"
-                            v-model:backup="stepData.backup"
-                            v-model:dependencies="stepData.dependencies"
+                            v-model:title="stepData.data.title"
+                            v-model:desc="stepData.data.description"
+                            v-model:deadline="stepData.data.deadline"
+                            v-model:duration="stepData.data.duration"
+                            v-model:owner="stepData.data.owner"
+                            v-model:backup="stepData.data.backup"
+                            v-model:dependencies="stepData.data.dependencies"
                             :dependencyStepList="Array.from({length: tab}, (_, i) => ({title: `Step ${i + 1}`, value: i+1}))"
+                            :isLocked="stepData.metadata.locked"
                         ></StepForm>
                     </Suspense>
                 </v-window-item>
             </v-window>
         </v-col>
     </v-card>
-    <v-row class="text-center mt-3" style="height: 10%" align="center">
+
+    <v-row class="text-center pt-2" align="center">
         <v-col class="fill-height">
             <v-btn
-                class="w-100 h-100"
+                class="w-100"
                 :disabled="!length"
                 text="Remove Step"
                 elevation="0"
@@ -74,7 +77,7 @@ function removeStep(stepIndex) {
         </v-col>
         <v-col class="fill-height">
             <v-btn
-                class="w-100 h-100"
+                class="w-100"
                 text="Add Step"
                 elevation="0"
                 color="green-darken-1"

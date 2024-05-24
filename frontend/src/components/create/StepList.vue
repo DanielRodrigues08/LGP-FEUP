@@ -7,7 +7,7 @@ const authStore = useAuthStore();
 
 // get steps
 const steps = await fetchSteps();
-console.log(steps)
+//console.log(steps)
 const show = ref(Array(steps.length).fill(false))
 const search = ref('')
 
@@ -15,12 +15,12 @@ defineEmits(['importStep'])
 
 async function fetchSteps() {
     try {
-    // const response = await axios.get(`${import.meta.env.VITE_API_URL}/steps`);
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/steps`, {headers: authStore.authData()});
-    console.log(response.data);
-    return response.data;
+        // const response = await axios.get(`${import.meta.env.VITE_API_URL}/steps`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/steps`, {headers: authStore.authData()});
+        console.log(response.data);
+        return response.data;
     } catch (error) {
-    console.error('Error fetching steps:', error);
+        console.error('Error fetching steps:', error);
     }
 }
 
@@ -61,7 +61,7 @@ const stepsPerPage = 10
                             class="pt-1 mr-2 mt-1 mb-3 "
                             :key="item"
                             :title="`${item.raw.title}`"
-                            :subtitle="`Deadline: ${item.raw.deadline} day(s) | Duration: ${item.raw.duration}`"
+                            :subtitle="`Deadline: ${item.raw.deadline} day(s) | Duration: ${item.raw.duration} day(s)`"
                             variant="outlined"
                             color="primary"
                             hover

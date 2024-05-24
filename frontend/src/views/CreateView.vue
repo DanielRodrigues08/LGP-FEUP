@@ -18,36 +18,39 @@ const process = ref({
   // onboardee: null,
 })
 const steps = ref([{
-  number: 1,
-  id: null,
-  title: '',
-  description: '',
-  deadline: 1,
-  duration: 1,
-  owner: null,
-  backup: null,
-  dependencies: [],
-}])
-
-let nextStepNumber = 2
-
-function importStep(stepData) {
-  for (const property in stepData) {
-    steps.value[currentStep.value][property] = stepData[property]
-  }
-}
-
-function addStep() {
-  steps.value.push({
-    number: nextStepNumber++, // display number on creation page
-    id: null, // step id
+  metadata: {
+    number: 1,
+    locked: false,
+  },
+  data: {
+    id: null,
     title: '',
     description: '',
     deadline: 1,
     duration: 1,
     owner: null,
     backup: null,
-    dependencies: [], // list of step ids
+    dependencies: [],
+  }
+}])
+let nextStepNumber = 2
+
+function addStep() {
+  steps.value.push({
+      metadata: {
+      number: nextStepNumber++,
+      locked: false,
+    },
+    data: {
+      id: null,
+      title: '',
+      description: '',
+      deadline: 1,
+      duration: 1,
+      owner: null,
+      backup: null,
+      dependencies: [],
+    }
   })
   
   // Manually reset form validity ( because it doesn't want to do it on its own >:c )
@@ -58,14 +61,20 @@ function removeStep(stepIndex) {
   steps.value.splice(stepIndex, 1)
 }
 
-function createProcess() {
-  // const stepsWithPosition = Array.from(steps.value, (step, i) => ({...step, position: i+1}))
+function importStep(stepData) {
+  for (const property in stepData) {
+    steps.value[currentStep.value].data[property] = stepData[property]
+  }
+  steps.value[currentStep.value].metadata.locked = true
+}
 
-  for (let step of steps.value) delete step.number;
+function createProcess() {
+  // const stepsWithPosition = Array.from(steps.value, (step, i) => ({...step.data, position: i+1}))
+
   const data = {
     title: process.value.title,
     description: process.value.desc,
-    incomingSteps: steps.value
+    incomingSteps: Array.from(steps.value, (step) => step.data)
   }
   console.log(process.value)
   console.log(steps.value)
@@ -81,7 +90,6 @@ function createProcess() {
   .catch(function (error) {
     console.log(error);
   });
-
   loading.value = false
 }
 
