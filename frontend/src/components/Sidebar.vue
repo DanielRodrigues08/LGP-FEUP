@@ -26,6 +26,11 @@ const boards = ref([
     icon: "pi pi-file"
   },
   {
+    name: "Schedule",
+    route: "/job-scheduling",
+    icon: "pi pi-calendar"
+  },
+  {
     name: "Admin area",
     route: "/admin-area",
     icon: "pi pi-wrench"
