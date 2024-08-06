@@ -30,12 +30,6 @@
           </select>
         </div>
         <div class="form-group">
-          <label for="process">Process:</label>
-          <select id="process" v-model="processId">
-            <option v-for="proc in processes" :value="proc.id" :key="proc.id">{{ proc.title }}</option>
-          </select>
-        </div>
-        <div class="form-group">
           <label for="annualSalary">Annual Salary:</label>
           <InputText id="annualSalary" v-model="annualSalary" />
         </div>
@@ -46,6 +40,12 @@
         <div class="form-group">
           <label for="startDate">Start Date:</label>
           <InputText id="startDate" type="date" v-model="startDate" />
+        </div>
+        <div class="form-group">
+          <label for="process">Process:</label>
+          <select id="process" v-model="processId">
+            <option v-for="proc in processes" :value="proc.id" :key="proc.id">{{ proc.title }}</option>
+          </select>
         </div>
         <div class="button-container">
           <div class="go-back" @click="goBack">
@@ -112,7 +112,7 @@ export default {
 
       await axios.post(`${import.meta.env.VITE_API_URL}/onboardees`, requestData, {headers: this.authStore.authData()})
         .then(response => {
-          this.$router.push({ name: 'onboardees' });
+          this.$router.push(`/onboardees/${response.data.id}`);
         })
         .catch(error => {
           console.error('Error adding Onboardee:', error);
@@ -139,7 +139,7 @@ h1 {
 
 .new-onboardee {
   background-color: #033A65;
-  height: calc(100vh - 3.25rem);
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -149,7 +149,8 @@ h1 {
   background-color: white;
   padding: 1.5rem;
   border-radius: 20px;
-  height: 92%;
+  margin-top: 3em;
+  margin-bottom: 3em;
   width: 30%;
   display: flex;
   flex-direction: column;
@@ -206,5 +207,4 @@ button {
   font-size: 0.8rem;
   border-radius: 5px;
 }
-
 </style>

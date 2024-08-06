@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -30,7 +31,7 @@ public class StepInProcess {
     @JsonBackReference
     private Process process;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<StepInProcess> dependencies;
 
@@ -42,5 +43,6 @@ public class StepInProcess {
         this.step = step;
         this.process = process;
         this.dependencies = dependencies;
+        this.stepsInfo = new ArrayList<>();
     }
 }

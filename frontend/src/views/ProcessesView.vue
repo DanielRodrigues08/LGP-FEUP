@@ -2,7 +2,7 @@
     <div class="users">
       <div class="title-container">
         <h1>Processes</h1>
-        <router-link to="/"> <!--! CHANGE THIS LINK -->
+        <router-link to="/process/create"> <!--! CHANGE THIS LINK -->
         <Button class="add-button" label="New Process" icon="pi pi-plus" />
         </router-link>
       </div>

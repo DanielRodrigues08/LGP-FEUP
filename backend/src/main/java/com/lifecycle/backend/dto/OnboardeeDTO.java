@@ -1,5 +1,6 @@
 package com.lifecycle.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lifecycle.backend.model.Onboardee;
 import com.lifecycle.backend.model.OnboardeeStatus;
 
@@ -42,42 +43,52 @@ public class OnboardeeDTO {
         return dto;
     }
 
+    @JsonIgnore
     public boolean isNameEmpty() {
         return this.name == null || this.name.trim().trim().isEmpty();
     }
 
+    @JsonIgnore
     public boolean isPhoneNumberEmpty() {
         return this.phoneNumber == null || this.phoneNumber.trim().isEmpty();
     }
 
+    @JsonIgnore
     public boolean isEmailEmpty() {
         return this.email == null || this.email.trim().isEmpty();
     }
 
+    @JsonIgnore
     public boolean isGenderEmpty() {
         return this.gender == null || this.gender.trim().isEmpty();
     }
 
+    @JsonIgnore
     public boolean isNationalityEmpty() {
         return this.gender == null || this.nationality.trim().isEmpty();
     }
 
+    @JsonIgnore
     public boolean isAnnualSalaryEmpty() {
         return this.annualSalary == null || this.annualSalary.trim().isEmpty();
     }
 
+    @JsonIgnore
     public boolean isPayrollNumberEmpty() {
         return this.payrollNumber == null || this.payrollNumber.trim().isEmpty();
     }
 
+    @JsonIgnore
     public boolean isStartDateEmpty() {
         return this.startDate == null;
     }
 
+    @JsonIgnore
     public boolean isStateEmpty() {
         return this.state == null;
     }
 
+    @JsonIgnore
     public boolean isProcessIdEmpty() {
         return this.processId == null;
     }

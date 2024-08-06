@@ -1,24 +1,26 @@
-// src/router/index.js
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth';
-import HomeView from '../views/HomeView.vue';
-import UserView from '../views/UserView.vue';
-import OnboardeesView from '@/views/OnboardeesView.vue';
-import NewOnboardee from '@/views/NewOnboardee.vue';
-import Login from '@/views/Login.vue';
-import AdminArea from '@/views/AdminArea.vue';
-import NewUser from '@/views/NewUser.vue';
-import Statistics from '@/views/Statistics.vue';
-import NotFound from '@/views/NotFound.vue';
-import OnboardeeProfileView from '@/views/OnboardeeProfileView.vue';
+import HomeView from '../views/HomeView.vue'
+import CreateView from '@/views/CreateView.vue'
+import UserView from '../views/UserView.vue'
+import OnboardeesView from '@/views/OnboardeesView.vue'
+import NewOnboardee from '@/views/NewOnboardee.vue'
+import Login from '@/views/Login.vue'
+import AdminArea from '@/views/AdminArea.vue'
+import NewUser from '@/views/NewUser.vue'
+import Statistics from '@/views/Statistics.vue'
+import NotFound from '@/views/NotFound.vue'
+import OnboardeeProfileView from '@/views/OnboardeeProfileView.vue'
 import ForbiddenView from '@/views/ForbiddenView.vue';
 import ProcessesView from '@/views/ProcessesView.vue';
+import JobSchedulingView from '@/views/JobSchedulingView.vue';
 
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: '/', name: 'statistics', component: Statistics },
+    { path: '/process/create', name: 'create-process', component: CreateView },
     { path: '/user/:id', name: 'user', component: UserView, props: true },
     { path: '/onboardees', name: 'onboardees', component: OnboardeesView },
     { path: '/add-onboardee', name: 'add-onboardee', component: NewOnboardee },
@@ -29,6 +31,7 @@ const router = createRouter({
     { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFound },
     { path: '/forbidden', name: 'forbidden', component: ForbiddenView },
     { path: '/processes', name: 'processes', component: ProcessesView },
+    { path: '/job-scheduling', name: 'job-scheduling', component: JobSchedulingView },
   ]
 });
 

@@ -13,6 +13,13 @@ import StepperPanel from 'primevue/stepperpanel';
 import Menu from 'primevue/menu';
 import "primeflex/themes/primeone-light.css"
 import "primevue/resources/themes/aura-light-blue/theme.css"
+import '@mdi/font/css/materialdesignicons.css'
+
+// Vuetify
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
 
 import 'primevue/resources/primevue.min.css';
 import ConfirmationService from 'primevue/confirmationservice';
@@ -21,12 +28,20 @@ import App from './App.vue'
 import router from './router'
 import { useAuthStore } from '@/stores/auth';
 
+const vuetify = createVuetify({
+    theme: {
+        defaultTheme: 'light'
+    },
+    components,
+    directives,
+})
+
 const app = createApp(App)
 
 app.use(ConfirmationService);
-
 app.use(createPinia())
 app.use(router)
+app.use(vuetify)
 
 const authStore = useAuthStore();
 authStore.loadStoredUser();
